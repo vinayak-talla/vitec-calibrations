@@ -1,0 +1,26 @@
+.custom-phone-input {
+    width: 60px;
+    text-align: center;
+    margin-right: -10px;
+    
+
+}
+.test {
+    margin-left: -10px;
+
+}
+.custom-phone-input-last {
+    width: 70px;
+    text-align: center;
+
+}
+
+.phone-error-custom {
+    font-weight:400;
+    margin-left: 16.5%;
+}
+
+.custom-row .col-auto span {
+    font-size: 20px; /* Adjust the size of the dash */
+    margin: -10px;   /* Adjust the margin if needed */
+}

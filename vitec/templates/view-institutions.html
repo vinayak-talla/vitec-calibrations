@@ -1,0 +1,47 @@
+{% extends 'view-page.html' %}
+
+{% block title %}Vitec Admin | View/Edit Institutions{% endblock %}
+
+{% block breadcrumb %}View/Edit Institution{% endblock %}
+
+{% block page_title %}View and/or Select Institution{% endblock %}
+
+{% block add_btn_href %} {% url 'add-institution' %} {% endblock %}
+
+{% block add_btn_name %}Add Institution{% endblock %}
+
+{% block search_placeholder %} Search Institution...{% endblock %}
+
+{% block search_btn_name %}Search Institution{% endblock %}
+
+
+{% block header_row %}
+<tr>
+    <th>INSTITUTION NAME</th>
+    <th>CONTACT NAME</th>
+    <th>PHONE NUMBER</th>
+    <th>EMAIL</th>
+    <th>ADDRESS</th>
+</tr>
+{% endblock %}
+
+
+{% block data_rows %}
+{% if is_full %}
+    {% for institution in page_obj %}
+        <tr class="{% cycle 'row-light' 'row-dark' %}">
+            <td><a href="{% url 'edit-institution' institution.name %}" class="table-row-link">{{ institution.name }}</a></td>
+            <td>{{ institution.contact }}</td>
+            <td>{{ institution.phone_number }}</td>
+            <td>{{ institution.email }}</td>
+            <td>{{ institution.address }}</td>
+        </tr>
+    {% endfor %}
+{% else %}
+    <tr class="no-results-row">
+        <td colspan="5" class="text-center">No matches found</td>
+    </tr>
+{% endif %}
+{% endblock %}
+
+        

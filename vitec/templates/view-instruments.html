@@ -1,0 +1,40 @@
+{% extends 'view-page.html' %}
+
+{% block title %}Vitec Admin | View/Edit Instruments{% endblock %}
+
+{% block breadcrumb %}View/Edit Instrument{% endblock %}
+
+{% block page_title %}View and/or Select Instrument{% endblock %}
+
+{% block add_btn_href %} {% url 'add-instrument' %} {% endblock %}
+
+{% block add_btn_name %}Add Instrument{% endblock %}
+
+{% block search_placeholder %} Search Instrument ID...{% endblock %}
+
+{% block search_btn_name %}Search ID{% endblock %}
+
+{% block header_row %}
+<th>ID</th>
+<th>TYPE</th>
+<th>INSTITUTION</th>
+<th>NOTES</th>
+{% endblock %}
+
+{% block data_rows %}
+{% if is_full %}
+    {% for instrument in page_obj %}
+        <tr class="{% cycle 'row-light' 'row-dark' %}">
+            <td><a href="{% url 'edit-instrument' instrument.id %}" class="table-row-link">{{ instrument.id }}</a></td>
+            <td>{{ instrument.instrument_type }}</td>
+            <td>{{ instrument.institution }}</td>
+            <td>{{ instrument.notes }}</td>
+        </tr>
+    {% endfor %}
+{% else %}
+    <tr class="no-results-row">
+        <td colspan="5" class="text-center">No matches found</td>
+    </tr>
+{% endif %}
+
+{% endblock %}

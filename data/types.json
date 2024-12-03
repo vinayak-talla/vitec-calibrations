@@ -1,0 +1,30 @@
+{
+    "instrument_types": [
+        "Pipette",
+        "RPM",
+        "Temperature"
+    ],
+    "pipette_types": [
+        "Single Channel",
+        "Fixed Single Channel",
+        "Multi 6 Channel",
+        "Multi 8 Channel",
+        "Multi 12 Channel",
+        "Repeater",
+        "Last time",
+        "Add Test"
+    ],
+    "rpm_types": [
+        "Centrifuge",
+        "Vortex Spinner",
+        "Mini-Centrifuge",
+        "RPM Test",
+        "ffewwede"
+    ],
+    "temperature_types": [
+        "Digital Thermometer",
+        "Glass Thermometer",
+        "DTH",
+        "Tetsifnfgmd"
+    ]
+}

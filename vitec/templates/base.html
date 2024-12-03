@@ -1,0 +1,70 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    
+    <!-- Link to Bootstrap CSS (Minified version) -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+
+    <!-- Include Bootstrap Select CSS -->
+    <link href="{% static 'bootstrap/css/bootstrap-select.min.css' %}" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="{% static 'css/navbar_custom.css' %}?v={{ timestamp }}">
+
+
+    {% block custom_css %}
+     <!-- Custom CSS Files go here-->
+    {% endblock %}
+
+    
+    <!-- Optionally add a favicon -->
+    <link rel="icon" href="{% static 'images/logo.png' %}" type="image/x-icon">
+</head>
+<body>
+    <!-- Navigation Bar (can be customized) -->
+    <nav class="navbar navbar-expand-lg navbar-custom ">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/vitec/home/">
+                <img src="/static/images/logo.png" alt="Logo" width="75" height="60" class="d-inline-block align-text-top">
+                Vitec Calibrations Administration
+              </a>
+        
+            <div class="position-absolute top-0 end-0 p-3">
+                    <span class="navbar-text text-white custom-welcome">Welcome, {{ user.username }}</span>
+            </div>
+
+            <div class="position-absolute bottom-0 end-0 p-3">
+                <a href="{% url 'logout' %}" class="navbar-logout text-white custom-logout" >LOG OUT</a>
+            </div>
+
+        </div>
+    </nav>
+
+    {% block path_bar %}
+     <!-- Path bar goes here -->
+    {% endblock %}
+
+    <!-- Page Content -->
+    <div class="container-fluid mt-4">
+        {% block content %}
+        <!-- Page-specific content will be injected here -->
+        {% endblock %}
+    </div>
+
+    <!-- Bootstrap Bundle JS (includes Popper.js) -->
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- Include Bootstrap Select JS -->
+    <script src="{% static 'bootstrap/js/bootstrap-select.min.js' %}"></script>
+
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,46 @@
+.custom-row {
+    margin-left: 30px; /* Adjust as needed */
+    margin-right: 30px; /* Adjust as needed */
+}
+
+.custom-form-label {
+    color: #6D6666;
+    font-weight: bold;
+}
+
+.custom-input {
+    height: 30px;  
+    border-color: #cccccc;
+}
+
+.save-button-container {
+    background-color: #ECECEC; 
+    margin-left: 25px;
+    margin-right: 25px;
+
+}
+
+.save-btn {
+    background-color: #234759;
+    color: #FFFFFF;
+    margin-left: 25px;
+    
+}
+
+.save-btn:hover {
+    background-color: #3D6A80;
+    color: #FFFFFF;
+}
+
+
+.save-add-btn {
+    background-color: #3D6A80;
+    color: #FFFFFF;
+    margin-left: 25px;
+    
+}
+
+.save-add-btn:hover {
+    background-color: #234759;
+    color: #FFFFFF;
+}

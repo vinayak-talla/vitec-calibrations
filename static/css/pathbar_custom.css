@@ -1,0 +1,32 @@
+.path-bar {
+    background-color: #234759; /* Bootstrap blue color */
+    color: #c4dce8;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    font-weight: 300;
+    width: 100%; /* Ensures the bar spans the full width of the page */
+    box-sizing: border-box; /* Includes padding in the width calculation */
+    position: relative; /* Ensures it stays within the layout flow */
+}
+
+.path-bar .breadcrumb-link {
+    color: white;
+    text-decoration: none;
+}
+
+.path-bar .breadcrumb-link:hover {
+    color: #c4dce8;
+    
+
+}
+
+.path-bar .breadcrumb-text {
+    color: #c4dce8;
+}
+
+.alert {
+    border-radius: 0 !important; /* Removes the corner radius */
+    padding-bottom: 0.5%;
+    padding-top: 0.5%;
+    font-size: 15px;
+}

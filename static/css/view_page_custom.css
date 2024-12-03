@@ -1,0 +1,166 @@
+.add-btn {
+    margin-right: 1rem;
+    font-size: small;
+    color: #FFFFFF;
+    background-color: #7D7D7D;
+}
+
+
+.add-btn:hover {
+    color: #FFFFFF;
+    background-color: #3f3f3f;
+}
+
+.plus_icon_white {
+    margin-left: 3px;
+}
+
+.search-container {
+    background-color: #f8f8f8; /* Set the desired background color */
+    border-top: 1px solid #e8e8e8; /* Blue border at the top */
+    border-bottom: 1px solid #e8e8e8; 
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+.search-container .form-control {
+    width: 300px; /* Adjust the input field width */
+}
+
+.search-btn {
+    background-color: #fcfcfc;
+    border: 1px solid #cccccc;
+    height: 30px;
+    display: flex;
+    align-items: center;
+
+}
+
+.search-btn:hover {
+    border: 1px solid #6d6d6d;
+    
+}
+
+/* Table container */
+.table-container {
+    margin-top: 35px;
+    margin-bottom: 30px;
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+/* Custom table styles */
+.custom-table {
+    width: 100%;
+    border-collapse: collapse; /*Remove spaces between table cells*/
+}
+
+/* Header row */
+.custom-table thead th {
+    text-align: left;
+    background-color: #f8f8f8; /* Slight gray background for the header */
+    padding: 10px;
+    border-top: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
+    color: #666666; /* Desired header text color */
+    font-weight: 450;
+    font-size: 0.875rem;
+    line-height: 1rem;
+}
+
+
+/* Data rows */
+.custom-table tbody tr {
+    color: #3D6A80; /* Text color for data rows */
+}
+
+.custom-table tbody tr.row-light {
+    background-color: #ffffff; /* White background */
+}
+
+.custom-table tbody tr.row-dark {
+    background-color: #f8f8f8; /* Light gray background */
+}
+
+.custom-table tbody tr td {
+    padding: 10px;
+    border-top: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;
+    vertical-align: top;
+    font-size: 0.875rem;
+    line-height: 1rem;
+}
+
+/* table-row name link */
+.table-row-link {
+    color: #3D6A80;
+    text-decoration: none;
+}
+
+.table-row-link:hover {
+    color: #122935;
+}
+
+.pagination-box {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    margin: 0 5px;
+    background-color: white;
+    border: 1px solid #F1F1F1;
+    color: #333333;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+}
+
+.pagination-box.active {
+    background-color: #3D6A80;
+    color: white;
+    pointer-events: none;
+    border: none;
+}
+
+.pagination-box:hover {
+    border: 1px solid #6d6d6d;
+}
+
+.pagination-dots {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    margin: 0 5px;
+    color: #333333;
+}
+
+.btn.disabled {
+    pointer-events: none;
+    opacity: 0.2;
+}
+
+.pag-btn {
+    border: none;
+    color: #7D7D7D;
+    font-size: 0.875rem;
+}
+
+.pag-btn:hover {
+    color: #3f3f3f;
+}
+
+.clear-btn {
+    color: #3D6A80;
+    margin-left: 10px;
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    border: none;
+    background-color: transparent;
+}
+
+.clear-btn:hover {
+    color: #122935;
+}

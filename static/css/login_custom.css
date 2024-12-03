@@ -1,0 +1,118 @@
+/* Full-page dark overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(155, 153, 153, 0.6); /* Semi-transparent black for dimming effect */
+    z-index: 1; /* Behind the login container */
+}
+
+/* Centered login box with border and shadow */
+.login-container {
+    position: relative;
+    z-index: 2; /* Above the overlay */
+    background: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    top: 80%;
+    transform: translateY(50%);
+    padding-bottom: 2rem;
+}
+
+/* Login Header */
+.login-header {
+    display: flex;
+    align-items: center;
+    background-color: #3D6A80; /* Blue background */
+    padding: 0.5rem;
+    justify-content: center; /* Centers content horizontally */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Logo styling */
+.login-logo {
+    width: 40px;   /* Adjust the size as needed */
+    height: auto;
+    margin-right: 0.5rem; /* Space between logo and text */
+}
+
+/* Header text styling */
+.login-title {
+    color: #ffffff;  /* White text */
+    font-size: 1.5rem;
+    font-weight: 250;
+}
+
+.login-title-section {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.login-title-text {
+    font-size: 1.6rem;
+    color: #818181; /* Matches the header color */
+    margin: 0; /* Removes default h2 margin */
+    font-weight: normal;
+}
+
+#loginForm {
+    width: 90%; /* Ensures the form itself takes up full width */
+} 
+
+#loginForm .form-label {
+    color: #818181; /* Change to your desired label color */
+    font-weight: normal; /* Optional: make the text bold */
+    margin-bottom: 0rem;
+}
+
+#loginForm .btn-primary {
+    margin-top: 1rem;
+    background-color: #3D6A80; /* Change to your desired button background color */
+    border-color: #3D6A80; /* Change to match background color for seamless look */
+}
+
+#loginForm .btn-primary:hover {
+    background-color: #28536b; /* Darker shade for hover effect */
+    border-color: #28536b;
+}
+
+/* Ensures the container for password label and input field are aligned properly */
+.mb-3 {
+    position: relative;
+}
+
+/* Styling for the 'Show/Hide' text */
+#togglePasswordText {
+    cursor: pointer;
+    color: #818181 !important;
+    font-size: 0.75rem;
+    font-weight: 400;
+    position: absolute; /* Position relative to the password input field */
+    right: 10px;  /* Adjust space from the right edge of the container */
+    top: 7%;
+}
+
+#togglePasswordText:hover {
+    color: #4f4f4f !important; /* Darker blue when hovering */
+}
+
+.custom-alert {
+    width: 100%;       /* or a fixed width, like 300px */
+    max-width: 390px;  /* controls maximum width */
+    height: auto;      /* or set a fixed height */
+    padding: 10px;     /* adjust padding as needed */
+    margin: auto;      /* centers the alert box */
+    text-align: center;  /* ensures text aligns well */
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+}

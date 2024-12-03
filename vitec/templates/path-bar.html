@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'css/pathbar_custom.css' %}?v={{ timestamp }}">
+{% block more_custom_css %}
+{% endblock %}
+{% endblock %}
+
+{% block path_bar %}
+<div class="path-bar">
+    <a href="{% url 'home' %}" class="breadcrumb-link">Home</a> > 
+    {% block add_path %}{% endblock %}
+    <span class="breadcrumb-text">{% block breadcrumb %}{% endblock %}</span>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert
+            {% if message.tags == 'success' %} alert-success 
+            {% elif message.tags == 'error' %} alert-danger 
+            {% elif message.tags == 'warning' %} alert-warning 
+            {% else %} alert-info {% endif %}" role="alert">
+
+            <!-- Insert corresponding SVG icon based on message type -->
+            {% if message.tags == 'success' %}
+                <img src="{% static 'images/checked.png' %}" alt="Success" class="me-2" width="17" height="17">
+            {% elif message.tags == 'error' %}
+                <img src="{% static 'images/remove.png' %}" alt="Success" class="me-2" width="17" height="17">
+            {% elif message.tags == 'warning' %}
+                <img src="{% static 'images/caution-sign.png' %}" alt="Success" class="me-2" width="17" height="17">
+            {% endif %}
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

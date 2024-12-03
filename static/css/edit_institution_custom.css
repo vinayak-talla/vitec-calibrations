@@ -1,0 +1,31 @@
+.modal-institution-name {
+    font-weight: bold;
+}
+
+.del-btn {
+    background-color: #ba2021;
+    color: white;
+    margin-right: 25px;
+}
+
+.del-btn:hover {
+    background-color: #931919;
+    color: white;
+}
+
+.modal-header, .modal-footer {
+    border: none;
+    padding: 0.3rem 0.3rem;
+}
+
+.modal-body {
+    padding: 0.3rem 0.3rem; 
+}
+
+.warning-header {
+    font-size: 1.1rem;
+}
+
+.warning-body {
+    font-size: 0.9rem;
+}

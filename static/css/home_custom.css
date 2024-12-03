@@ -1,0 +1,47 @@
+/* Styling for the title */
+.admin-title {
+    background-color: #407189;
+    color: #ffffff;
+    font-weight: 350;
+}
+
+
+/* Text color and padding adjustments */
+.custom-item {
+    font-size: 1rem;
+    position: relative;
+}
+
+/* Alternate background color for list items */
+.custom-item:nth-child(even) {
+    background-color: #FFFFFF;
+}
+
+.custom-item:nth-child(odd) {
+    background-color: #F9F9F9;
+}
+
+ul.list-group > li.list-group-item:last-child {
+    border-bottom: 1px solid #dee2e6;
+}
+
+
+/* Style for the action icons and text alignment */
+
+/* Icon link style */
+.icon-link {
+    margin-left: 20px;
+    text-decoration: none;
+    float: right;
+}
+
+.icon-text {
+    color: #407189;
+    text-decoration: none;
+
+}
+
+/* Hover effect for the icon links */
+.icon-text:hover {
+    color: #214C61;
+}

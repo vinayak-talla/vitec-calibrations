@@ -1,0 +1,88 @@
+{% extends 'path-bar.html' %}
+{% load static %}
+
+
+{% block more_custom_css %}
+<link rel="stylesheet" href="{% static 'css/view_page_custom.css' %}?v={{ timestamp }}">
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h2>{% block page_title %}{% endblock %}</h2>
+    <a href="{% block add_btn_href %} {% endblock %}" class="btn rounded-pill px-3 add-btn align-items-center">
+        {% block add_btn_name %}{% endblock %}
+        <img class="plus_icon_white" src="{% static 'images/plus_icon_white.png' %}" alt="Add Icon" width="13" height="13" class="icon" />
+    </a>
+</div>
+
+<form method="GET" >
+    <div class="d-flex align-items-center mb-4 search-container p-2">
+            <!-- Search Icon -->
+            <div class="me-3 ms-2" id="search-addon">
+                <img src="{% static 'images/search.png' %}" alt="Search" width="16" height="16">
+            </div>
+            <!-- Input Field -->
+            <div class="me-3">
+                <input type="text" class="custom-input form-control" name="search" id="search-input" placeholder="{% block search_placeholder %} {% endblock %}" aria-label="Search" aria-describedby="search-addon" value="{{ search_query }}">
+            </div>
+            <!-- Search Button -->
+            <div>
+                <button type="submit" class="btn search-btn">{% block search_btn_name %}{% endblock %}</button>
+            </div>
+
+         <!-- Clear Button (hidden by default) -->
+        {% if search_query %}
+            <div>
+                <button class=" clear-btn" id="clear-btn">(Clear Search)</button>
+            </div>
+        {% endif %}
+    </div>
+</form>
+
+
+<div class="table-container">
+    <table class="custom-table">
+        <!-- Header Row -->
+        <thead class="table-header">
+            <tr>
+                {% block header_row %}{% endblock %}
+            </tr>
+        </thead>
+
+        <!-- Data Rows -->
+        <tbody>
+            {% block data_rows %}{% endblock %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination Controls -->
+<div class="pagination-container d-flex justify-content-center align-items-center mt-2 mb-3">
+    <!-- Prev Button -->
+    <a href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}" class="btn mx-1 pag-btn {% if not page_obj.has_previous %}disabled{% endif %}">
+        Prev
+    </a>
+
+    <!-- Page Numbers -->
+    {% for num in page_range %}
+        {% if num == '...' %}
+            <span class="pagination-dots">...</span>
+        {% else %}
+            <a href="?page={{ num }}" class="pagination-box {% if num == page_obj.number %}active{% endif %}">
+                {{ num }}
+            </a>
+        {% endif %}
+    {% endfor %}
+
+    <!-- Next Button -->
+    <a href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}" class="btn pag-btn mx-1 {% if not page_obj.has_next %}disabled{% endif %}">
+        Next
+    </a>
+</div>
+
+
+
+<script src="{% static 'js/customView.js' %}"></script>
+
+{% endblock %}

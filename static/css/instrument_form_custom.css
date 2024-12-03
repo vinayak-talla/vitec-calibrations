@@ -1,0 +1,75 @@
+.custom-toggle {
+    color: black !important; 
+    background-color: white;
+    border: 1px solid #cccccc;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    padding-bottom: 0px;
+    padding-top: 0px;
+    line-height: 30px; 
+}
+
+.custom-toggle:hover {
+    color: black; 
+    background-color: white;
+    border-color: #8d8d8d;
+}
+
+.dropdown-toggle::after {
+    color: black; /* Ensure the caret is black */
+}
+
+.fields {
+    display: none;
+}
+
+.custom-dropdown.active, .custom-dropdown:focus {
+    background-color: #3D6A80;
+}
+
+/* Change background and text color when a dropdown item is clicked or focused */
+.dropdown-item:active,
+.dropdown-item:focus {
+    background-color: #3D6A80; /* Desired background color */
+}
+
+.sm-custom-input {
+    width: 35%;
+    text-align: center;
+}
+
+.notes-custom {
+    border-color: #cccccc;
+}
+
+.scrollable-menu {
+    max-height: 175px; /* Adjust based on the height of 5 items */
+    overflow-y: auto;
+}
+
+.plus_container_custom {
+    margin-left: -10px;
+    padding-bottom: 5px;
+}
+
+.add-option-btn {
+    border: none;
+    background-color: transparent;
+}
+
+.add-fields-btn {
+    border: none;
+    background-color: transparent;
+}
+
+.dropdown-error-custom {
+    font-weight:400;
+    margin-left: 16.5%;
+}
+
+.rpm-custom-size {
+    width: 100px;
+    text-align: center;
+}

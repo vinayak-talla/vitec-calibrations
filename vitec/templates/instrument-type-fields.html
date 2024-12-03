@@ -1,0 +1,222 @@
+{% extends 'instrument-form.html' %}
+{% load static %}
+
+{% block instrument_type_fields %} 
+
+<!-- Pipette Fields-->
+ <div id="pipette-fields" class="fields">
+
+    <!-- Pipette Type -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center dropdown-container" data-dropdown-key="pipette_types">
+        <label for="pipette_type" class="col-sm-2 col-form-label custom-form-label">Pipette Type:</label>
+        <div class="col-auto">
+            <!-- Dropdown for pipette tyoe with Bootstrap-Select -->
+            <select class="selectpicker" data-style="custom-toggle" id="pipetteTypeSelect" name="pipette_type" data-live-search="true" title="Select Pipette Type" data-width="100%" data-size="5">
+                <!-- Dynamically populated pipette type options -->
+                {% for pipette in pipette_types %}
+                    <option class="custom-dropdown" value="{{ pipette }}" {% if pipette_form.pipette_type.value == pipette %}selected{% endif %}>{{ pipette }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto plus_container_custom" id="urls" data-add-dropdown-option-url="{% url 'add-dropdown-option' %}" data-csrf="{{ csrf_token }}">
+            <button class=" add-option-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control new-option-input custom-input" style="display: none;">
+        </div>
+            <!-- Display validation errors -->
+            {% if pipette_form.pipette_type.errors %}
+                <div class="text-danger dropdown-error-custom ">
+                    {{ pipette_form.pipette_type.errors|join:", " }}
+                </div>
+            {% endif %}
+        
+    </div>
+
+     <!-- Volume -->
+     <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="volume" class="col-sm-2 col-form-label custom-form-label">Volume:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="volume" name="volume" value="{{ pipette_form.volume.value| default:'' }}">
+            {% if pipette_form.volume.errors %}
+                <div class="text-danger">
+                    {{ pipette_form.volume.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- RPM Fields-->
+<div id="rpm-fields" class="fields">
+
+    <!-- RPM Type-->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center dropdown-container" data-dropdown-key="rpm_types">
+        <label for="rpm_type" class="col-sm-2 col-form-label custom-form-label">RPM Type:</label>
+        <div class="col-auto">
+            <!-- Dropdown for rpm type with Bootstrap-Select -->
+            <select class="selectpicker" data-style="custom-toggle" id="rpmTypeSelect" name="rpm_type" data-live-search="true" title="Select RPM Type" data-width="100%" data-size="5">
+                <!-- Dynamically populated rpm type options -->
+                {% for rpm in rpm_types %}
+                    <option class="custom-dropdown" value="{{ rpm }}" {% if rpm_form.rpm_type.value == rpm %}selected{% endif %}>{{ rpm }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto plus_container_custom" id="urls" data-add-dropdown-option-url="{% url 'add-dropdown-option' %}" data-csrf="{{ csrf_token }}">
+            <button class=" add-option-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control new-option-input custom-input" style="display: none;">
+        </div>
+            <!-- Display validation errors -->
+            {% if rpm_form.rpm_type.errors %}
+                <div class="text-danger dropdown-error-custom ">
+                    {{ rpm_form.rpm_type.errors|join:", " }}
+                </div>
+            {% endif %}
+        
+    </div>
+
+    <!-- RPM Test -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="rpm_test" class="col-sm-2 col-form-label custom-form-label">RPM Test:</label>
+        <div class="col-auto plus_container_custom" id="toggleRpmButton" >
+            <button class=" add-fields-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control custom-input sm-custom-input" id="rpmCountInput" placeholder="#RPM" style="display: none;">
+        </div>
+
+        <div class="col-auto d-flex" id="rpmTestFields">
+
+            {% if rpm_test_values %}
+                {% for rpm_test in rpm_test_values %}
+                    <input type="text" class="form-control custom-input rpm-custom-size me-3 rpm-test-fields" value="{{rpm_test}}">
+                {% endfor %}    
+            {% endif %}
+
+            {% if rpm_form.rpm_test.errors %}
+                <div class="text-danger">
+                    {{ rpm_form.rpm_test.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+        
+    </div>
+
+     <!-- RPM Actual -->
+     <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="rpm_actual" class="col-sm-2 col-form-label custom-form-label">RPM Actual:</label>
+        <div class="col-auto d-flex" id="rpmActualFields">
+
+            {% if rpm_actual_values %}
+                {% for rpm_actual in rpm_actual_values %}
+                    <input type="text" class="form-control custom-input rpm-custom-size me-3 rpm-test-fields" value="{{rpm_actual}}">
+                {% endfor %}    
+            {% endif %}
+
+            {% if rpm_form.rpm_actual.errors %}
+                <div class="text-danger">
+                    {{ rpm_form.rpm_actual.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<!-- Temperature Fields-->
+<div id="temperature-fields" class="fields">
+
+    <!-- Temperature Type-->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center dropdown-container" data-dropdown-key="temperature_types">
+        <label for="temperature_type" class="col-sm-2 col-form-label custom-form-label">Temperature Type:</label>
+        <div class="col-auto">
+            <!-- Dropdown for temperature type with Bootstrap-Select -->
+            <select class="selectpicker" data-style="custom-toggle" id="temperatureTypeSelect" name="temperature_type" data-live-search="true" title="Select Temperature Type" data-width="100%" data-size="5">
+                <!-- Dynamically populated temperature type options -->
+                {% for temperature in temperature_types %}
+                    <option class="custom-dropdown" value="{{ temperature }}" {% if temperature_form.temperature_type.value == temperature %}selected{% endif %}>{{ temperature }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto plus_container_custom" id="urls" data-add-dropdown-option-url="{% url 'add-dropdown-option' %}" data-csrf="{{ csrf_token }}">
+            <button class=" add-option-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control new-option-input custom-input" style="display: none;">
+        </div>
+            <!-- Display validation errors -->
+            {% if temperature_form.temperature_type.errors %}
+                <div class="text-danger dropdown-error-custom ">
+                    {{ temperature_form.temperature_type.errors|join:", " }}
+                </div>
+            {% endif %}
+        
+    </div>
+
+    <!-- Temperature Test -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="temperature_test" class="col-sm-2 col-form-label custom-form-label">Temperature Test:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input sm-custom-input" id="temperature_test" name="temperature_test" value="{{ temperature_form.temperature_test.value| default:'' }}">
+            {% if temperature_form.temperature_test.errors %}
+                <div class="text-danger">
+                    {{ temperature_form.temperature_test.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+     <!-- Temperature Actual -->
+     <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="temperature_actual" class="col-sm-2 col-form-label custom-form-label">Temperature Actual:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input sm-custom-input" id="temperature_actual" name="temperature_actual" value="{{ temperature_form.temperature_actual.value| default:'' }}">
+            {% if temperature_form.temperature_actual.errors %}
+                <div class="text-danger">
+                    {{ temperature_form.temperature_actual.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="humidity-fields" class="fields">
+        <!-- Humidity Test -->
+        <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+            <label for="humidity_test" class="col-sm-2 col-form-label custom-form-label">Humidity Test:</label>
+            <div class="col-sm-3 ">
+                <input type="text" class="form-control custom-input sm-custom-input" id="humidity_test" name="humidity_test" value="{{ temperature_form.humidity_test.value| default:'' }}">
+                {% if temperature_form.humidity_test.errors %}
+                    <div class="text-danger">
+                        {{ temperature_form.humidity_test.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Humidity Actual -->
+        <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+            <label for="humidity_actual" class="col-sm-2 col-form-label custom-form-label">Humidity Actual:</label>
+            <div class="col-sm-3 ">
+                <input type="text" class="form-control custom-input sm-custom-input" id="humidity_actual" name="humidity_actual" value="{{ temperature_form.humidity_actual.value| default:'' }}">
+                {% if temperature_form.humidity_actual.errors %}
+                    <div class="text-danger">
+                        {{ temperature_form.humidity_actual.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

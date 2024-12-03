@@ -1,0 +1,124 @@
+{% extends 'path-bar.html' %}
+{% load static %}
+
+
+{% block more_custom_css %}
+<link rel="stylesheet" href="{% static 'css/add_page_custom.css' %}?v={{ timestamp }}">
+<link rel="stylesheet" href="{% static 'css/instrument_form_custom.css' %}?v={{ timestamp }}">
+{% block even_more_css %} {% endblock%}
+{% endblock %}
+
+
+{% block content %}
+<h2 class="mb-4">{% block page_title %}{% endblock %}</h2>
+
+<form method="POST" action="">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    
+    <!-- Instrument ID -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="instrumentId" class="col-sm-2 col-form-label custom-form-label">Instrument ID:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="instrumentId" name="id" value="{{ instrument_form.id.value|default:'' }}" {% block make_uneditable %} {% endblock %} >
+            {% if instrument_form.id.errors %}
+                <div class="text-danger">
+                    {{ instrument_form.id.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Instrument Type-->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="instrument_type" class="col-sm-2 col-form-label custom-form-label">Instrument Type:</label>
+        <div class="col-auto">
+            <!-- Dropdown for instrument type with Bootstrap-Select -->
+            <select class="selectpicker" data-style="custom-toggle" id="instrumentTypeSelect" name="instrument_type" title="Select Instrument Type" data-width="100%" data-size="5" data-instrument-type="{{instrument_form.instrument_type.value}}" {% block make_disabled %} {% endblock %}>
+                <!-- Dynamically populated instrument type options -->
+                {% for instrument in instrument_types %}
+                    <option class="custom-dropdown" value="{{ instrument }}" {% if instrument_form.instrument_type.value == instrument %}selected{% endif %}>{{ instrument }}</option>
+                {% endfor %}
+            </select>
+        </div>
+            <!-- Display validation errors -->
+            {% if instrument_form.instrument_type.errors %}
+                <div class="text-danger dropdown-error-custom ">
+                    {{ instrument_form.instrument_type.errors|join:", " }}
+                </div>
+            {% endif %}
+        
+    </div>
+
+    <!-- Instrument Make -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="instrumentMake" class="col-sm-2 col-form-label custom-form-label">Make:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="instrumentMake" name="make" value="{{ instrument_form.make.value | default:'' }}">
+            {% if instrument_form.make.errors %}
+                <div class="text-danger">
+                    {{ instrument_form.make.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!--Institution-->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="institution" class="col-sm-2 col-form-label custom-form-label">Institution:</label>
+        <div class="col-auto">
+            <!-- Dropdown for institution with Bootstrap-Select -->
+            <select class="selectpicker" data-style="custom-toggle" id="institution" name="institution" data-live-search="true" title="Select Institution" data-width="100%" data-size="5">
+                <!-- Dynamically populated institution options -->
+                {% for institution in institutions %}
+                    <option class="custom-dropdown" value="{{ institution.name }}" {% if instrument_form.institution.value == institution.name %}selected{% endif %}>{{ institution.name }}</option>
+                {% endfor %}
+            </select>
+            <!-- Display validation errors -->
+            {% if instrument_form.institution.errors %}
+                <div class="text-danger">
+                    {{ instrument_form.institution.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="notes" class="col-sm-2 col-form-label custom-form-label">Notes:</label>
+        <div class="col-sm-3 ">
+            <textarea class="form-control notes-custom" id="notes" name="notes" rows="3" value="{{ instrument_form.notes.value| default:'' }}"></textarea>
+            {% if instrument_form.notes.errors %}
+                <div class="text-danger">
+                    {{ instrument_form.notes.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+    {% block instrument_type_fields %} {% endblock %}
+
+    <!-- Buttons -->
+    <div class="mt-4 save-button-container pb-3 pt-3 mb-4 d-flex">
+        <button type="submit" class="btn save-btn" name="save">Save</button>
+        <button type="submit" class="btn btn-secondary save-add-btn" name="save_and_add_another">Save and Add Another</button>
+        <div class="ms-auto">
+            {% block add_button %}{% endblock %}
+        </div>
+    </div>
+</form>
+
+{% block delete_func %} {% endblock %}
+<script src="{% static 'bootstrap/js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'js/customAddInstrument.js' %}"></script>
+{% endblock %}

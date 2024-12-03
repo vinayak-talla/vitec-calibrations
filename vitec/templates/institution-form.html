@@ -1,0 +1,119 @@
+{% extends 'path-bar.html' %}
+{% load static %}
+
+
+{% block more_custom_css %}
+<link rel="stylesheet" href="{% static 'css/add_page_custom.css' %}?v={{ timestamp }}">
+<link rel="stylesheet" href="{% static 'css/institution_form_custom.css' %}?v={{ timestamp }}">
+{% block even_more_css %} {% endblock%}
+{% endblock %}
+
+
+{% block content %}
+<h2 class="mb-4">{% block page_title %}{% endblock %}</h2>
+
+<form method="POST" action="">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    
+    <!-- Institution Name -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="institutionName" class="col-sm-2 col-form-label custom-form-label">Institution Name:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="institutionName" name="name" value="{{ form.name.value|default:'' }}" {% block make_uneditable %} {% endblock %} >
+            {% if form.name.errors %}
+                <div class="text-danger">
+                    {{ form.name.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Contact Name -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="institutionName" class="col-sm-2 col-form-label custom-form-label">Contact Name:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="id_contact" name="contact" value="{{ form.contact.value|default:'' }}">
+            {% if form.contact.errors %}
+                <div class="text-danger">
+                    {{ form.contact.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Address -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="institutionName" class="col-sm-2 col-form-label custom-form-label">Address:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="id_address" name="address" value="{{ form.address.value | default:'' }}">
+            {% if form.address.errors %}
+                <div class="text-danger">
+                    {{ form.address.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Phone Number -->
+    <div class="row mb-4 pb-4 border-bottom custom-row custom-form-label align-items-center">
+        <label for="phoneNumber" class="col-sm-2 col-form-label custom-form-label">Phone Number:</label>
+        <div class="col-auto">
+            <input type="text" class="form-control phone-input custom-phone-input custom-input" id="phone-part1" name="phone_part1" maxlength="3" value="{{ phone_part1|default:'' }}">
+        </div>
+        <div class="col-auto d-flex justify-content-center align-items-center">
+            <span>-</span>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control phone-input custom-phone-input custom-input test" id="phone-part2" name="phone_part2" maxlength="3" value="{{ phone_part2|default:'' }}">
+        </div>
+        <div class="col-auto d-flex justify-content-center align-items-center">
+            <span>-</span>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control phone-input custom-phone-input-last custom-input test" id="phone-part3" name="phone_part3" maxlength="4" value="{{ phone_part3|default:'' }}">
+        </div>
+
+        {% if form.phone_number.errors %}
+            <div class="text-danger phone-error-custom">
+                {{ form.phone_number.errors|join:", " }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Email -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="institutionName" class="col-sm-2 col-form-label custom-form-label">Email:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="id_email" name="email" value="{{ form.email.value| default:'' }}">
+            {% if form.email.errors %}
+                <div class="text-danger">
+                    {{ form.email.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="mt-4 save-button-container pb-3 pt-3 mb-4 d-flex">
+        <button type="submit" class="btn save-btn" name="save">Save</button>
+        <button type="submit" class="btn btn-secondary save-add-btn" name="save_and_add_another">Save and Add Another</button>
+        <div class="ms-auto">
+            {% block add_button %}{% endblock %}
+        </div>
+    </div>
+</form>
+
+{% block delete_func %} {% endblock %}
+
+<script src="{% static 'js/customAddInstitution.js' %}"></script>
+{% endblock %}
