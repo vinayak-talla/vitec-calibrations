@@ -53,6 +53,7 @@
 .custom-table {
     width: 100%;
     border-collapse: collapse; /*Remove spaces between table cells*/
+    table-layout: auto; /* Allows columns to adjust their width dynamically */
 }
 
 /* Header row */
@@ -89,6 +90,10 @@
     vertical-align: top;
     font-size: 0.875rem;
     line-height: 1rem;
+    word-wrap: break-word; /* Ensures long words wrap */
+    white-space: normal; /* Allows multiline text */
+    max-width: 150px; /* Set a max width for the notes column to limit the line length */
+    vertical-align: middle;
 }
 
 /* table-row name link */

@@ -57,7 +57,7 @@
         <label for="rpm_type" class="col-sm-2 col-form-label custom-form-label">RPM Type:</label>
         <div class="col-auto">
             <!-- Dropdown for rpm type with Bootstrap-Select -->
-            <select class="selectpicker" data-style="custom-toggle" id="rpmTypeSelect" name="rpm_type" data-live-search="true" title="Select RPM Type" data-width="100%" data-size="5">
+            <select class="selectpicker" data-style="custom-toggle" id="rpmTypeSelect" name="rpm_type" data-live-search="true" title="Select RPM Type" data-temperature-type="{{rpm_form.rpm_type.value}}" data-width="100%" data-size="5">
                 <!-- Dynamically populated rpm type options -->
                 {% for rpm in rpm_types %}
                     <option class="custom-dropdown" value="{{ rpm }}" {% if rpm_form.rpm_type.value == rpm %}selected{% endif %}>{{ rpm }}</option>

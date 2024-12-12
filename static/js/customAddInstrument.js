@@ -38,8 +38,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    if(document.getElementById('rpmTypeSelect').getAttribute('data-temperature-type') != "None") {
+        toggleTempFields() 
+    }
 
-    $(document.getElementById('temperatureTypeSelect')).on('changed.bs.select', function () {
+    $(document.getElementById('rpmTypeSelect')).on('changed.bs.select', function () {
+        toggleTempFields()
+    });
+
+    function toggleTempFields() {
         // Get the selected instrument type from the clicked dropdown item
         const temperatureType = document.getElementById('temperatureTypeSelect').value;
         
@@ -52,8 +59,8 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             humidityFields.style.display = 'none';
         }
-    });
-
+       
+    }
 
     document.querySelectorAll('.dropdown-container').forEach(container => {
         const dropdownKey = container.dataset.dropdownKey;
@@ -188,36 +195,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-    // let rpmTestInput = document.getElementById('rpm_test')
-    // let rpmActualInput = document.getElementById('rpm_actual')
 
-    // function populateFieldsFromHiddenInput() {
-    //     if (rpmTestInput && rpmTestInput.value) {
-    //         const values = rpmTestInput.value.split(';');
-    //         rpmTestFields.innerHTML = '';
-    //         values.forEach((value, index) => {
-    //             const testInputField = document.createElement('input');
-    //             testInputField.type = 'text';
-    //             testInputField.className = 'form-control custom-input rpm-custom-size me-3 rpm-test-fields';
-    //             testInputField.value = value
-    //             rpmTestFields.appendChild(testInputField);
-    //         });
-    //     }
-
-    //     if (rpmActualInput && rpmActualInput.value) {
-    //         const values = rpmActualInput.value.split(';');
-    //         rpmActualFields.innerHTML = '';
-    //         values.forEach((value, index) => {
-    //             const testInputField = document.createElement('input');
-    //             testInputField.type = 'text';
-    //             testInputField.className = 'form-control custom-input rpm-custom-size me-3 rpm-actu-fields';
-    //             testInputField.value = value
-    //             rpmActualFields.appendChild(testInputField);
-    //         });
-    //     }
-    // }
-
-
-    // populateFieldsFromHiddenInput();
 
 });

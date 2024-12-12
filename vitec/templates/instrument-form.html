@@ -50,6 +50,9 @@
                 {% endfor %}
             </select>
         </div>
+
+        {% block hidden_instrument_type %} {% endblock %}
+        
             <!-- Display validation errors -->
             {% if instrument_form.instrument_type.errors %}
                 <div class="text-danger dropdown-error-custom ">
