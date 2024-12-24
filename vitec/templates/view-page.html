@@ -4,6 +4,7 @@
 
 {% block more_custom_css %}
 <link rel="stylesheet" href="{% static 'css/view_page_custom.css' %}?v={{ timestamp }}">
+{% block even_more_custom_css %}{% endblock %}
 {% endblock %}
 
 {% block content %}
@@ -40,6 +41,8 @@
     </div>
 </form>
 
+{% block additional-content %}
+{% endblock %}
 
 <div class="table-container">
     <table class="custom-table">

@@ -9,40 +9,68 @@
 
 {% block content %}
 <ul class="list-group list-group-flush col-md-4">
+
     <li class="list-group-item admin-title">ADMIN ACTIONS</li>
+
     <li class="list-group-item custom-item">
+
       <a  href="/vitec/view-instruments/" class="icon-text">Instruments</a>
-      <a href="/vitec/view-instruments/" class="icon-link">
+
+      <div class="right-actions">
+        <a href="/vitec/add-instrument/" class="icon-link move-left">
+          <img src="/static/images/plus_icon.png" alt="Add Icon" width="14" height="14" class="icon" />
+          <span class="icon-text">Add</span>
+        </a>
+
+        <a href="/vitec/view-instruments/" class="icon-link">
+            <img src="/static/images/pencil.png" alt="Add Icon" width="14" height="14" class="icon" />
+            <span class="icon-text">View/Edit</span>
+        </a>
+      </div>
+
+    </li>
+
+    <li class="list-group-item custom-item">
+
+      <a  href="/vitec/view-institutions/" class="icon-text">Institutions</a>
+
+      <div class="right-actions">
+        <a href="/vitec/add-institution/" class="icon-link move-left">
+          <img src="/static/images/plus_icon.png" alt="Add Icon" width="14" height="14" class="icon" />
+          <span class="icon-text">Add</span>
+        </a>
+
+        <a href="/vitec/view-institutions/" class="icon-link">
           <img src="/static/images/pencil.png" alt="Add Icon" width="14" height="14" class="icon" />
           <span class="icon-text">View/Edit</span>
-      </a>
-      <a href="/vitec/add-instrument/" class="icon-link">
-        <img src="/static/images/plus_icon.png" alt="Add Icon" width="14" height="14" class="icon" />
-        <span class="icon-text">Add</span>
-      </a>
+        </a>
+      </div>
+
+
     </li>
-    <li class="list-group-item custom-item">
-      <a  href="/vitec/view-institutions/" class="icon-text">Institutions</a>
-      <a href="/vitec/view-institutions/" class="icon-link">
-        <img src="/static/images/pencil.png" alt="Add Icon" width="14" height="14" class="icon" />
-        <span class="icon-text">View/Edit</span>
-      </a>
-      <a href="/vitec/add-institution/" class="icon-link">
-        <img src="/static/images/plus_icon.png" alt="Add Icon" width="14" height="14" class="icon" />
-        <span class="icon-text">Add</span>
-      </a>
-    </li>
+
     <li class="list-group-item custom-item">
       <a  href="/vitec/view-service-orders/" class="icon-text">Service Orders</a>
-      <a href="/vitec/view-service-orders/" class="icon-link">
-        <img src="/static/images/pencil.png" alt="Add Icon" width="14" height="14" class="icon" />
-        <span class="icon-text">View/Edit</span>
-      </a>
-      <a href="/vitec/add-service-order/" class="icon-link">
-        <img src="/static/images/plus_icon.png" alt="Add Icon" width="14" height="14" class="icon" />
-        <span class="icon-text">Add</span>
-      </a>
+
+
+      
+      <div class="right-actions">
+        <form method="POST" action="{% url 'home' %}" id="createServiceOrderForm">
+          {% csrf_token %}
+          <button type="submit" class="icon-link-as-anchor">
+            <img src="/static/images/plus_icon.png" alt="Add Icon" width="14" height="14" class="icon" />
+            <span class="icon-text add-dist">Add</span>
+          </button>
+        </form>
+
+        <a href="/vitec/view-service-orders/" class="icon-link">
+          <img src="/static/images/pencil.png" alt="Add Icon" width="14" height="14" class="icon" />
+          <span class="icon-text">View/Edit</span>
+        </a>
+      </div>
+
     </li>
+
   </ul>
 
 

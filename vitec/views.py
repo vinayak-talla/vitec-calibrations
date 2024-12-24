@@ -2,17 +2,31 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.timezone import now
 from django.contrib import messages
-from .forms import InstitutionForm, InstrumentForm, PipetteForm, RPMForm, TemperatureForm
-from .models import Institution, Instrument, Pipette, RPM, Temperature
+from .forms import InstitutionForm, InstrumentForm, PipetteForm, RPMForm, TemperatureForm, RPMValueForm
+from .models import Institution, Instrument, Pipette, RPM, Temperature, Service_Order
 from django.core.paginator import Paginator
 from .helper import get_paginated_page_range, parse_phone_number, add_instrument_type, find_instrument_type, form_not_valid, parse_rpm_fields
 from .utils import add_dropdown_option, load_instrument_types
+from django.db.models import Max
+
 
 
 def home(request):
     if not request.user.is_authenticated:
         messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
         return redirect('login')
+    
+    if request.method == "POST":
+        # Clear any existing session service order
+        if 'session_so_number' in request.session:
+            del request.session['session_so_number']
+
+        last_so_number = Service_Order.objects.aggregate(Max('so_number'))['so_number__max']
+        so_number = last_so_number + 1 if last_so_number else 1
+
+        # Redirect to the Add Service Order page with the `so_number`
+        return redirect('add-service-order', so_number=so_number)
+    
     return render(request, 'home.html', {'timestamp': now().timestamp()})
 
 
@@ -235,7 +249,8 @@ def edit_instrument(request, instrument_id):
             instrument = instrument.rpm
             form = RPMForm(request.POST, instance=instrument)
             context["rpm_form"] = form
-            context.update(parse_rpm_fields(instrument.rpm_test, instrument.rpm_actual))
+            context['rpm_test_values'] = instrument.rpm_test
+            context['rpm_actual_values'] = instrument.rpm_actual
         elif instrument.instrument_type == "Temperature":
             instrument = instrument.temperature
             form = TemperatureForm(request.POST, instance=instrument)
@@ -267,7 +282,8 @@ def edit_instrument(request, instrument_id):
     elif instrument.instrument_type == "RPM":
         instrument = instrument.rpm
         context["rpm_form"] = RPMForm(instance=instrument)
-        context.update(parse_rpm_fields(instrument.rpm_test, instrument.rpm_actual))
+        context['rpm_test_values'] = instrument.rpm_test
+        context['rpm_actual_values'] = instrument.rpm_actual
     elif instrument.instrument_type == "Temperature":
         instrument = instrument.temperature
         context["temperature_form"] = TemperatureForm(instance=instrument)
@@ -293,16 +309,122 @@ def delete_instrument(request, instrument_id):
     return redirect('edit_instrument', instrument_id=instrument_id) 
 
 
-def add_service_order(request):
+def add_service_order(request, so_number):
     if not request.user.is_authenticated:
         messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
         return redirect('login')
     
-    return render(request, 'add-service-order.html', {'timestamp': now().timestamp() })
+    # Retrieve the service order session or initialize it
+    session_so_number = request.session.get('session_so_number', None)
+        
+    if request.method == "POST":
+        instrument_id = request.POST.get('instrument_id', '').strip()
+        if instrument_id:
+            # Check if the instrument exists in the database
+            try:
+                instrument = Instrument.objects.get(id=instrument_id)
+            except Instrument.DoesNotExist:
+                messages.error(request, f"Instrument with id: {instrument_id} does not exist.")
+                return redirect('add-service-order', so_number=so_number)
+
+            if not session_so_number:
+                service_order = Service_Order.objects.create(
+                        institution=instrument.institution,
+                        instrument_list=[instrument.id]
+                    )
+                request.session['session_so_number'] = service_order.so_number
+                session_so_number = request.session.get('session_so_number', None)
+                messages.success(request, f"Instrument {instrument_id} added successfully")
+            else:
+                # Add the instrument to the session list if not already there
+                service_order = Service_Order.objects.get(so_number=session_so_number)
+                if instrument.id not in service_order.instrument_list:
+                    if instrument.institution == service_order.institution:
+                        service_order.instrument_list.append(instrument.id)
+                        service_order.save()
+                        messages.success(request, f"Instrument {instrument_id} added successfully")
+                    else:
+                        messages.warning(request, f"Instrument {instrument_id} belongs to a different institution")
+                else:
+                    messages.warning(request, f"Instrument {instrument_id} is already in the service order")
+        else:
+            messages.error(request, "Invalid instrument ID.")
+
+    if session_so_number:
+        instrument_list = Service_Order.objects.get(so_number=session_so_number).instrument_list
+    else:
+        instrument_list = []
+
+    # Get the search query from the GET request
+    search_query = request.GET.get('search', '')
+
+    # Filter institutions by name if search query exists
+    if search_query:
+        so_instruments = Instrument.objects.filter(id__in=instrument_list, id__icontains=search_query)
+    else:
+        # Fetch the list of Instrument objects for rendering
+        so_instruments = Instrument.objects.filter(id__in=instrument_list)
+    
+    # Cast each instrument to the appropriate child model
+    cast_so_instruments = []
+    for instrument in so_instruments:
+        if instrument.instrument_type == "RPM":
+            cast_so_instruments.append(RPM.objects.get(id=instrument.id))
+        elif instrument.instrument_type == "Temperature":
+            cast_so_instruments.append(Temperature.objects.get(id=instrument.id))
+        elif instrument.instrument_type == "Pipette":
+            cast_so_instruments.append(Pipette.objects.get(id=instrument.id))
+    
+    paginator = Paginator(cast_so_instruments, 2)  # Show 10 institutions per page
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    # Calculate the range of pages for pagination 
+    page_range = get_paginated_page_range(page_obj)
 
 
+    context = {
+        'timestamp': now().timestamp(), 
+        'page_obj': page_obj, 
+        'page_range': page_range, 
+        'search_query': search_query,
+        'is_full': len(page_obj),
+    }
+
+    return render(request, 'add-service-order.html', context)
+
+def update_instrument_values(request, instrument_id):
+    if not request.user.is_authenticated:
+        messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
+        return redirect('login')
+    
+    if request.method == "POST":
+        instrument = get_object_or_404(Instrument, id=instrument_id)
+        instrument_type = instrument.instrument_type
+
+        if instrument_type == "RPM":
+            rpm_instrument = instrument.rpm  # Cast to RPM child model
+            form = RPMValueForm(request.POST, instance=rpm_instrument)
+            print(request.POST)
+            if form.is_valid():
+                form.save()  # Saves the cleaned data to the model
+                messages.success(request, f"Values updated successfully for Instrument ID {instrument_id}.")
+                # return None
+                return JsonResponse({'success': True, 'message': 'Instrument values updated successfully.'})
+            else:
+                return JsonResponse({'success': False, 'errors': form.errors})
+
+        elif instrument_type == "Temperature":
+            temp_instrument = Temperature.objects.get(id=instrument.id)  # Cast to Temperature child model
+            temp_instrument.temperature_test = request.POST.get('temperature_test', temp_instrument.temperature_test)
+            temp_instrument.temperature_actual = request.POST.get('temperature_actual', temp_instrument.temperature_actual)
+            temp_instrument.save()
 
 
+        return redirect('add-service-order', so_number=request.session.get('session_so_number'))
+
+    messages.error(request, "Invalid request.")
+    return redirect('add-service-order', so_number=request.session.get('session_so_number'))
 
 
 

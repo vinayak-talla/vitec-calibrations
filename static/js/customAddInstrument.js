@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-
     if(document.getElementById('instrumentTypeSelect').getAttribute('data-instrument-type') != "None") {
         toggleFields() 
     }
@@ -130,22 +129,33 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isInputVisible) {
             // Get the number entered
             const fieldCount = parseInt(rpmCountInput.value, 10);
-            
-            // Clear the container before adding new fields
-            rpmTestFields.innerHTML = '';
-            rpmActualFields.innerHTML = '';
+    
+            if (!isNaN(fieldCount) && fieldCount >= 0) {
+                // Preserve existing data
+                const existingRpmTestData = Array.from(rpmTestFields.querySelectorAll('input')).map(input => input.value);
+                const existingRpmActualData = Array.from(rpmActualFields.querySelectorAll('input')).map(input => input.value);
 
-            if (!isNaN(fieldCount) && fieldCount > 0) {
+                // Clear the container before adding new fields
+                rpmTestFields.innerHTML = '';
+                rpmActualFields.innerHTML = '';
+
                 // Generate the specified number of input fields
                 for (let i = 0; i < fieldCount; i++) {
                     const testInputField = document.createElement('input');
                     testInputField.type = 'text';
                     testInputField.className = 'form-control custom-input rpm-custom-size me-3 rpm-test-fields';
+                    if (i < existingRpmTestData.length) {
+                        testInputField.value = existingRpmTestData[i]; // Restore previous data
+                    }
                     rpmTestFields.appendChild(testInputField);
+                    
 
                     const actualInputField = document.createElement('input');
                     actualInputField.type = 'text';
                     actualInputField.className = 'form-control custom-input rpm-custom-size me-3 rpm-actual-fields';
+                    if (i < existingRpmActualData.length) {
+                        actualInputField.value = existingRpmActualData[i]; // Restore previous data
+                    }
                     rpmActualFields.appendChild(actualInputField);
                 }
             }
@@ -169,14 +179,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('form');
     form.addEventListener('submit', function (event) {
 
-        if (rpmTestFields.children.length === 0) {
-            var rpmTest = '';
-            var rpmActual = '';
-        }
-        else {
-            var rpmTest = Array.from(rpmTestFields.querySelectorAll('input')).map(input => input.value.trim()).filter(value => value !== '').join(';');
-            var rpmActual = Array.from(rpmActualFields.querySelectorAll('input')).map(input => input.value.trim()).filter(value => value !== '').join(';');
-        }
+        var rpmTest = Array.from(rpmTestFields.querySelectorAll('input')).map(input => input.value.trim()).filter(value => value !== '');
+        var rpmActual = Array.from(rpmActualFields.querySelectorAll('input')).map(input => input.value.trim()).filter(value => value !== '');
 
         const rpmTestInput = document.createElement('input');
         rpmTestInput.type = 'hidden';

@@ -29,8 +29,24 @@ class Pipette(Instrument):
 
 class RPM(Instrument):
     rpm_type = models.CharField(max_length=100)
-    rpm_test = models.CharField(max_length=200, blank=True)
-    rpm_actual = models.CharField(max_length=200, blank=True)
+    rpm_test = ArrayField(
+        models.IntegerField(
+            error_messages={
+                'invalid': 'Please enter a valid whole number for each RPM Test value.'
+            }
+        ),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    rpm_actual = ArrayField(
+        models.IntegerField(
+            error_messages={
+                'invalid': 'Please enter a valid whole number for each RPM Actual value.'
+            }
+        ),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
     def __str__(self):
         return f"{self.id} {self.rpm_test} {self.rpm_actual}"
 

@@ -10,6 +10,9 @@
 .custom-item {
     font-size: 1rem;
     position: relative;
+
+    display: flex;
+    align-items: center;
 }
 
 /* Alternate background color for list items */
@@ -44,4 +47,32 @@ ul.list-group > li.list-group-item:last-child {
 /* Hover effect for the icon links */
 .icon-text:hover {
     color: #214C61;
+}
+
+.icon-link, .icon-link-as-anchor {
+    display: inline-flex; /* Ensures all icons and text stay in a line */
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.icon-link-as-anchor {
+ 
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit; /* Match button's font with the rest */
+}
+
+.add-dist {
+    padding-left: 5px;
+}
+
+.right-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align items to the right */
+    /* gap: 10px; Add spacing between "+ Add" and "View/Edit" */
+    margin-left: auto; /* Push this section to the far right */
 }

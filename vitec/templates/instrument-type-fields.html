@@ -95,38 +95,38 @@
 
         <div class="col-auto d-flex" id="rpmTestFields">
 
-            {% if rpm_test_values %}
-                {% for rpm_test in rpm_test_values %}
-                    <input type="text" class="form-control custom-input rpm-custom-size me-3 rpm-test-fields" value="{{rpm_test}}">
-                {% endfor %}    
-            {% endif %}
-
-            {% if rpm_form.rpm_test.errors %}
-                <div class="text-danger">
-                    {{ rpm_form.rpm_test.errors|join:", " }}
-                </div>
-            {% endif %}
+            {% for rpm_test in rpm_test_values %}
+            <input type="text" class="form-control custom-input rpm-custom-size me-3 rpm-test-fields" value="{{rpm_test}}">
+            {% endfor %}  
         </div>
+
+        {% if rpm_form.rpm_test.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in rpm_form.rpm_test.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
         
     </div>
 
      <!-- RPM Actual -->
-     <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
         <label for="rpm_actual" class="col-sm-2 col-form-label custom-form-label">RPM Actual:</label>
         <div class="col-auto d-flex" id="rpmActualFields">
 
-            {% if rpm_actual_values %}
-                {% for rpm_actual in rpm_actual_values %}
-                    <input type="text" class="form-control custom-input rpm-custom-size me-3 rpm-test-fields" value="{{rpm_actual}}">
-                {% endfor %}    
-            {% endif %}
-
-            {% if rpm_form.rpm_actual.errors %}
-                <div class="text-danger">
-                    {{ rpm_form.rpm_actual.errors|join:", " }}
-                </div>
-            {% endif %}
+            {% for rpm_actual in rpm_actual_values %}
+                <input type="text" class="form-control custom-input rpm-custom-size me-3 rpm-test-fields" value="{{rpm_actual}}">
+            {% endfor %}    
         </div>
+
+        {% if rpm_form.rpm_actual.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in rpm_form.rpm_actual.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 </div>
 

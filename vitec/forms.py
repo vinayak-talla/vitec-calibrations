@@ -1,5 +1,7 @@
+import json
 from django import forms
 from .models import Institution, Instrument, Pipette, RPM, Temperature
+from django.forms.widgets import HiddenInput
 
 class InstitutionForm(forms.ModelForm):
     class Meta:
@@ -58,3 +60,8 @@ class TemperatureForm(forms.ModelForm):
     class Meta:
         model = Temperature
         fields = ['temperature_type', 'temperature_test', 'temperature_actual', 'humidity_test', 'humidity_actual']
+
+class RPMValueForm(forms.ModelForm):
+    class Meta:
+        model = RPM
+        fields = ['rpm_test', 'rpm_actual']

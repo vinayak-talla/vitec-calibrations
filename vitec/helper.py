@@ -65,10 +65,10 @@ def parse_rpm_fields(rpm_test, rpm_actual):
     rpm_test_values = []
     rpm_actual_values = []
     if rpm_test:
-        for rpm in rpm_test.split(";"):
+        for rpm in rpm_test.split(","):
             rpm_test_values.append(rpm)
     if rpm_actual:
-        for rpm in rpm_actual.split(";"):
+        for rpm in rpm_actual.split(","):
             rpm_actual_values.append(rpm)
     return {'rpm_test_values': rpm_test_values, 'rpm_actual_values': rpm_actual_values}
 
