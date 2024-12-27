@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.timezone import now
 from django.contrib import messages
-from .forms import InstitutionForm, InstrumentForm, PipetteForm, RPMForm, TemperatureForm, RPMValueForm
+from .forms import InstitutionForm, InstrumentForm, PipetteForm, RPMForm, TemperatureForm, RPMValueForm, TemperatureValueForm
 from .models import Institution, Instrument, Pipette, RPM, Temperature, Service_Order
 from django.core.paginator import Paginator
 from .helper import get_paginated_page_range, parse_phone_number, add_instrument_type, find_instrument_type, form_not_valid, parse_rpm_fields
@@ -405,28 +405,18 @@ def update_instrument_values(request, instrument_id):
         if instrument_type == "RPM":
             rpm_instrument = instrument.rpm  # Cast to RPM child model
             form = RPMValueForm(request.POST, instance=rpm_instrument)
+        else:
+            temp_instrument = instrument.temperature  # Cast to Temperature child model
+            form = TemperatureValueForm(request.POST, instance=temp_instrument)
             print(request.POST)
-            if form.is_valid():
-                form.save()  # Saves the cleaned data to the model
-                messages.success(request, f"Values updated successfully for Instrument ID {instrument_id}.")
-                # return None
-                return JsonResponse({'success': True, 'message': 'Instrument values updated successfully.'})
-            else:
-                return JsonResponse({'success': False, 'errors': form.errors})
 
-        elif instrument_type == "Temperature":
-            temp_instrument = Temperature.objects.get(id=instrument.id)  # Cast to Temperature child model
-            temp_instrument.temperature_test = request.POST.get('temperature_test', temp_instrument.temperature_test)
-            temp_instrument.temperature_actual = request.POST.get('temperature_actual', temp_instrument.temperature_actual)
-            temp_instrument.save()
-
-
-        return redirect('add-service-order', so_number=request.session.get('session_so_number'))
-
-    messages.error(request, "Invalid request.")
-    return redirect('add-service-order', so_number=request.session.get('session_so_number'))
-
-
+        if form.is_valid():
+            form.save()  # Saves the cleaned data to the model
+            messages.success(request, f"Values updated successfully for Instrument ID {instrument_id}.")
+            # return None
+            return JsonResponse({'success': True, 'message': 'Instrument values updated successfully.'})
+        
+        return JsonResponse({'success': False, 'errors': form.errors})
 
 # def view_service_orders(request):
 #     if not request.user.is_authenticated:

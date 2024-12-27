@@ -1,0 +1,50 @@
+.custom-form-label {
+    color: #6D6666;
+    font-weight: bold;
+}
+
+.add-fields-btn {
+    border: none;
+    background-color: transparent;
+}
+
+.custom-input {
+    height: 30px;  
+    border-color: #cccccc;
+}
+
+.sm-custom-input {
+    width: 50%;
+    text-align: center;
+}
+
+.rpm-custom-size {
+    width: 100px;
+    text-align: center;
+}
+
+.rpm_input_custom {
+    row-gap: 1rem;
+}
+
+.save-btn {
+    background-color: #234759;
+    color: #FFFFFF;    
+}
+
+.save-btn:hover {
+    background-color: #3D6A80;
+    color: #FFFFFF;
+}
+
+.open-btn {
+    background-color: #3D6A80;
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    width: 70px;
+}
+
+.open-btn:hover {
+    background-color: #234759;
+    color: #FFFFFF;
+}

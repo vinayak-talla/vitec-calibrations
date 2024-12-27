@@ -58,9 +58,9 @@
             <td>{{ instrument.make }}</td>
             <td>
                 {% if instrument.instrument_type != "Pipette" %}
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                    <button type="button" class="btn open-btn btn-sm " data-bs-toggle="modal"
                             data-bs-target="#valuesModal{{ instrument.id }}">
-                        Open
+                        OPEN
                     </button>
 
                     <!-- Modal for editing measured values -->
@@ -77,30 +77,32 @@
                                 </div>
                                 <form method="POST" action="{% url 'update-instrument-values' instrument.id %}" id="valuesForm">
                                     {% csrf_token %}
-                                    <div class="modal-body">
+                                    <div class="modal-body m-0">
                                         {% if instrument.instrument_type == "RPM" %}
                                             <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
-                                                <label for="rpm_test" class="col-sm-2 col-form-label custom-form-label">RPM Test:</label>
-                                                <div class="col-auto plus_container_custom" >
+                                        
+                                                <div class="col-auto plus_container_custom mb-2" >
+                                                    <label for="rpm_test" class="col-form-label custom-form-label">RPM Test:</label>
                                                     <button type="button" class=" add-fields-btn"  id="toggleRpmButton{{ instrument.id }}">
                                                         <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
                                                     </button>
                                                 </div>
-                                                <div class="col-auto">
+                                                <div class="col-auto mb-2">
                                                     <input type="text" class="form-control custom-input sm-custom-input" id="rpmCountInput{{ instrument.id }}" placeholder="#RPM" style="display: none;">
                                                 </div>
                                         
-                                                <div class="col-auto d-flex" id="rpmTestFields{{ instrument.id }}">
+                                                <div class="col-auto d-flex flex-wrap rpm_input_custom" id="rpmTestFields{{ instrument.id }}">
                                                                                         
                                                     {% for rpm_test in instrument.rpm_test %}
                                                         <input type="text" class="form-control custom-input rpm-custom-size me-3 rpm-test-fields" value="{{rpm_test}}">
                                                     {% endfor %}    
 
                                                 </div>
+                                            </div>
 
-                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
-                                                <label for="rpm_actual" class="col-sm-2 col-form-label custom-form-label">RPM Actual:</label>
-                                                <div class="col-auto d-flex" id="rpmActualFields{{ instrument.id }}">
+                                            <div class="row mb-2 pb-2 custom-row align-items-center">
+                                                <label for="rpm_actual" class="col-sm-3 mb-2 col-form-label custom-form-label">RPM Actual:</label>
+                                                <div class="col-auto d-flex flex-wrap rpm_input_custom" id="rpmActualFields{{ instrument.id }}">
 
                                                     {% for rpm_actual in instrument.rpm_actual %}
                                                         <input type="text" class="form-control custom-input rpm-custom-size me-3 rpm-test-fields" value="{{rpm_actual}}">
@@ -109,40 +111,64 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center" id="formErrors{{ instrument.id }}">
-                                            </div>  
-                                                
-                                            <!-- <div class="mb-3">
-                                                <label for="rpm_test_{{ instrument.id }}">RPM Test</label>
-                                                <input type="number" class="form-control"
-                                                       name="rpm_test" id="rpm_test_{{ instrument.id }}"
-                                                       value="{{ instrument.rpm_test }}">
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="rpm_actual_{{ instrument.id }}">RPM Actual</label>
-                                                <input type="number" class="form-control"
-                                                       name="rpm_actual" id="rpm_actual_{{ instrument.id }}"
-                                                       value="{{ instrument.rpm_actual }}">
-                                            </div> -->
+                     
+
                                         {% elif instrument.instrument_type == "Temperature" %}
-                                            <div class="mb-3">
-                                                <label for="temperature_test_{{ instrument.id }}">Temperature Test</label>
-                                                <input type="number" class="form-control"
-                                                       name="temperature_test" id="temperature_test_{{ instrument.id }}"
-                                                       value="{{ instrument.temperature_test }}">
+
+                                            <!-- Temperature Test -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                <label for="temperature_test" class="col-auto col-form-label custom-form-label">Temperature Test:</label>
+                                                <div class="col-auto ">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="temperature_test" name="temperature_test" value="{{ instrument.temperature_test| default:'' }}">
+                                                </div>
                                             </div>
-                                            <div class="mb-3">
-                                                <label for="temperature_actual_{{ instrument.id }}">Temperature Actual</label>
-                                                <input type="number" class="form-control"
-                                                       name="temperature_actual" id="temperature_actual_{{ instrument.id }}"
-                                                       value="{{ instrument.temperature_actual }}">
-                                            </div>
+
+                                            {% if instrument.temperature_type == "DTH" %}
+                                                <!-- Temperature Actual -->
+                                                <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                    <label for="temperature_actual" class="col-auto col-form-label custom-form-label">Temperature Actual:</label>
+                                                    <div class="col-auto ">
+                                                        <input type="text" class="form-control custom-input sm-custom-input" id="temperature_actual" name="temperature_actual" value="{{ instrument.temperature_actual| default:'' }}">
+                                                    </div>
+                                                </div>
+
+                                                <!-- Humidity Test -->
+                                                <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                    <label for="humidity_test" class="col-auto col-form-label custom-form-label">Humidity Test:</label>
+                                                    <div class="col-auto ">
+                                                        <input type="text" class="form-control custom-input sm-custom-input" id="humidity_test" name="humidity_test" value="{{ instrument.humidity_test| default:'' }}">
+                                                    </div>
+                                                </div>
+
+                                                <!-- Humidity Actual -->
+                                                <div class="row mb-2 pb-2 custom-row align-items-center">
+                                                    <label for="humidity_actual" class="col-auto col-form-label custom-form-label">Humidity Actual:</label>
+                                                    <div class="col-auto ">
+                                                        <input type="text" class="form-control custom-input sm-custom-input" id="humidity_actual" name="humidity_actual" value="{{ instrument.humidity_actual| default:'' }}">
+                                                    </div>
+                                                </div>
+                                            
+
+                                            {% else %}
+                                                <!-- Temperature Actual -->
+                                                <div class="row mb-2 pb-2 custom-row align-items-center">
+                                                    <label for="temperature_actual" class="col-auto col-form-label custom-form-label">Temperature Actual:</label>
+                                                    <div class="col-auto ">
+                                                        <input type="text" class="form-control custom-input sm-custom-input" id="temperature_actual" name="temperature_actual" value="{{ instrument.temperature_actual| default:'' }}">
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+
                                         {% endif %}
+
+                                        <div class="row mb-2 pb-2 custom-row align-items-center" id="formErrors{{ instrument.id }}" style="display: none;">
+                                        </div> 
+
                                     </div>
-                                    <div class="modal-footer">
+                                    <div class="modal-footer m-0 d-flex justify-content-between">
+                                        <button type="submit" class="btn save-btn">Save</button>
                                         <button type="button" class="btn btn-secondary"
                                                 data-bs-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn btn-primary">Save</button>
                                     </div>
                                 </form>
                             </div>

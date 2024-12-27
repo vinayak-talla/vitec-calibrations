@@ -65,3 +65,8 @@ class RPMValueForm(forms.ModelForm):
     class Meta:
         model = RPM
         fields = ['rpm_test', 'rpm_actual']
+
+class TemperatureValueForm(forms.ModelForm):
+    class Meta:
+        model = Temperature
+        fields = ['temperature_test', 'temperature_actual', 'humidity_test', 'humidity_actual']
