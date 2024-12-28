@@ -4,6 +4,7 @@ from django.utils.timezone import now
 from django.contrib import messages
 from .forms import InstitutionForm, InstrumentForm, PipetteForm, RPMForm, TemperatureForm, RPMValueForm, TemperatureValueForm
 from .models import Institution, Instrument, Pipette, RPM, Temperature, Service_Order
+from django.db.models import Case, When
 from django.core.paginator import Paginator
 from .helper import get_paginated_page_range, parse_phone_number, add_instrument_type, find_instrument_type, form_not_valid, parse_rpm_fields
 from .utils import add_dropdown_option, load_instrument_types
@@ -316,6 +317,7 @@ def add_service_order(request, so_number):
     
     # Retrieve the service order session or initialize it
     session_so_number = request.session.get('session_so_number', None)
+    context = {}
         
     if request.method == "POST":
         instrument_id = request.POST.get('instrument_id', '').strip()
@@ -338,6 +340,8 @@ def add_service_order(request, so_number):
             else:
                 # Add the instrument to the session list if not already there
                 service_order = Service_Order.objects.get(so_number=session_so_number)
+                if not service_order.instrument_list:
+                    service_order.institution = instrument.institution
                 if instrument.id not in service_order.instrument_list:
                     if instrument.institution == service_order.institution:
                         service_order.instrument_list.append(instrument.id)
@@ -351,19 +355,28 @@ def add_service_order(request, so_number):
             messages.error(request, "Invalid instrument ID.")
 
     if session_so_number:
-        instrument_list = Service_Order.objects.get(so_number=session_so_number).instrument_list
+        service_order = Service_Order.objects.get(so_number=session_so_number)
+        instrument_list = service_order.instrument_list[::-1]
+        context['service_order'] = service_order
+        context['lab_contact'] = Institution.objects.get(name=service_order.institution).contact
+        
     else:
         instrument_list = []
 
     # Get the search query from the GET request
     search_query = request.GET.get('search', '')
 
+    # Define a custom ordering
+    ordering = Case(*[When(id=pk, then=pos) for pos, pk in enumerate(instrument_list)])
+
+
     # Filter institutions by name if search query exists
     if search_query:
-        so_instruments = Instrument.objects.filter(id__in=instrument_list, id__icontains=search_query)
+        so_instruments = Instrument.objects.filter(id__in=instrument_list, id__icontains=search_query).order_by(ordering)
     else:
         # Fetch the list of Instrument objects for rendering
-        so_instruments = Instrument.objects.filter(id__in=instrument_list)
+        so_instruments = Instrument.objects.filter(id__in=instrument_list).order_by(ordering)
+
     
     # Cast each instrument to the appropriate child model
     cast_so_instruments = []
@@ -374,22 +387,22 @@ def add_service_order(request, so_number):
             cast_so_instruments.append(Temperature.objects.get(id=instrument.id))
         elif instrument.instrument_type == "Pipette":
             cast_so_instruments.append(Pipette.objects.get(id=instrument.id))
-    
+
     paginator = Paginator(cast_so_instruments, 2)  # Show 10 institutions per page
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
 
     # Calculate the range of pages for pagination 
     page_range = get_paginated_page_range(page_obj)
-
-
-    context = {
+    
+    context.update({
         'timestamp': now().timestamp(), 
         'page_obj': page_obj, 
         'page_range': page_range, 
         'search_query': search_query,
         'is_full': len(page_obj),
-    }
+        'title_so_number': so_number,
+    })
 
     return render(request, 'add-service-order.html', context)
 
@@ -417,6 +430,28 @@ def update_instrument_values(request, instrument_id):
             return JsonResponse({'success': True, 'message': 'Instrument values updated successfully.'})
         
         return JsonResponse({'success': False, 'errors': form.errors})
+
+def delete_instrument_service_order(request, so_number, instrument_id):
+    if not request.user.is_authenticated:
+        messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
+        return redirect('login')
+    
+    servive_order = get_object_or_404(Service_Order, so_number=so_number)
+    
+    if request.method == "POST":
+        if instrument_id in servive_order.instrument_list:
+            servive_order.instrument_list.remove(instrument_id)
+            servive_order.save()
+            messages.success(request, f"Instrument '{instrument_id}' has been removed from the service order.")
+            return JsonResponse({'success': True})
+        else:
+            messages.warning(request, f"Instrument '{instrument_id}' doesn't exist in this service order.")
+            return JsonResponse({'success': False})
+
+    messages.error(request, "Invalid request method.")
+    return JsonResponse({'success': False})
+
+
 
 # def view_service_orders(request):
 #     if not request.user.is_authenticated:

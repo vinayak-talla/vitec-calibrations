@@ -78,6 +78,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
+    const delForms = document.querySelectorAll('form[id^="delete-form"]'); // Select all modals' forms
+
+    delForms.forEach(form => {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Get the form data
+            const formData = new FormData(form);
+
+            const url = form.getAttribute('action');
+
+            // Send the data using AJAX
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                location.reload(); 
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+
+                    
+        });
+
+                
+    });
 
 
 });
@@ -136,7 +169,7 @@ function modalSubmission(form, instrumentId) {
     fetch(url, {
         method: 'POST',
         headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
         },
         body: formData
     })

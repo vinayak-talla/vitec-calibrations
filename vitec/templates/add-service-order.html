@@ -9,7 +9,7 @@
 
 {% block breadcrumb %}Add Service Order{% endblock %}
 
-{% block page_title %}Service Order {{so_number}} {% endblock %}
+{% block page_title %}Service Order {{title_so_number}} {% endblock %}
 
 {% block add_btn_href %} {% url 'add-instrument' %} {% endblock %}
 
@@ -21,12 +21,40 @@
 
 
 {% block additional-content %}
+{% if service_order %}
+    <div class="service-order-info">
+        <div class="info-item">
+            <span class="info-label">Date:</span>
+            <span class="info-value">{{service_order.date}}</span>
+        </div>
+        <div class="separator"></div>
+        <div class="info-item">
+            <span class="info-label">Institution:</span>
+            <span class="info-value">{{service_order.institution}}</span>
+        </div>
+        <div class="separator"></div>
+        <div class="info-item">
+            <span class="info-label">Lab Contact:</span>
+            <span class="info-value">{{lab_contact}}</span>
+        </div>
+    </div>
+{% endif %}
+
+
 <form method="POST" id="id-form">
     {% csrf_token %}
     <div class="d-flex align-items-center mb-4 search-container p-2">
-            <!-- Search Icon -->
+            <!-- Add Icon -->
             <div class="me-3 ms-2" id="search-addon">
-                <img src="{% static 'images/search.png' %}" alt="Search" width="16" height="16">
+                <svg height="25px" width="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier"> 
+                        <g id="Edit / Add_Row"> 
+                            <path id="Vector" d="M3 14V15C3 16.1046 3.89543 17 5 17L19 17C20.1046 17 21 16.1046 21 15L21 13C21 11.8954 20.1046 11 19 11H13M10 8H7M7 8H4M7 8V5M7 8V11" stroke="#838383" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
+                        </g> 
+                    </g>
+                </svg>
             </div>
             <!-- Input Field -->
             <div class="me-3">
@@ -47,6 +75,7 @@
 <th>TYPE</th>
 <th>MAKE</th>
 <th>VALUES</th>
+<th></th>
 {% endblock %}
 
 {% block data_rows %}
@@ -175,6 +204,45 @@
                         </div>
                     </div>
                 {% endif %}
+            </td>
+            <td>
+                <button type="button" class="btn del-btn " data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <svg height="17px" width="17px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000" stroke="#000000">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier"> 
+                            <g> 
+                                <path class="st0" d="M99.381,465.993c1.472,25.31,23.409,46.007,48.75,46.007h57.158c25.342,0,66.821,0,92.162,0h57.158 c25.342,0,47.285-20.697,48.758-46.007l16.785-289.586H82.589L99.381,465.993z"></path> 
+                                <path class="st0" d="M427.011,107.022c-4.653-3.132-45.696-27.507-110.772-46.03c0.062-0.304,0.125-0.585,0.188-0.881 c5.189-27.507-12.897-54.017-40.396-59.222c-27.516-5.19-54.026,12.88-59.231,40.396c-0.054,0.28-0.094,0.576-0.14,0.88 c-67.351-6.506-114.487,1.192-119.95,2.408c-9.53,2.119-11.751,6.92-13.177,14.478c-0.958,5.05-6.202,32.791-6.202,32.791 l350.484,66.252c0,0,5.245-27.741,6.204-32.79C435.441,117.745,435.129,112.47,427.011,107.022z M288.303,53.816 c-6.951-1.59-14.08-3.102-21.437-4.489c-7.348-1.403-14.54-2.587-21.593-3.631c2.688-11.361,13.832-18.718,25.411-16.543 C282.264,31.357,289.947,42.267,288.303,53.816z"></path> 
+                            </g> 
+                        </g>
+                    </svg>
+                </button>
+                 <!-- Modal -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header ">
+                                <h1 class="modal-title fs-5 mx-auto text-center" id="exampleModalLabel">Delete Instrument from Service Order</h1>
+                                <button type="button" class="btn-close position-absolute end-0 me-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body ">
+                                <div class="text-center">
+                                    Are you sure you want to delete the instrument with id: "<span class="modal-institution-name">{{ instrument.id}}</span>" from this service order?
+                                </div>
+                            </div>
+
+                            <div class="modal-footer justify-content-center">
+                                <form method="POST" id="delete-form" action="{% url 'delete-instrument-service-order' service_order.so_number instrument.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn del-btn me-4" data-bs-dismiss="modal" id="confirm-delete">Yes</button>
+                                </form>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </td>
 
         </tr>
