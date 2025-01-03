@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         form.addEventListener('submit', function (event) {
             event.preventDefault();
+            console.log(event)
 
             // Run the specific handler if it exists
             if (instrumentType in instrumentHandlers) {
@@ -111,6 +112,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 
     });
+
+    
 
 
 });

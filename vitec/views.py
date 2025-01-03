@@ -9,6 +9,7 @@ from django.core.paginator import Paginator
 from .helper import get_paginated_page_range, parse_phone_number, add_instrument_type, find_instrument_type, form_not_valid, parse_rpm_fields
 from .utils import add_dropdown_option, load_instrument_types
 from django.db.models import Max
+from django.utils.cache import add_never_cache_headers
 
 
 
@@ -354,6 +355,9 @@ def add_service_order(request, so_number):
         else:
             messages.error(request, "Invalid instrument ID.")
 
+        # Redirect to prevent form resubmission on refresh
+        return redirect('add-service-order', so_number=so_number)
+
     if session_so_number:
         service_order = Service_Order.objects.get(so_number=session_so_number)
         instrument_list = service_order.instrument_list[::-1]
@@ -404,7 +408,11 @@ def add_service_order(request, so_number):
         'title_so_number': so_number,
     })
 
-    return render(request, 'add-service-order.html', context)
+    response = render(request, 'add-service-order.html', context)
+    add_never_cache_headers(response)
+    return response
+
+    # return render(request, 'add-service-order.html', context)
 
 def update_instrument_values(request, instrument_id):
     if not request.user.is_authenticated:
@@ -421,7 +429,6 @@ def update_instrument_values(request, instrument_id):
         else:
             temp_instrument = instrument.temperature  # Cast to Temperature child model
             form = TemperatureValueForm(request.POST, instance=temp_instrument)
-            print(request.POST)
 
         if form.is_valid():
             form.save()  # Saves the cleaned data to the model
