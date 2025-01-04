@@ -1,0 +1,30 @@
+{% extends 'instrument-type-fields.html' %}
+{% load static %}
+
+{% block title %}Vitec Admin | Edit Instrument{% endblock %}
+
+{% block add_path %}
+<a href="{% url 'service-order' so_number %}" class="breadcrumb-link">Service Order {{so_number}}</a> > 
+{% endblock %}
+
+{% block breadcrumb %}Edit Instrument{% endblock %}
+
+{% block page_title %}Edit Instrument{% endblock %}
+
+
+{% block make_uneditable %} readonly {% endblock %}
+
+{% block make_disabled %} disabled{% endblock %}
+
+{% block disable_institution %} disabled{% endblock %}
+
+{% block hidden_fields %} 
+<input type="hidden" name="instrument_type" value="{{ instrument_form.instrument_type.value }}">
+<input type="hidden" name="institution" value="{{ instrument_form.institution.value }}">
+{% endblock %}
+
+
+{% block form_buttons %}
+<button type="submit" class="btn save-btn" name="save">Save</button>
+{% endblock %}
+

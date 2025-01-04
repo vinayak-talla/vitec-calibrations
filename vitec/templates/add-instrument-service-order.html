@@ -2,6 +2,9 @@
 
 {% block title %}Vitec Admin | Add Instrument{% endblock %}
 
+{% block add_path %}
+<a href="{% url 'service-order' so_number %}" class="breadcrumb-link">Service Order {{so_number}}</a> > 
+{% endblock %}
 
 {% block breadcrumb %}Add Instrument{% endblock %}
 

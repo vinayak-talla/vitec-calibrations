@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from .forms import PipetteForm, RPMForm, TemperatureForm
+from .forms import PipetteForm, RPMForm, TemperatureForm, InstrumentForm
 from django.utils.timezone import now
 from .models import Institution, Instrument
 from django.core.paginator import Paginator
@@ -82,56 +82,97 @@ def add_instrument_type(instrument_form, parent_instrument, request):
     instrument.institution = parent_instrument.institution
     instrument.save()
 
-    messages.success(request, f"Instrument ID: '{instrument.id}' has been successfully added.")
+def find_instrument_type(instrument_form, request):
 
-    if 'save_and_add_another' in request.POST:
-                return redirect('add-instrument')
-    return redirect('view-instruments')
-
-
-def find_instrument_type(instrument_type, instrument_form, request):
     # Save the parent Instrument instance
     parent_instrument = instrument_form.save(commit=False)
+    instrument_type = instrument_form.cleaned_data['instrument_type']
+    context = {'instrument_form': instrument_form}
 
      # Handle child models based on type
     if instrument_type == 'Pipette':
-        pipette_form = PipetteForm(request.POST)
-        if pipette_form.is_valid():
-            return add_instrument_type(pipette_form,parent_instrument,request)
-        else:
-            context= {
-                'pipette_form': pipette_form,
-                'instrument_form': instrument_form,
-            }
-            return form_not_valid(request, pipette_form, context)
-        
+        form = PipetteForm(request.POST)
+        context['pipette_form']=  form
+
     elif instrument_type == 'RPM':
-        rpm_form = RPMForm(request.POST)
-        if rpm_form.is_valid():
-            return add_instrument_type(rpm_form,parent_instrument,request)
-        else:
-            rpm_fields = parse_rpm_fields(request.POST.get('rpm_test', ''), request.POST.get('rpm_actual', ''))
-            context = {
-                'rpm_form': rpm_form,
-                'instrument_form': instrument_form,
-            }
-            context.update(rpm_fields)
-            return form_not_valid(request, context)
+        form = RPMForm(request.POST)
+        context['rpm_form']=  form
+        context.update(parse_rpm_fields(request.POST.get('rpm_test', ''), request.POST.get('rpm_actual', '')))
     
     elif instrument_type == 'Temperature':
-        temperature_form = TemperatureForm(request.POST)
-        if temperature_form.is_valid():
-            return add_instrument_type(temperature_form,parent_instrument,request)
-        else:
-            context = {
-                'temperature_form': temperature_form,
-                'instrument_form': instrument_form,
-            }
-            return form_not_valid(request, context)
-        
+        form = TemperatureForm(request.POST)
+        context['temperature_form']=  form
+
+    if form.is_valid():
+            add_instrument_type(form,parent_instrument,request)
+            return (True,context)
+    else:
+        return (False,context)
 
 def form_not_valid(request, context):
     messages.error(request, 'There was an error with your submission. Please correct the errors below.')
     context.update(load_instrument_types())
     context["institutions"] = Institution.objects.all()
+    print(request)
     return render(request, 'add-instrument.html', context)
+
+def add_instrument_valid(request, instrument_id):
+    messages.success(request, f"Instrument ID: '{instrument_id}' has been successfully added.")
+    if 'save_and_add_another' in request.POST:
+        return redirect('add-instrument')
+    return redirect('view-instruments')
+
+
+def edit_instrument_post(request, instrument):
+    context = {}
+    instrument_form = InstrumentForm(request.POST, instance=instrument)
+    if instrument.instrument_type == "Pipette":
+        instrument = instrument.pipette
+        form = PipetteForm(request.POST, instance=instrument)
+        context["pipette_form"] = form
+    elif instrument.instrument_type == "RPM":
+        instrument = instrument.rpm
+        form = RPMForm(request.POST, instance=instrument)
+        context["rpm_form"] = form
+        context['rpm_test_values'] = instrument.rpm_test
+        context['rpm_actual_values'] = instrument.rpm_actual
+    elif instrument.instrument_type == "Temperature":
+        instrument = instrument.temperature
+        form = TemperatureForm(request.POST, instance=instrument)
+        context["temperature_form"] = form
+
+    if instrument_form.is_valid() and form.is_valid():
+        parent = instrument_form.save(commit=False)
+        child = form.save(commit=False)
+        child.id = parent.id  # Link with parent
+        child.instrument_type = parent.instrument_type
+        child.make = parent.make
+        child.notes = parent.notes
+        child.institution = parent.institution
+        child.save()
+        messages.success(request, f"Instrument '{instrument.id}' has been successfully updated.")
+        return (True,context)
+
+    else:
+        context['instrument_form'] = instrument_form
+        messages.error(request, 'There was an error with your update. Please correct the errors below.')
+        return(False,context)
+
+def edit_instrument_get(instrument):
+    context = {}
+    instrument_form = InstrumentForm(instance=instrument)
+    if instrument.instrument_type == "Pipette":
+        instrument = instrument.pipette
+        context["pipette_form"] = PipetteForm(instance=instrument)
+    elif instrument.instrument_type == "RPM":
+        instrument = instrument.rpm
+        context["rpm_form"] = RPMForm(instance=instrument)
+        context['rpm_test_values'] = instrument.rpm_test
+        context['rpm_actual_values'] = instrument.rpm_actual
+    elif instrument.instrument_type == "Temperature":
+        instrument = instrument.temperature
+        context["temperature_form"] = TemperatureForm(instance=instrument)
+
+    context['instrument_form'] = instrument_form
+
+    return context

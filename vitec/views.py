@@ -6,7 +6,7 @@ from .forms import InstitutionForm, InstrumentForm, PipetteForm, RPMForm, Temper
 from .models import Institution, Instrument, Pipette, RPM, Temperature, Service_Order
 from django.db.models import Case, When
 from django.core.paginator import Paginator
-from .helper import get_paginated_page_range, parse_phone_number, add_instrument_type, find_instrument_type, form_not_valid, parse_rpm_fields
+from .helper import get_paginated_page_range, parse_phone_number, add_instrument_type, find_instrument_type, form_not_valid, parse_rpm_fields, edit_instrument_post, edit_instrument_get, add_instrument_valid
 from .utils import add_dropdown_option, load_instrument_types
 from django.db.models import Max
 from django.utils.cache import add_never_cache_headers
@@ -27,7 +27,7 @@ def home(request):
         so_number = last_so_number + 1 if last_so_number else 1
 
         # Redirect to the Add Service Order page with the `so_number`
-        return redirect('add-service-order', so_number=so_number)
+        return redirect('service-order', so_number=so_number)
     
     return render(request, 'home.html', {'timestamp': now().timestamp()})
 
@@ -151,13 +151,13 @@ def add_instrument(request):
     if request.method == "POST":
         instrument_form = InstrumentForm(request.POST)
         if instrument_form.is_valid():
-            # Extract the type from the form
-            instrument_type = instrument_form.cleaned_data['instrument_type']
+            valid_post,data = find_instrument_type(instrument_form,request)
 
-
-            # Handle child models based on type
-            return find_instrument_type(instrument_type,instrument_form,request)
-
+            if valid_post:
+                return add_instrument_valid(request,instrument_form.cleaned_data['id'])
+            else:
+                return form_not_valid(request,data)
+        
         else:
             messages.error(request, 'There was an error with your submission. Please correct the errors below.')
             context = {'timestamp': now().timestamp(),
@@ -241,56 +241,17 @@ def edit_instrument(request, instrument_id):
     context.update(load_instrument_types())
 
     if request.method == "POST":
-
-        instrument_form = InstrumentForm(request.POST, instance=instrument)
-        if instrument.instrument_type == "Pipette":
-            instrument = instrument.pipette
-            form = PipetteForm(request.POST, instance=instrument)
-            context["pipette_form"] = form
-        elif instrument.instrument_type == "RPM":
-            instrument = instrument.rpm
-            form = RPMForm(request.POST, instance=instrument)
-            context["rpm_form"] = form
-            context['rpm_test_values'] = instrument.rpm_test
-            context['rpm_actual_values'] = instrument.rpm_actual
-        elif instrument.instrument_type == "Temperature":
-            instrument = instrument.temperature
-            form = TemperatureForm(request.POST, instance=instrument)
-            context["temperature_form"] = form
-
-        if instrument_form.is_valid() and form.is_valid():
-            parent = instrument_form.save(commit=False)
-            child = form.save(commit=False)
-            child.id = parent.id  # Link with parent
-            child.instrument_type = parent.instrument_type
-            child.make = parent.make
-            child.notes = parent.notes
-            child.institution = parent.institution
-            child.save()
-            messages.success(request, f"Instrument '{instrument.id}' has been successfully updated.")
+        valid_post,data = edit_instrument_post(request,instrument)
+        if valid_post:
             if 'save_and_add_another' in request.POST:
                 return redirect('add-instrument')
             else:
                 return redirect('view-instruments') 
         else:
-            context['instrument_form'] = instrument_form
-            messages.error(request, 'There was an error with your update. Please correct the errors below.')
+            context.update(data)
             return render(request, 'edit-instrument.html', context) 
 
-    instrument_form = InstrumentForm(instance=instrument)
-    if instrument.instrument_type == "Pipette":
-        instrument = instrument.pipette
-        context["pipette_form"] = PipetteForm(instance=instrument)
-    elif instrument.instrument_type == "RPM":
-        instrument = instrument.rpm
-        context["rpm_form"] = RPMForm(instance=instrument)
-        context['rpm_test_values'] = instrument.rpm_test
-        context['rpm_actual_values'] = instrument.rpm_actual
-    elif instrument.instrument_type == "Temperature":
-        instrument = instrument.temperature
-        context["temperature_form"] = TemperatureForm(instance=instrument)
-
-    context['instrument_form'] = instrument_form
+    context.update(edit_instrument_get(instrument))
     return render(request, 'edit-instrument.html', context)
     
 
@@ -311,15 +272,18 @@ def delete_instrument(request, instrument_id):
     return redirect('edit_instrument', instrument_id=instrument_id) 
 
 
-def add_service_order(request, so_number):
+def service_order(request, so_number):
     if not request.user.is_authenticated:
         messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
         return redirect('login')
-    
-    # Retrieve the service order session or initialize it
-    session_so_number = request.session.get('session_so_number', None)
+
+    if Service_Order.objects.filter(so_number=so_number).exists():
+        so_exists = True
+    else:
+        so_exists = False
+
     context = {}
-        
+    
     if request.method == "POST":
         instrument_id = request.POST.get('instrument_id', '').strip()
         if instrument_id:
@@ -328,19 +292,19 @@ def add_service_order(request, so_number):
                 instrument = Instrument.objects.get(id=instrument_id)
             except Instrument.DoesNotExist:
                 messages.error(request, f"Instrument with id: {instrument_id} does not exist.")
-                return redirect('add-service-order', so_number=so_number)
-
-            if not session_so_number:
+                return redirect('service-order', so_number=so_number)
+                
+            if not so_exists:
                 service_order = Service_Order.objects.create(
                         institution=instrument.institution,
                         instrument_list=[instrument.id]
                     )
-                request.session['session_so_number'] = service_order.so_number
-                session_so_number = request.session.get('session_so_number', None)
                 messages.success(request, f"Instrument {instrument_id} added successfully")
+                if service_order.so_number != so_number:
+                    return redirect('service-order', so_number=service_order.so_number)
             else:
                 # Add the instrument to the session list if not already there
-                service_order = Service_Order.objects.get(so_number=session_so_number)
+                service_order = Service_Order.objects.get(so_number=so_number)
                 if not service_order.instrument_list:
                     service_order.institution = instrument.institution
                 if instrument.id not in service_order.instrument_list:
@@ -356,10 +320,10 @@ def add_service_order(request, so_number):
             messages.error(request, "Invalid instrument ID.")
 
         # Redirect to prevent form resubmission on refresh
-        return redirect('add-service-order', so_number=so_number)
+        return redirect('service-order', so_number=so_number)
 
-    if session_so_number:
-        service_order = Service_Order.objects.get(so_number=session_so_number)
+    if so_exists:
+        service_order = Service_Order.objects.get(so_number=so_number)
         instrument_list = service_order.instrument_list[::-1]
         context['service_order'] = service_order
         context['lab_contact'] = Institution.objects.get(name=service_order.institution).contact
@@ -405,14 +369,10 @@ def add_service_order(request, so_number):
         'page_range': page_range, 
         'search_query': search_query,
         'is_full': len(page_obj),
-        'title_so_number': so_number,
+        'so_number': so_number
     })
 
-    response = render(request, 'add-service-order.html', context)
-    add_never_cache_headers(response)
-    return response
-
-    # return render(request, 'add-service-order.html', context)
+    return render(request, 'service-order.html', context)
 
 def update_instrument_values(request, instrument_id):
     if not request.user.is_authenticated:
@@ -438,6 +398,8 @@ def update_instrument_values(request, instrument_id):
         
         return JsonResponse({'success': False, 'errors': form.errors})
 
+
+
 def delete_instrument_service_order(request, so_number, instrument_id):
     if not request.user.is_authenticated:
         messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
@@ -458,6 +420,107 @@ def delete_instrument_service_order(request, so_number, instrument_id):
     messages.error(request, "Invalid request method.")
     return JsonResponse({'success': False})
 
+
+
+def edit_instrument_service_order(request, so_number, instrument_id):
+    if not request.user.is_authenticated:
+        messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
+        return redirect('login')
+    
+    instrument = get_object_or_404(Instrument, id=instrument_id)
+
+    context = {
+        'timestamp': now().timestamp(),
+        'so_number': so_number,
+        'institutions': Institution.objects.all()
+    }
+    context.update(load_instrument_types())
+
+    if request.method == "POST":
+        valid_post,data = edit_instrument_post(request,instrument)
+        if valid_post:
+            return redirect('service-order', so_number=so_number)
+        else:
+            context.update(data)
+            return render(request, 'edit-instrument-service-order.html', context) 
+
+    context.update(edit_instrument_get(instrument))
+    return render(request, 'edit-instrument-service-order.html', context)
+
+
+
+
+def add_instrument_service_order(request, so_number):
+    if not request.user.is_authenticated:
+        messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
+        return redirect('login')
+    
+    if request.method == "POST":
+        instrument_form = InstrumentForm(request.POST)
+        if instrument_form.is_valid():
+            valid_post,data = find_instrument_type(instrument_form,request)
+
+            if valid_post:
+                instrument = get_object_or_404(Instrument, id=instrument_form.cleaned_data['id'])
+                if Service_Order.objects.filter(so_number=so_number).exists():
+                    service_order = Service_Order.objects.get(so_number=so_number)
+                    if not service_order.instrument_list:
+                        service_order.institution = instrument.institution
+                    if instrument.institution == service_order.institution:
+                        service_order.instrument_list.append(instrument.id)
+                        service_order.save()
+                        messages.success(request, f"Instrument ID: '{instrument.id}' has been successfully created and added to the service order.")
+                    else:
+                        messages.success(request, f"Instrument ID: '{instrument.id}' has been successfully created")
+                        messages.warning(request, f"Instrument ID: '{instrument.id}' can't be added to the service order because it belongs to a different institution")
+                else:
+                    service_order = Service_Order.objects.create(
+                        institution=instrument.institution,
+                        instrument_list=[instrument.id]
+                    )
+                    if service_order.so_number != so_number:
+                        so_number = service_order.so_number
+                
+                    messages.success(request, f"Instrument ID: '{instrument.id}' has been successfully created and added to the service order.")
+                if 'save_and_add_another' in request.POST:
+                    return redirect('add-instrument-service-order', so_number=so_number)
+                return redirect('service-order', so_number=so_number)
+                    
+            else:
+                # change form not valid to check if so_number is in context and render correct template accordingly
+                print("NHFJFJJFIFIIFII")
+                data['so_number'] = so_number
+                return form_not_valid(request,data)
+        
+        else:
+            messages.error(request, 'There was an error with your submission. Please correct the errors below.')
+            context = {'timestamp': now().timestamp(),
+                    'instrument_form': instrument_form,
+                    'institutions': Institution.objects.all(),
+                    'so_number': so_number
+                    }
+            context.update(load_instrument_types())
+            return render(request, 'add-instrument-service-order.html', context)
+
+
+    instrument_form = InstrumentForm()
+    if Service_Order.objects.filter(so_number=so_number).exists():
+        service_order = Service_Order.objects.get(so_number=so_number)
+        if service_order.instrument_list:
+            instrument_form = InstrumentForm(initial={'institution': service_order.institution})
+
+
+    context = {'timestamp': now().timestamp(),
+        'instrument_form': instrument_form,
+        'pipette_form': PipetteForm(),
+        'centrifuge_form': RPMForm(),
+        'thermometer_form': TemperatureForm(),
+        'institutions': Institution.objects.all(),
+        'so_number': so_number
+        }
+    context.update(load_instrument_types())
+
+    return render(request, 'add-instrument-service-order.html', context)
 
 
 # def view_service_orders(request):

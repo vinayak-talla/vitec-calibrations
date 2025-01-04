@@ -5,13 +5,13 @@
 <link rel="stylesheet" href="{% static 'css/add_service_order_custom.css' %}?v={{ timestamp }}">
 {% endblock %}
 
-{% block title %}Vitec Admin | Add Service Order{% endblock %}
+{% block title %}Vitec Admin | Service Order{% endblock %}
 
-{% block breadcrumb %}Add Service Order{% endblock %}
+{% block breadcrumb %} Service Order {{so_number}} {% endblock %}
 
-{% block page_title %}Service Order {{title_so_number}} {% endblock %}
+{% block page_title %}Service Order {{so_number}} {% endblock %}
 
-{% block add_btn_href %} {% url 'add-instrument' %} {% endblock %}
+{% block add_btn_href %} {% url 'add-instrument-service-order' so_number %} {% endblock %}
 
 {% block add_btn_name %}Add Instrument{% endblock %}
 
@@ -82,7 +82,7 @@
 {% if is_full %}
     {% for instrument in page_obj %}
         <tr class="{% cycle 'row-light' 'row-dark' %}">
-            <td><a href="{% url 'edit-instrument' instrument.id %}" class="table-row-link">{{ instrument.id }}</a></td>
+            <td><a href="{% url 'edit-instrument-service-order' service_order.so_number instrument.id %}" class="table-row-link">{{ instrument.id }}</a></td>
             <td id="instrument_type{{ instrument.id }}">{{ instrument.instrument_type }}</td>
             <td>{{ instrument.make }}</td>
             <td>
