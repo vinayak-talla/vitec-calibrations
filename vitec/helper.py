@@ -113,8 +113,18 @@ def form_not_valid(request, context):
     messages.error(request, 'There was an error with your submission. Please correct the errors below.')
     context.update(load_instrument_types())
     context["institutions"] = Institution.objects.all()
-    print(request)
-    return render(request, 'add-instrument.html', context)
+
+    # Map URLs or view names to templates
+    template_mapping = {
+        'add-instrument': 'add-instrument.html',
+        'edit-instrument': 'edit-instrument.html',
+        'add-instrument-service-order': 'add-instrument-service-order.html'
+    }
+
+    view_name = request.resolver_match.view_name
+    template_name = template_mapping.get(view_name)
+    
+    return render(request, template_name, context)
 
 def add_instrument_valid(request, instrument_id):
     messages.success(request, f"Instrument ID: '{instrument_id}' has been successfully added.")

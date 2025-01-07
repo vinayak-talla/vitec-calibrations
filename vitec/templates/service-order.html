@@ -34,9 +34,23 @@
         </div>
         <div class="separator"></div>
         <div class="info-item">
-            <span class="info-label">Lab Contact:</span>
+            <span class="info-label">Contact:</span>
             <span class="info-value">{{lab_contact}}</span>
+
         </div>
+        <div class="separator"></div>
+        <form method="POST" action="{% url 'add-service-order-details' service_order.so_number %}"  class="form" id="serviceOrderDetailsForm">
+            {% csrf_token %}
+            <div class="info-item">
+                <span class="info-label">Department:</span>
+                <input type="text" class="form-control so-custom-input" name="department" value="{{ service_order.department|default:'' }}" >
+            </div>
+            <div class="separator"></div>
+            <div class="info-item">
+                <span class="info-label">Additional Contact:</span>
+                <input type="text" class="form-control so-custom-input" name="additional_contact" value="{{ service_order.additional_contact|default:'' }}" >
+            </div>
+        </form>
     </div>
 {% endif %}
 
@@ -203,6 +217,8 @@
                             </div>
                         </div>
                     </div>
+                {% else %} 
+                    <span  class="dash-custom">-</span>
                 {% endif %}
             </td>
             <td>
@@ -227,15 +243,15 @@
                                 <button type="button" class="btn-close position-absolute end-0 me-2" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body ">
-                                <div class="text-center">
-                                    Are you sure you want to delete the instrument with id: "<span class="modal-institution-name">{{ instrument.id}}</span>" from this service order?
+                                <div class="text-center del-modal-body">
+                                    Are you sure you want to delete the instrument with ID: "<span class="modal-institution-name">{{ instrument.id}}</span>" from this service order?
                                 </div>
                             </div>
 
                             <div class="modal-footer justify-content-center">
                                 <form method="POST" id="delete-form" action="{% url 'delete-instrument-service-order' service_order.so_number instrument.id %}">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn del-btn me-4" data-bs-dismiss="modal" id="confirm-delete">Yes</button>
+                                    <button type="submit" class="btn confirm-del-btn me-4" data-bs-dismiss="modal" id="confirm-delete">Yes</button>
                                 </form>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             </div>
@@ -252,6 +268,21 @@
         <td colspan="5" class="text-center">No data found</td>
     </tr>
 {% endif %}
+
+
+
+{% endblock %}
+
+
+
+{% block buttons %}
+
+<!-- Buttons -->
+<div class="mt-4 save-button-container pb-3 pt-3 mb-4 d-flex">
+    <button type="submit" class="btn save-btn" name="save" form="serviceOrderDetailsForm">Save</button>
+    <button type="submit" class="btn save-add-btn" name="save_and_continue" form="serviceOrderDetailsForm">Save and Continue</button>
+    <button type="button" class="btn btn-secondary save-add-btn" >Save and Download PDF</button>
+</div>
 
 
 <script src="{% static 'bootstrap/js/jquery-3.7.1.min.js' %}"></script>

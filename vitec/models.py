@@ -64,6 +64,9 @@ class Service_Order(models.Model):
     date = models.DateField(auto_now_add=True)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
     instrument_list = ArrayField(models.CharField(max_length=50))
+    additional_contact = models.CharField(max_length=120, blank=True)
+    department = models.CharField(max_length=50, blank=True)
+
     def __str__(self):
         return f"{self.so_number} {self.date} {self.institution}"
 

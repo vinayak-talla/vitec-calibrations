@@ -11,7 +11,8 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
 
     <h2>{% block page_title %}{% endblock %}</h2>
-    <a href="{% block add_btn_href %} {% endblock %}" class="btn rounded-pill px-3 add-btn align-items-center">
+    {% block add_service_order_btn %}{% endblock %}
+    <a href="{% block add_btn_href %} {% endblock %}" class="btn rounded-pill px-3 add-btn align-items-center {% block hide_btn %}{% endblock %}">
         {% block add_btn_name %}{% endblock %}
         <img class="plus_icon_white" src="{% static 'images/plus_icon_white.png' %}" alt="Add Icon" width="13" height="13" class="icon" />
     </a>
@@ -84,7 +85,7 @@
     </a>
 </div>
 
-
+{% block buttons %}{% endblock %}
 
 <script src="{% static 'js/customView.js' %}"></script>
 

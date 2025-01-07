@@ -169,3 +169,9 @@
 .clear-btn:hover {
     color: #122935;
 }
+
+.dash-custom {
+    margin-left: 22.5px;
+    font-size: 1.2rem;
+    padding: 0;
+}

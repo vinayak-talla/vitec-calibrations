@@ -18,7 +18,8 @@ urlpatterns = [
     path('delete-instrument-service-order/<int:so_number>/<str:instrument_id>/', views.delete_instrument_service_order, name='delete-instrument-service-order'),
     path("edit-instrument-service-order/<int:so_number>/<str:instrument_id>/", views.edit_instrument_service_order, name="edit-instrument-service-order"),
     path("add-instrument-service-order/<int:so_number>/", views.add_instrument_service_order, name="add-instrument-service-order"),
-    # path("view-service-orders/", views.view_service_orders, name="view-institutions"),
+    path("add-service-order-details/<int:so_number>/", views.add_service_order_details, name="add-service-order-details"),
+    path("view-service-orders/", views.view_service_orders, name="view-service-orders"),
     # path("edit-service-order/<int:so_number>/", views.edit_service_order, name="edit-institution"),
     # path('delete-service-order/<int:so_number>/', views.delete_service_order, name='delete-institution'),
 ]

@@ -1,0 +1,57 @@
+{% extends 'view-page.html' %}
+{% load static %}
+
+
+{% block title %}Vitec Admin | View/Edit Service Orders{% endblock %}
+
+{% block breadcrumb %}View/Edit Service Order{% endblock %}
+
+{% block page_title %}View and/or Select Service Order{% endblock %}
+
+
+{% block add_service_order_btn %}
+<form method="POST" >
+    {% csrf_token %}
+    <button type="submit" class="btn rounded-pill px-3 add-btn align-items-center">
+        Add Service Order
+        <img class="plus_icon_white" src="{% static 'images/plus_icon_white.png' %}" alt="Add Icon" width="13" height="13" class="icon" />
+    </button>
+</form>
+
+{% endblock %}
+
+
+
+{% block hide_btn %}d-none{% endblock %}
+
+{% block search_placeholder %} Search Service Order...{% endblock %}
+
+{% block search_btn_name %}Search Service Order{% endblock %}
+
+
+{% block header_row %}
+<tr>
+    <th>SO NUMBER</th>
+    <th>DATE</th>
+    <th>INSTITUTION</th>
+    <th>DEPARTMENT</th>
+</tr>
+{% endblock %}
+
+
+{% block data_rows %}
+{% if is_full %}
+    {% for service_order in page_obj %}
+        <tr class="{% cycle 'row-light' 'row-dark' %}">
+            <td><a href="{% url 'service-order' service_order.so_number %}" class="table-row-link">{{ service_order.so_number }}</a></td>
+            <td>{{ service_order.date }}</td>
+            <td>{{ service_order.institution }}</td>
+            <td>{{ service_order.department }}</td>
+        </tr>
+    {% endfor %}
+{% else %}
+    <tr class="no-results-row">
+        <td colspan="5" class="text-center">No matches found</td>
+    </tr>
+{% endif %}
+{% endblock %}

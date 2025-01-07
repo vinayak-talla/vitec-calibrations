@@ -18,6 +18,15 @@
     text-align: center;
 }
 
+.so-custom-input {
+    width: 50%;
+    height: 30px;
+    border-color: #cccccc;
+    margin-right: -65px;
+    margin-left: 4px;
+    /* padding: 0; */
+}
+
 .rpm-custom-size {
     width: 100px;
     text-align: center;
@@ -69,7 +78,7 @@
   }
 
 
-  .service-order-info {
+.service-order-info {
     display: flex;
     align-items: center; /* Aligns items vertically centered */
     justify-content: center; /* Centers the content horizontally */
@@ -102,4 +111,69 @@
     font-weight: bold;
     color: #6D6666; /* Optional: Softer color for the value */
     margin-top: 4px; /* Space between label and value */
+}
+
+.confirm-del-btn {
+    background-color: #ba2021;
+    color: white;
+    margin-right: 25px;
+}
+
+.confirm-del-btn:hover {
+    background-color: #931919;
+    color: white;
+}
+
+.confirm-del-btn:active {
+    background-color: #931919 !important;
+    color: white !important;
+    box-shadow: none;
+}
+
+.modal-institution-name {
+    font-weight: bold;
+}
+
+.del-modal-body {
+    color: black;
+}
+
+.save-button-container {
+    background-color: #ECECEC; 
+    margin-left: 25px;
+    margin-right: 25px;
+
+}
+
+
+.save-btn {
+    background-color: #234759;
+    color: #FFFFFF;
+    margin-left: 25px;
+    
+}
+
+.save-btn:hover {
+    background-color: #3D6A80;
+    color: #FFFFFF;
+}
+
+
+
+.save-add-btn {
+    background-color: #3D6A80;
+    color: #FFFFFF;
+    margin-left: 25px;
+    
+}
+
+.save-add-btn:hover {
+    background-color: #234759;
+    color: #FFFFFF;
+}
+
+.form {
+    margin: 0;
+    padding: 0;
+    display: contents;
 }

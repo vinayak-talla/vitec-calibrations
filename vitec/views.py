@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.timezone import now
 from django.contrib import messages
-from .forms import InstitutionForm, InstrumentForm, PipetteForm, RPMForm, TemperatureForm, RPMValueForm, TemperatureValueForm
+from .forms import InstitutionForm, InstrumentForm, PipetteForm, RPMForm, TemperatureForm, RPMValueForm, TemperatureValueForm, ServiceOrderForm
 from .models import Institution, Instrument, Pipette, RPM, Temperature, Service_Order
 from django.db.models import Case, When
 from django.core.paginator import Paginator
@@ -19,10 +19,6 @@ def home(request):
         return redirect('login')
     
     if request.method == "POST":
-        # Clear any existing session service order
-        if 'session_so_number' in request.session:
-            del request.session['session_so_number']
-
         last_so_number = Service_Order.objects.aggregate(Max('so_number'))['so_number__max']
         so_number = last_so_number + 1 if last_so_number else 1
 
@@ -159,13 +155,10 @@ def add_instrument(request):
                 return form_not_valid(request,data)
         
         else:
-            messages.error(request, 'There was an error with your submission. Please correct the errors below.')
             context = {'timestamp': now().timestamp(),
                     'instrument_form': instrument_form,
-                    'institutions': Institution.objects.all()
                     }
-            context.update(load_instrument_types())
-            return render(request, 'add-instrument.html', context)
+            return form_not_valid(request,context)
 
     context = {'timestamp': now().timestamp(),
         'instrument_form': InstrumentForm(),
@@ -448,8 +441,6 @@ def edit_instrument_service_order(request, so_number, instrument_id):
     return render(request, 'edit-instrument-service-order.html', context)
 
 
-
-
 def add_instrument_service_order(request, so_number):
     if not request.user.is_authenticated:
         messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
@@ -487,20 +478,15 @@ def add_instrument_service_order(request, so_number):
                 return redirect('service-order', so_number=so_number)
                     
             else:
-                # change form not valid to check if so_number is in context and render correct template accordingly
-                print("NHFJFJJFIFIIFII")
                 data['so_number'] = so_number
                 return form_not_valid(request,data)
         
         else:
-            messages.error(request, 'There was an error with your submission. Please correct the errors below.')
             context = {'timestamp': now().timestamp(),
                     'instrument_form': instrument_form,
-                    'institutions': Institution.objects.all(),
                     'so_number': so_number
                     }
-            context.update(load_instrument_types())
-            return render(request, 'add-instrument-service-order.html', context)
+            return form_not_valid(request,context)
 
 
     instrument_form = InstrumentForm()
@@ -523,12 +509,63 @@ def add_instrument_service_order(request, so_number):
     return render(request, 'add-instrument-service-order.html', context)
 
 
-# def view_service_orders(request):
-#     if not request.user.is_authenticated:
-#         messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
-#         return redirect('login')
+def add_service_order_details(request, so_number):
+    if not request.user.is_authenticated:
+        messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
+        return redirect('login')
+
+    if request.method == "POST":
+        print("fhjjfjjr")
+        service_order = get_object_or_404(Service_Order, so_number=so_number)
+        service_order_form = ServiceOrderForm(request.POST, instance=service_order)
+
+        if service_order_form.is_valid():
+            service_order_form.save()  # Saves the cleaned data to the model
+            if 'save_and_continue' in request.POST:
+                return redirect('service-order', so_number=so_number)
+            return redirect('view-service-orders')
+
+    messages.error(request, f"Something is wrong. Please try again.")
+    return redirect('service-order', so_number=so_number)
+        
+
+
+
+def view_service_orders(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
+        return redirect('login')
     
-#     return render(request, 'view-service-orders.html', {'timestamp': now().timestamp() })
+    if request.method == "POST":
+        last_so_number = Service_Order.objects.aggregate(Max('so_number'))['so_number__max']
+        so_number = last_so_number + 1 if last_so_number else 1
+
+        # Redirect to the Add Service Order page with the `so_number`
+        return redirect('service-order', so_number=so_number)
+    
+    # Get the search query from the GET request
+    search_query = request.GET.get('search', '')
+
+    # Filter institutions by name if search query exists
+    if search_query:
+        service_orders = Service_Order.objects.filter(so_number__icontains=search_query)
+    else:
+        service_orders = Service_Order.objects.all()
+    
+    service_orders = service_orders.order_by('-date')
+    paginator = Paginator(service_orders, 10)  # Show 10 institutions per page
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    # Calculate the range of pages for pagination 
+    page_range = get_paginated_page_range(page_obj)
+
+    return render(request, 'view-service-orders.html', {'timestamp': now().timestamp(), 
+                                                      'page_obj': page_obj, 
+                                                      'page_range': page_range, 
+                                                      'search_query': search_query,
+                                                      'is_full': len(page_obj)})
+    
 
 
 # def edit_service_order(request, so_number):
@@ -544,4 +581,4 @@ def add_instrument_service_order(request, so_number):
 #         messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
 #         return redirect('login')
     
-#     return render(request, 'delete-service-order.html', {'timestamp': now().timestamp() })
+    # return render(request, 'delete-service-order.html', {'timestamp': now().timestamp() })
