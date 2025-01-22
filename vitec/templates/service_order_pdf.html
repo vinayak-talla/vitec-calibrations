@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ css_url }}?v={{ timestamp }}">
+</head>
+<body>
+    <header class="letterhead">
+        <img src="{{ letterhead_url }}" class="logo" alt="Company Logo">
+    </header>
+    
+    <div class="content-wrapper">
+        <div class="so-details">
+            <div class="testing">
+                <span class="left"><strong>Date:</strong> {{ service_order.date }}</span>
+                <span class="right"><strong>INV#:</strong> {{ service_order.so_number }}</span>
+            </div>
+            <div class="testing">
+                <span class="left"><strong>Institution:</strong> {{ service_order.institution }}</span>
+                <span class="right"><strong>Contact:</strong> {{ institution.contact }}</span>
+            </div>
+            <div class="testing">
+                <span class="left"><strong>Department:</strong> {{ service_order.department|default:"N/A" }}</span>
+                <span class="right"><strong>Email:</strong> {{ institution.email }}</span>
+            </div>
+            <div class="testing">
+                <span class="left"><strong>Additional Contact:</strong> {{ service_order.additional_contact|default:"N/A" }}</span>
+                <span class="right"><strong>Phone Number:</strong> {{ phone_number }}</span>
+            </div>
+            <div class="testing">
+                <span class="left"><strong>Address:</strong> {{ institution.address  }}</span>
+            </div>
+        </div>
+
+        {% if pipettes %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ID</th>
+                        <th>Make</th>
+                        <th>Pipette Type</th>
+                        <th>Volume</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pipette in pipettes %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ pipette.id }}</td>
+                        <td>{{ pipette.make }}</td>
+                        <td>{{ pipette.pipette_type }}</td>
+                        <td>{{ pipette.volume }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+
+        {% if rpms %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ID</th>
+                        <th>Make</th>
+                        <th>RPM Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rpm in rpms %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ rpm.id }}</td>
+                        <td>{{ rpm.make }}</td>
+                        <td>{{ rpm.rpm_type }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        {% if temperatures %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ID</th>
+                        <th>Make</th>
+                        <th>Temperature Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for temperature in temperatures %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ temperature.id }}</td>
+                        <td>{{ temperature.make }}</td>
+                        <td>{{ temperature.temperature_type }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</body>
+</html>

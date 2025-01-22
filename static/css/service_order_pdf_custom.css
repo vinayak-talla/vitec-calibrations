@@ -1,0 +1,64 @@
+@page {
+    margin: 30px; /* Or a smaller value like 5mm or 10px */
+    background-image: url("../images/vitec_so_letterhead.jpg"); 
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-size: contain;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+.letterhead {
+    display: block;
+    position: fixed;
+    width: 100%;
+    text-align: center;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    margin-bottom: 160px;
+}
+
+.logo {
+    width: 100%;  /* Scale to full width if needed */
+    height: auto;
+    margin-bottom: 160px;
+}
+.so-details {
+    /* margin-top: 160px; */
+}
+.content-wrapper {
+    margin-top: 160px;
+}
+.testing {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;  /* Aligns text properly */
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.left {
+    flex-grow: 1;  /* Takes available space on the left */
+    text-align: left;
+}
+
+.right {
+    text-align: right;
+    flex-grow: 0;  /* Prevents expansion on the right */
+    min-width: 300px; /* Adjust this to control starting point of right content */
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+th, td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+th {
+    background-color: #f2f2f2;
+}

@@ -20,6 +20,7 @@ urlpatterns = [
     path("add-instrument-service-order/<int:so_number>/", views.add_instrument_service_order, name="add-instrument-service-order"),
     path("add-service-order-details/<int:so_number>/", views.add_service_order_details, name="add-service-order-details"),
     path("view-service-orders/", views.view_service_orders, name="view-service-orders"),
+    path('download-service-order/<int:so_number>/', views.download_service_order_pdf, name='download-service-order'),
     # path("edit-service-order/<int:so_number>/", views.edit_service_order, name="edit-institution"),
     # path('delete-service-order/<int:so_number>/', views.delete_service_order, name='delete-institution'),
 ]

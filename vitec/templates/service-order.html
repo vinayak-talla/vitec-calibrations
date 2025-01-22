@@ -281,7 +281,9 @@
 <div class="mt-4 save-button-container pb-3 pt-3 mb-4 d-flex">
     <button type="submit" class="btn save-btn" name="save" form="serviceOrderDetailsForm">Save</button>
     <button type="submit" class="btn save-add-btn" name="save_and_continue" form="serviceOrderDetailsForm">Save and Continue</button>
-    <button type="button" class="btn btn-secondary save-add-btn" >Save and Download PDF</button>
+    {% if service_order %}
+    <a href="{% url 'download-service-order' service_order.so_number %}" class="btn btn-secondary save-add-btn">Download PDF</a>
+    {% endif %}
 </div>
 
 

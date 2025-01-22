@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.timezone import now
 from django.contrib import messages
@@ -6,11 +6,12 @@ from .forms import InstitutionForm, InstrumentForm, PipetteForm, RPMForm, Temper
 from .models import Institution, Instrument, Pipette, RPM, Temperature, Service_Order
 from django.db.models import Case, When
 from django.core.paginator import Paginator
-from .helper import get_paginated_page_range, parse_phone_number, add_instrument_type, find_instrument_type, form_not_valid, parse_rpm_fields, edit_instrument_post, edit_instrument_get, add_instrument_valid
+from .helper import get_paginated_page_range, parse_phone_number, find_instrument_type, form_not_valid, edit_instrument_post, edit_instrument_get, add_instrument_valid
 from .utils import add_dropdown_option, load_instrument_types
 from django.db.models import Max
-from django.utils.cache import add_never_cache_headers
-
+from weasyprint import HTML
+from django.templatetags.static import static
+from .so_pdf_generation import create_so_pdf
 
 
 def home(request):
@@ -566,6 +567,65 @@ def view_service_orders(request):
                                                       'search_query': search_query,
                                                       'is_full': len(page_obj)})
     
+
+# def download_service_order_pdf(request, so_number):
+#     if not request.user.is_authenticated:
+#         messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
+#         return redirect('login')
+    
+    
+#     letterhead_url = request.build_absolute_uri(static('images/vitec_so_letterhead.jpg'))
+#     css_url = request.build_absolute_uri(static('css/service_order_pdf_custom.css'))
+
+#     service_order = get_object_or_404(Service_Order, so_number=so_number)
+#     instruments = Instrument.objects.filter(id__in=service_order.instrument_list)
+#     institution = Institution.objects.get(name=service_order.institution)
+
+
+#     pipettes = []
+#     rpms = []
+#     temperatures = []
+#     for instrument in instruments:
+#         if instrument.instrument_type == "Pipette":
+#             pipettes.append(instrument.pipette)
+#         elif instrument.instrument_type == "RPM":
+#             rpms.append(instrument.rpm)
+#         elif instrument.instrument_type == "Temperature":
+#             temperatures.append(instrument.temperature)
+
+#     phone_number = institution.phone_number[0:3] + "-" + institution.phone_number[3:6] + "-" + institution.phone_number[6:10]
+
+
+
+#     context = {
+#         'service_order': service_order,
+#         'institution': institution,
+#         'timestamp': now().timestamp(),
+#         'letterhead_url': letterhead_url,
+#         'css_url': css_url,
+#         'pipettes': pipettes,
+#         'rpms': rpms,
+#         'temperatures': temperatures,
+#         "phone_number": phone_number 
+#     }
+#     html_content = render(request, 'service_order_pdf.html', context).content.decode()
+    
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = f'attachment; filename="service_order_{so_number}.pdf"'
+    
+#     HTML(string=html_content).write_pdf(response)
+#     return response
+    
+
+def download_service_order_pdf(request, so_number):
+    if not request.user.is_authenticated:
+        messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
+        return redirect('login')
+    
+
+    return create_so_pdf(so_number)
+    
+
 
 
 # def edit_service_order(request, so_number):
