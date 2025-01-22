@@ -567,78 +567,11 @@ def view_service_orders(request):
                                                       'search_query': search_query,
                                                       'is_full': len(page_obj)})
     
-
-# def download_service_order_pdf(request, so_number):
-#     if not request.user.is_authenticated:
-#         messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
-#         return redirect('login')
     
-    
-#     letterhead_url = request.build_absolute_uri(static('images/vitec_so_letterhead.jpg'))
-#     css_url = request.build_absolute_uri(static('css/service_order_pdf_custom.css'))
-
-#     service_order = get_object_or_404(Service_Order, so_number=so_number)
-#     instruments = Instrument.objects.filter(id__in=service_order.instrument_list)
-#     institution = Institution.objects.get(name=service_order.institution)
-
-
-#     pipettes = []
-#     rpms = []
-#     temperatures = []
-#     for instrument in instruments:
-#         if instrument.instrument_type == "Pipette":
-#             pipettes.append(instrument.pipette)
-#         elif instrument.instrument_type == "RPM":
-#             rpms.append(instrument.rpm)
-#         elif instrument.instrument_type == "Temperature":
-#             temperatures.append(instrument.temperature)
-
-#     phone_number = institution.phone_number[0:3] + "-" + institution.phone_number[3:6] + "-" + institution.phone_number[6:10]
-
-
-
-#     context = {
-#         'service_order': service_order,
-#         'institution': institution,
-#         'timestamp': now().timestamp(),
-#         'letterhead_url': letterhead_url,
-#         'css_url': css_url,
-#         'pipettes': pipettes,
-#         'rpms': rpms,
-#         'temperatures': temperatures,
-#         "phone_number": phone_number 
-#     }
-#     html_content = render(request, 'service_order_pdf.html', context).content.decode()
-    
-#     response = HttpResponse(content_type='application/pdf')
-#     response['Content-Disposition'] = f'attachment; filename="service_order_{so_number}.pdf"'
-    
-#     HTML(string=html_content).write_pdf(response)
-#     return response
-    
-
 def download_service_order_pdf(request, so_number):
     if not request.user.is_authenticated:
         messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
         return redirect('login')
     
-
     return create_so_pdf(so_number)
     
-
-
-
-# def edit_service_order(request, so_number):
-#     if not request.user.is_authenticated:
-#         messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
-#         return redirect('login')
-    
-#     return render(request, 'edit-service-order.html', {'timestamp': now().timestamp() })
-
-
-# def delete_service_order(request, so_number):
-#     if not request.user.is_authenticated:
-#         messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
-#         return redirect('login')
-    
-    # return render(request, 'delete-service-order.html', {'timestamp': now().timestamp() })
