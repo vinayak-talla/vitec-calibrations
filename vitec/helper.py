@@ -1,11 +1,8 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from .forms import PipetteForm, RPMForm, TemperatureForm, InstrumentForm
-from django.utils.timezone import now
-from .models import Institution, Instrument
-from django.core.paginator import Paginator
 from .utils import load_instrument_types
-
+from .models import Institution
 
 
 def get_paginated_page_range(page_obj):
@@ -61,17 +58,12 @@ def parse_phone_number(phone_number, form):
 
     return context
 
-def parse_rpm_fields(rpm_test, rpm_actual):
-    rpm_test_values = []
-    rpm_actual_values = []
-    if rpm_test:
-        for rpm in rpm_test.split(","):
-            rpm_test_values.append(rpm)
-    if rpm_actual:
-        for rpm in rpm_actual.split(","):
-            rpm_actual_values.append(rpm)
-    return {'rpm_test_values': rpm_test_values, 'rpm_actual_values': rpm_actual_values}
-
+def parse_array_fields(arr_str):
+    res_arr = []
+    if arr_str:
+        for val in arr_str.split(","):
+            res_arr.append(val)
+    return res_arr
 
 def add_instrument_type(instrument_form, parent_instrument, request):
     instrument = instrument_form.save(commit=False)
@@ -93,12 +85,14 @@ def find_instrument_type(instrument_form, request):
     if instrument_type == 'Pipette':
         form = PipetteForm(request.POST)
         context['pipette_form']=  form
-
     elif instrument_type == 'RPM':
         form = RPMForm(request.POST)
         context['rpm_form']=  form
-        context.update(parse_rpm_fields(request.POST.get('rpm_test', ''), request.POST.get('rpm_actual', '')))
-    
+        context['rpm_test_values'] = parse_array_fields(request.POST.get('rpm_test', ''))
+        context['rpm_actual_values'] = parse_array_fields(request.POST.get('rpm_actual', ''))  
+        context['timer_test_values'] = parse_array_fields(request.POST.get('timer_test', ''))
+        context['timer_actual_values'] = parse_array_fields(request.POST.get('timer_actual', ''))    
+
     elif instrument_type == 'Temperature':
         form = TemperatureForm(request.POST)
         context['temperature_form']=  form
@@ -146,6 +140,8 @@ def edit_instrument_post(request, instrument):
         context["rpm_form"] = form
         context['rpm_test_values'] = instrument.rpm_test
         context['rpm_actual_values'] = instrument.rpm_actual
+        context['timer_test_values'] = instrument.timer_test
+        context['timer_actual_values'] = instrument.timer_actual
     elif instrument.instrument_type == "Temperature":
         instrument = instrument.temperature
         form = TemperatureForm(request.POST, instance=instrument)
@@ -179,6 +175,8 @@ def edit_instrument_get(instrument):
         context["rpm_form"] = RPMForm(instance=instrument)
         context['rpm_test_values'] = instrument.rpm_test
         context['rpm_actual_values'] = instrument.rpm_actual
+        context['timer_test_values'] = instrument.timer_test
+        context['timer_actual_values'] = instrument.timer_actual
     elif instrument.instrument_type == "Temperature":
         instrument = instrument.temperature
         context["temperature_form"] = TemperatureForm(instance=instrument)

@@ -164,7 +164,7 @@ def add_instrument(request):
     context = {'timestamp': now().timestamp(),
         'instrument_form': InstrumentForm(),
         'pipette_form': PipetteForm(),
-        'centrifuge_form': RPMForm(),
+        'rpm_form': RPMForm(),
         'thermometer_form': TemperatureForm(),
         'institutions': Institution.objects.all()
         }
@@ -500,7 +500,7 @@ def add_instrument_service_order(request, so_number):
     context = {'timestamp': now().timestamp(),
         'instrument_form': instrument_form,
         'pipette_form': PipetteForm(),
-        'centrifuge_form': RPMForm(),
+        'rpm_form': RPMForm(),
         'thermometer_form': TemperatureForm(),
         'institutions': Institution.objects.all(),
         'so_number': so_number
@@ -516,7 +516,6 @@ def add_service_order_details(request, so_number):
         return redirect('login')
 
     if request.method == "POST":
-        print("fhjjfjjr")
         service_order = get_object_or_404(Service_Order, so_number=so_number)
         service_order_form = ServiceOrderForm(request.POST, instance=service_order)
 

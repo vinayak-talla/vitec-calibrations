@@ -1,3 +1,4 @@
+from datetime import timedelta
 import json
 from django import forms
 from .models import Institution, Instrument, Pipette, RPM, Temperature, Service_Order
@@ -54,7 +55,7 @@ class PipetteForm(forms.ModelForm):
 class RPMForm(forms.ModelForm):
     class Meta:
         model = RPM
-        fields = ['rpm_type', 'rpm_test', 'rpm_actual']
+        fields = ['rpm_type', 'rpm_test', 'rpm_actual', 'timer_test', 'timer_actual']
 
 class TemperatureForm(forms.ModelForm):
     class Meta:
@@ -64,7 +65,7 @@ class TemperatureForm(forms.ModelForm):
 class RPMValueForm(forms.ModelForm):
     class Meta:
         model = RPM
-        fields = ['rpm_test', 'rpm_actual']
+        fields = ['rpm_test', 'rpm_actual', 'timer_test', 'timer_actual']
 
 class TemperatureValueForm(forms.ModelForm):
     class Meta:

@@ -47,6 +47,16 @@ class RPM(Instrument):
         blank=True,   # Allows the field to be blank in forms
         default=list  # Ensures an empty list is used if no value is provided
     )
+    timer_test = ArrayField(
+        models.DurationField(),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    timer_actual = ArrayField(
+        models.DurationField(),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
     def __str__(self):
         return f"{self.id} {self.rpm_test} {self.rpm_actual}"
 

@@ -64,7 +64,7 @@
 <!-- Pagination Controls -->
 <div class="pagination-container d-flex justify-content-center align-items-center mt-2 mb-3">
     <!-- Prev Button -->
-    <a href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}" class="btn mx-1 pag-btn {% if not page_obj.has_previous %}disabled{% endif %}">
+    <a href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="btn mx-1 pag-btn {% if not page_obj.has_previous %}disabled{% endif %}">
         Prev
     </a>
 
@@ -73,14 +73,14 @@
         {% if num == '...' %}
             <span class="pagination-dots">...</span>
         {% else %}
-            <a href="?page={{ num }}" class="pagination-box {% if num == page_obj.number %}active{% endif %}">
+            <a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}" class="pagination-box {% if num == page_obj.number %}active{% endif %}">
                 {{ num }}
             </a>
         {% endif %}
     {% endfor %}
 
     <!-- Next Button -->
-    <a href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}" class="btn pag-btn mx-1 {% if not page_obj.has_next %}disabled{% endif %}">
+    <a href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}" class="btn pag-btn mx-1 {% if not page_obj.has_next %}disabled{% endif %}">
         Next
     </a>
 </div>

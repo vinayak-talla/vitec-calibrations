@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         form.addEventListener('submit', function (event) {
             event.preventDefault();
-            console.log(event)
 
             // Run the specific handler if it exists
             if (instrumentType in instrumentHandlers) {
@@ -23,55 +22,20 @@ document.addEventListener('DOMContentLoaded', function () {
             const toggleRPM = document.getElementById(`toggleRpmButton${instrumentId}`)
             toggleRPM.addEventListener('click', function (event) {
                 event.preventDefault();
-                const rpmCountInput = document.getElementById(`rpmCountInput${instrumentId}`);
-                const isInputVisible = rpmCountInput.style.display === 'block';
+                const rpmTestFields = document.getElementById(`rpmTestFields${instrumentId}`);
+                const rpmActualFields = document.getElementById(`rpmActualFields${instrumentId}`);
+                toggleArrayFieldBtn([rpmTestFields, rpmActualFields], document.getElementById(`rpmCountInput${instrumentId}`))
+               
 
-                if (isInputVisible) {
-                    // Get the number entered
-                    const fieldCount = parseInt(rpmCountInput.value, 10);
-            
-                    if (!isNaN(fieldCount) && fieldCount >= 0) {
-                        const rpmTestFields = document.getElementById(`rpmTestFields${instrumentId}`);
-                        const rpmActualFields = document.getElementById(`rpmActualFields${instrumentId}`);
+            });
 
-                        // Preserve existing data
-                        const existingRpmTestData = Array.from(rpmTestFields.querySelectorAll('input')).map(input => input.value);
-                        const existingRpmActualData = Array.from(rpmActualFields.querySelectorAll('input')).map(input => input.value);
-
-                        // Clear the container before adding new fields
-                        rpmTestFields.innerHTML = '';
-                        rpmActualFields.innerHTML = '';
-
-                        // Generate the specified number of input fields
-                        for (let i = 0; i < fieldCount; i++) {
-                            const testInputField = document.createElement('input');
-                            testInputField.type = 'text';
-                            testInputField.className = 'form-control custom-input rpm-custom-size me-3 rpm-test-fields';
-                            if (i < existingRpmTestData.length) {
-                                testInputField.value = existingRpmTestData[i]; // Restore previous data
-                            }
-                            rpmTestFields.appendChild(testInputField);
-                            
-
-                            const actualInputField = document.createElement('input');
-                            actualInputField.type = 'text';
-                            actualInputField.className = 'form-control custom-input rpm-custom-size me-3 rpm-actual-fields';
-                            if (i < existingRpmActualData.length) {
-                                actualInputField.value = existingRpmActualData[i]; // Restore previous data
-                            }
-                            rpmActualFields.appendChild(actualInputField);
-                        }
-                    }
-                    // Hide the input field after processing
-                    rpmCountInput.style.display = 'none';
-                    rpmCountInput.value = '';
-
-
-                }
-                else {
-                    rpmCountInput.style.display = 'block';
-                    rpmCountInput.focus();
-                }
+            const toggleTimer = document.getElementById(`toggleTimerButton${instrumentId}`)
+            toggleTimer.addEventListener('click', function (event) {
+                event.preventDefault();
+                const timerTestFields = document.getElementById(`timerTestFields${instrumentId}`);
+                const timerActualFields = document.getElementById(`timerActualFields${instrumentId}`);
+                toggleArrayFieldBtn([timerTestFields, timerActualFields], document.getElementById(`timerCountInput${instrumentId}`))
+               
 
             });
 
@@ -142,22 +106,14 @@ function consolidateRPM(form, instrumentId) {
     const rpmTestFields = document.getElementById(`rpmTestFields${instrumentId}`);
     const rpmActualFields = document.getElementById(`rpmActualFields${instrumentId}`);
 
-    var rpmTest = Array.from(rpmTestFields.querySelectorAll('input')).map(input => input.value.trim()).filter(value => value !== '');
-    var rpmActual = Array.from(rpmActualFields.querySelectorAll('input')).map(input => input.value.trim()).filter(value => value !== '');
+    const timerTestFields = document.getElementById(`timerTestFields${instrumentId}`);
+    const timerActualFields = document.getElementById(`timerActualFields${instrumentId}`);
 
-    const rpmTestInput = document.createElement('input');
-    rpmTestInput.type = 'hidden';
-    rpmTestInput.name = 'rpm_test';
-    rpmTestInput.id = 'rpm_test';
-    rpmTestInput.value = rpmTest;
-    form.appendChild(rpmTestInput);
+    consolidateArrayFields(form, rpmTestFields,'rpm_test')
+    consolidateArrayFields(form, rpmActualFields,'rpm_actual')
 
-    const rpmActualInput = document.createElement('input');
-    rpmActualInput.type = 'hidden';
-    rpmActualInput.name = 'rpm_actual';
-    rpmActualInput.name = 'rpm_actual';
-    rpmActualInput.value = rpmActual;
-    form.appendChild(rpmActualInput);
+    consolidateArrayFields(form, timerTestFields, 'timer_test')
+    consolidateArrayFields(form, timerActualFields, 'timer_actual')
 
 }
 
@@ -221,4 +177,55 @@ function formatErrorTitle(inputString) {
       return word.charAt(0).toUpperCase() + word.slice(1);
     });
     return formattedWords.join(" ");
+}
+
+function toggleArrayFieldBtn(fields, countInput) {
+    const isInputVisible = countInput.style.display === 'block';
+
+    if (isInputVisible) {
+        // Get the number entered
+        const fieldCount = parseInt(countInput.value, 10);
+
+        if (!isNaN(fieldCount) && fieldCount >= 0) {
+            fields.forEach( field => {
+                // Preserve existing data
+                const existingFieldData = Array.from(field.querySelectorAll('input')).map(input => input.value);
+
+                // Clear the container before adding new fields
+                field.innerHTML = '';
+
+                // Generate the specified number of input fields
+                for (let i = 0; i < fieldCount; i++) {
+                    const testInputField = document.createElement('input');
+                    testInputField.type = 'text';
+                    testInputField.className = 'form-control custom-input rpm-custom-size me-3';
+                    if (i < existingFieldData.length) {
+                        testInputField.value = existingFieldData[i]; // Restore previous data
+                    }
+                    field.appendChild(testInputField);
+                }
+            });
+        }
+        // Hide the input field after processing
+        countInput.style.display = 'none';
+        countInput.value = '';
+
+
+    }
+    else {
+        countInput.style.display = 'block';
+        countInput.focus();
+    }
+}
+
+function consolidateArrayFields(form, field, name) {
+    var array = Array.from(field.querySelectorAll('input')).map(input => input.value.trim()).filter(value => value !== '');
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.id = name;
+    input.value = array;
+    form.appendChild(input);
+
 }

@@ -77,3 +77,7 @@
 .rpm-err-margin {
     margin-left: 16.5%;
 }
+
+.rpm_input_custom {
+    row-gap: 1rem;
+}

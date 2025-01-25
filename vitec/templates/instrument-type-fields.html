@@ -57,7 +57,7 @@
         <label for="rpm_type" class="col-sm-2 col-form-label custom-form-label">RPM Type:</label>
         <div class="col-auto">
             <!-- Dropdown for rpm type with Bootstrap-Select -->
-            <select class="selectpicker" data-style="custom-toggle" id="rpmTypeSelect" name="rpm_type" data-live-search="true" title="Select RPM Type" data-temperature-type="{{rpm_form.rpm_type.value}}" data-width="100%" data-size="5">
+            <select class="selectpicker" data-style="custom-toggle" id="rpmTypeSelect" name="rpm_type" data-live-search="true" title="Select RPM Type" data-width="100%" data-size="5">
                 <!-- Dynamically populated rpm type options -->
                 {% for rpm in rpm_types %}
                     <option class="custom-dropdown" value="{{ rpm }}" {% if rpm_form.rpm_type.value == rpm %}selected{% endif %}>{{ rpm }}</option>
@@ -93,7 +93,7 @@
             <input type="text" class="form-control custom-input sm-custom-input" id="rpmCountInput" placeholder="#RPM" style="display: none;">
         </div>
 
-        <div class="col-auto d-flex" id="rpmTestFields">
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="rpmTestFields">
 
             {% for rpm_test in rpm_test_values %}
             <input type="text" class="form-control custom-input rpm-custom-size me-3 rpm-test-fields" value="{{rpm_test}}">
@@ -113,7 +113,7 @@
      <!-- RPM Actual -->
     <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
         <label for="rpm_actual" class="col-sm-2 col-form-label custom-form-label">RPM Actual:</label>
-        <div class="col-auto d-flex" id="rpmActualFields">
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="rpmActualFields">
 
             {% for rpm_actual in rpm_actual_values %}
                 <input type="text" class="form-control custom-input rpm-custom-size me-3 rpm-test-fields" value="{{rpm_actual}}">
@@ -128,6 +128,59 @@
             </div>
         {% endif %}
     </div>
+
+
+    <!-- Timer Test -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="timer_test" class="col-sm-2 col-form-label custom-form-label">Timer Test:</label>
+        <div class="col-auto plus_container_custom" id="toggleTimerButton" >
+            <button class=" add-fields-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control custom-input sm-custom-input" id="timerCountInput" placeholder="#times" style="display: none;">
+        </div>
+
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="timerTestFields">
+
+            {% for timer_test in timer_test_values %}
+            <input type="text" class="form-control custom-input rpm-custom-size me-3 timer-test-fields" value="{{timer_test}}">
+            {% endfor %}  
+        </div>
+
+        {% if rpm_form.timer_test.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in rpm_form.timer_test.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+     <!-- Timer Actual -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="timer_actual" class="col-sm-2 col-form-label custom-form-label">Timer Actual:</label>
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="timerActualFields">
+
+            {% for timer_actual in timer_actual_values %}
+                <input type="text" class="form-control custom-input rpm-custom-size me-3 timer-test-fields" value="{{timer_actual}}">
+            {% endfor %}    
+        </div>
+
+        {% if rpm_form.timer_actual.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in rpm_form.timer_actual.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    
+
+
+
 </div>
 
 
@@ -139,7 +192,7 @@
         <label for="temperature_type" class="col-sm-2 col-form-label custom-form-label">Temperature Type:</label>
         <div class="col-auto">
             <!-- Dropdown for temperature type with Bootstrap-Select -->
-            <select class="selectpicker" data-style="custom-toggle" id="temperatureTypeSelect" name="temperature_type" data-live-search="true" title="Select Temperature Type" data-width="100%" data-size="5">
+            <select class="selectpicker" data-style="custom-toggle" id="temperatureTypeSelect" name="temperature_type" data-live-search="true" data-temperature-type="{{temperature_form.temperature_type.value}}" title="Select Temperature Type" data-width="100%" data-size="5">
                 <!-- Dynamically populated temperature type options -->
                 {% for temperature in temperature_types %}
                     <option class="custom-dropdown" value="{{ temperature }}" {% if temperature_form.temperature_type.value == temperature %}selected{% endif %}>{{ temperature }}</option>
