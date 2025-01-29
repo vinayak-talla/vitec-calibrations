@@ -29,6 +29,7 @@ class Pipette(Instrument):
 
 class RPM(Instrument):
     rpm_type = models.CharField(max_length=100)
+    rpm_model = models.CharField(max_length=50, blank=True, default="N/A")
     rpm_test = ArrayField(
         models.IntegerField(
             error_messages={
@@ -62,12 +63,73 @@ class RPM(Instrument):
 
 class Temperature(Instrument):
     temperature_type = models.CharField(max_length=100)
-    temperature_test = models.DecimalField(max_digits=6, decimal_places=3, null=True, blank=True)
-    temperature_actual = models.DecimalField(max_digits=6, decimal_places=3, null=True, blank=True)
+    temperature_model = models.CharField(max_length=50, blank=True, default="N/A")
+    temperature_test = ArrayField(
+        models.DecimalField(max_digits=6, decimal_places=3),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    temperature_actual = ArrayField(
+        models.DecimalField(max_digits=6, decimal_places=3),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
     humidity_test = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
     humidity_actual = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
     def __str__(self):
         return f"{self.id} {self.temperature_type} {self.temperature_test} {self.temperature_actual}"
+    
+class Microscope(Instrument):
+    microscope_type = models.CharField(max_length=100)
+    microscope_model = models.CharField(max_length=50, blank=True, default="N/A")
+
+class Timer(Instrument):
+    timer_type = models.CharField(max_length=100)
+    timer_model = models.CharField(max_length=50, blank=True, default="N/A")
+    timer_test = ArrayField(
+        models.DurationField(),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    timer_actual = ArrayField(
+        models.DurationField(),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+
+class ThermoRPM(Instrument):
+    thermoRPM_type = models.CharField(max_length=100)
+    thermoRPM_model = models.CharField(max_length=50, blank=True, default="N/A")
+    rpm_test = ArrayField(
+        models.IntegerField(),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    rpm_actual = ArrayField(
+        models.IntegerField(),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    temperature_test = ArrayField(
+        models.DecimalField(max_digits=6, decimal_places=3),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    temperature_actual = ArrayField(
+        models.DecimalField(max_digits=6, decimal_places=3),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    timer_test = ArrayField(
+        models.DurationField(),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    timer_actual = ArrayField(
+        models.DurationField(),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
 
 class Service_Order(models.Model):
     so_number = models.AutoField(primary_key=True)

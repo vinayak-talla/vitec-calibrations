@@ -40,6 +40,62 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
         }
+        else if(instrumentType == "Temperature") {
+            const toggleTemperature = document.getElementById(`toggleTemperatureButton${instrumentId}`)
+            toggleTemperature.addEventListener('click', function (event) {
+                event.preventDefault();
+                const temperatureTestFields = document.getElementById(`temperatureTestFields${instrumentId}`);
+                const temperatureActualFields = document.getElementById(`temperatureActualFields${instrumentId}`);
+                toggleArrayFieldBtn([temperatureTestFields, temperatureActualFields], document.getElementById(`temperatureCountInput${instrumentId}`))
+               
+
+            });
+
+        }
+        else if (instrumentType === "Timer") {
+            const toggleTimer = document.getElementById(`toggleTimerButton${instrumentId}`)
+            toggleTimer.addEventListener('click', function (event) {
+                event.preventDefault();
+                const timerTestFields = document.getElementById(`timerTestFields${instrumentId}`);
+                const timerActualFields = document.getElementById(`timerActualFields${instrumentId}`);
+                toggleArrayFieldBtn([timerTestFields, timerActualFields], document.getElementById(`timerCountInput${instrumentId}`))
+               
+
+            });
+
+        }
+        else if (instrumentType === "ThermoRPM") {
+
+            const toggleRPM = document.getElementById(`toggleRpmButton${instrumentId}`)
+            toggleRPM.addEventListener('click', function (event) {
+                event.preventDefault();
+                const rpmTestFields = document.getElementById(`rpmTestFields${instrumentId}`);
+                const rpmActualFields = document.getElementById(`rpmActualFields${instrumentId}`);
+                toggleArrayFieldBtn([rpmTestFields, rpmActualFields], document.getElementById(`rpmCountInput${instrumentId}`))
+               
+
+            });
+            const toggleTemperature = document.getElementById(`toggleTemperatureButton${instrumentId}`)
+            toggleTemperature.addEventListener('click', function (event) {
+                event.preventDefault();
+                const temperatureTestFields = document.getElementById(`temperatureTestFields${instrumentId}`);
+                const temperatureActualFields = document.getElementById(`temperatureActualFields${instrumentId}`);
+                toggleArrayFieldBtn([temperatureTestFields, temperatureActualFields], document.getElementById(`temperatureCountInput${instrumentId}`))
+               
+
+            });
+            const toggleTimer = document.getElementById(`toggleTimerButton${instrumentId}`)
+            toggleTimer.addEventListener('click', function (event) {
+                event.preventDefault();
+                const timerTestFields = document.getElementById(`timerTestFields${instrumentId}`);
+                const timerActualFields = document.getElementById(`timerActualFields${instrumentId}`);
+                toggleArrayFieldBtn([timerTestFields, timerActualFields], document.getElementById(`timerCountInput${instrumentId}`))
+               
+
+            });
+
+        }
+        
 
     });
 
@@ -83,6 +139,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 const instrumentHandlers = {
     RPM: (form,instrumentId) => consolidateRPM(form,instrumentId), // Pass the form parameter
+    Temperature: (form, instrumentId) => consolidateTemperature(form, instrumentId),
+    Timer: (form, instrumentId) => consolidateTimer(form,instrumentId),
+    ThermoRPM: (form, instrumentId) => consolidateThermoRPM(form, instrumentId)
 };
 // Handle paste event (typically triggered by QR scanner)
 function handlePaste(event) {
@@ -114,6 +173,46 @@ function consolidateRPM(form, instrumentId) {
 
     consolidateArrayFields(form, timerTestFields, 'timer_test')
     consolidateArrayFields(form, timerActualFields, 'timer_actual')
+
+}
+
+function consolidateTemperature(form, instrumentId) {
+    const temperatureTestFields = document.getElementById(`temperatureTestFields${instrumentId}`);
+    const temperatureActualFields = document.getElementById(`temperatureActualFields${instrumentId}`);
+
+    consolidateArrayFields(form, temperatureTestFields, 'temperature_test')
+    consolidateArrayFields(form, temperatureActualFields, 'temperature_actual')
+}
+
+function consolidateTimer(form, instrumentId) {
+    const timerTestFields = document.getElementById(`timerTestFields${instrumentId}`);
+    const timerActualFields = document.getElementById(`timerActualFields${instrumentId}`);
+
+    consolidateArrayFields(form, timerTestFields, 'timer_test')
+    consolidateArrayFields(form, timerActualFields, 'timer_actual')
+
+
+}
+
+function consolidateThermoRPM(form, instrumentId) {
+    const rpmTestFields = document.getElementById(`rpmTestFields${instrumentId}`);
+    const rpmActualFields = document.getElementById(`rpmActualFields${instrumentId}`);
+
+    const timerTestFields = document.getElementById(`timerTestFields${instrumentId}`);
+    const timerActualFields = document.getElementById(`timerActualFields${instrumentId}`);
+
+    const temperatureTestFields = document.getElementById(`temperatureTestFields${instrumentId}`);
+    const temperatureActualFields = document.getElementById(`temperatureActualFields${instrumentId}`);
+
+    consolidateArrayFields(form, temperatureTestFields, 'temperature_test')
+    consolidateArrayFields(form, temperatureActualFields, 'temperature_actual')
+
+    consolidateArrayFields(form, timerTestFields, 'timer_test')
+    consolidateArrayFields(form, timerActualFields, 'timer_actual')
+
+    consolidateArrayFields(form, rpmTestFields,'rpm_test')
+    consolidateArrayFields(form, rpmActualFields,'rpm_actual')
+
 
 }
 

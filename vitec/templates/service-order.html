@@ -100,7 +100,7 @@
             <td id="instrument_type{{ instrument.id }}">{{ instrument.instrument_type }}</td>
             <td>{{ instrument.make }}</td>
             <td>
-                {% if instrument.instrument_type != "Pipette" %}
+                {% if instrument.instrument_type != "Pipette" and instrument.instrument_type != "Microscope"%}
                     <button type="button" class="btn open-btn btn-sm " data-bs-toggle="modal"
                             data-bs-target="#valuesModal{{ instrument.id }}">
                         OPEN
@@ -156,7 +156,7 @@
                                                 </div>
                                             </div>
 
-                                              <!-- Timer Test -->
+                                            <!-- Timer Test -->
                                             <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
                                             
                                                 <div class="col-auto plus_container_custom mb-2" >
@@ -195,20 +195,40 @@
 
                                         {% elif instrument.instrument_type == "Temperature" %}
 
+
                                             <!-- Temperature Test -->
                                             <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
-                                                <label for="temperature_test" class="col-auto col-form-label custom-form-label">Temperature Test:</label>
-                                                <div class="col-auto ">
-                                                    <input type="text" class="form-control custom-input sm-custom-input" id="temperature_test" name="temperature_test" value="{{ instrument.temperature_test| default:'' }}">
+                                                
+                                                <div class="col-auto plus_container_custom mb-2" >
+                                                    <label for="temperature_test" class="col-form-label custom-form-label">Temperature Test:</label>
+                                                    <button type="button" class=" add-fields-btn"  id="toggleTemperatureButton{{ instrument.id }}">
+                                                        <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+                                                    </button>
+                                                </div>
+                                                <div class="col-auto mb-2">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="temperatureCountInput{{ instrument.id }}" placeholder="#temp" style="display: none;">
+                                                </div>
+                                        
+                                                <div class="col-auto d-flex flex-wrap rpm_input_custom" id="temperatureTestFields{{ instrument.id }}">
+                                                                                        
+                                                    {% for temperature_test in instrument.temperature_test %}
+                                                        <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{temperature_test}}">
+                                                    {% endfor %}    
+
                                                 </div>
                                             </div>
+
 
                                             {% if instrument.temperature_type == "DTH" %}
                                                 <!-- Temperature Actual -->
                                                 <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
-                                                    <label for="temperature_actual" class="col-auto col-form-label custom-form-label">Temperature Actual:</label>
-                                                    <div class="col-auto ">
-                                                        <input type="text" class="form-control custom-input sm-custom-input" id="temperature_actual" name="temperature_actual" value="{{ instrument.temperature_actual| default:'' }}">
+                                                    <label for="temperature_actual" class="col-auto mb-2 col-form-label custom-form-label">Temperature Actual:</label>
+                                                    <div class="col-auto d-flex flex-wrap rpm_input_custom" id="temperatureActualFields{{ instrument.id }}">
+
+                                                        {% for temperature_actual in instrument.temperature_actual %}
+                                                            <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{temperature_actual}}">
+                                                        {% endfor %}
+
                                                     </div>
                                                 </div>
 
@@ -232,12 +252,161 @@
                                             {% else %}
                                                 <!-- Temperature Actual -->
                                                 <div class="row mb-2 pb-2 custom-row align-items-center">
-                                                    <label for="temperature_actual" class="col-auto col-form-label custom-form-label">Temperature Actual:</label>
-                                                    <div class="col-auto ">
-                                                        <input type="text" class="form-control custom-input sm-custom-input" id="temperature_actual" name="temperature_actual" value="{{ instrument.temperature_actual| default:'' }}">
+                                                    <label for="temperature_actual" class="col-auto mb-2 col-form-label custom-form-label">Temperature Actual:</label>
+                                                    <div class="col-auto d-flex flex-wrap rpm_input_custom" id="temperatureActualFields{{ instrument.id }}">
+
+                                                        {% for temperature_actual in instrument.temperature_actual %}
+                                                            <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{temperature_actual}}">
+                                                        {% endfor %}
+
                                                     </div>
                                                 </div>
                                             {% endif %}
+
+
+
+                                        {% elif instrument.instrument_type == "Timer" %}
+
+                                            <!-- Timer Test -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                
+                                                <div class="col-auto plus_container_custom mb-2" >
+                                                    <label for="timer_test" class="col-form-label custom-form-label">Timer Test:</label>
+                                                    <button type="button" class=" add-fields-btn"  id="toggleTimerButton{{ instrument.id }}">
+                                                        <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+                                                    </button>
+                                                </div>
+                                                <div class="col-auto mb-2">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="timerCountInput{{ instrument.id }}" placeholder="#times" style="display: none;">
+                                                </div>
+                                        
+                                                <div class="col-auto d-flex flex-wrap rpm_input_custom" id="timerTestFields{{ instrument.id }}">
+                                                                                        
+                                                    {% for timer_test in instrument.timer_test %}
+                                                        <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{timer_test}}">
+                                                    {% endfor %}    
+
+                                                </div>
+                                            </div>
+
+                                            <!-- Timer Actual -->
+                                            <div class="row mb-2 pb-2 custom-row align-items-center">
+                                                <label for="timer_actual" class="col-sm-3 mb-2 col-form-label custom-form-label">Timer Actual:</label>
+                                                <div class="col-auto d-flex flex-wrap rpm_input_custom" id="timerActualFields{{ instrument.id }}">
+
+                                                    {% for timer_actual in instrument.timer_actual %}
+                                                        <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{timer_actual}}">
+                                                    {% endfor %}
+
+                                                </div>
+                                            </div>
+
+
+                                        {% elif instrument.instrument_type == "ThermoRPM" %}
+
+                                            <!-- RPM Test -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                            
+                                                <div class="col-auto plus_container_custom mb-2" >
+                                                    <label for="rpm_test" class="col-form-label custom-form-label">RPM Test:</label>
+                                                    <button type="button" class=" add-fields-btn"  id="toggleRpmButton{{ instrument.id }}">
+                                                        <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+                                                    </button>
+                                                </div>
+                                                <div class="col-auto mb-2">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="rpmCountInput{{ instrument.id }}" placeholder="#RPM" style="display: none;">
+                                                </div>
+                                        
+                                                <div class="col-auto d-flex flex-wrap rpm_input_custom" id="rpmTestFields{{ instrument.id }}">
+                                                                                        
+                                                    {% for rpm_test in instrument.rpm_test %}
+                                                        <input type="text" class="form-control custom-input rpm-custom-size me-3 rpm-test-fields" value="{{rpm_test}}">
+                                                    {% endfor %}    
+
+                                                </div>
+                                            </div>
+
+                                            <!-- RPM Actual -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                <label for="rpm_actual" class="col-sm-3 mb-2 col-form-label custom-form-label">RPM Actual:</label>
+                                                <div class="col-auto d-flex flex-wrap rpm_input_custom" id="rpmActualFields{{ instrument.id }}">
+
+                                                    {% for rpm_actual in instrument.rpm_actual %}
+                                                        <input type="text" class="form-control custom-input rpm-custom-size me-3 rpm-test-fields" value="{{rpm_actual}}">
+                                                    {% endfor %}
+
+                                                </div>
+                                            </div>
+
+                                            <!-- Temperature Test -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                
+                                                <div class="col-auto plus_container_custom mb-2" >
+                                                    <label for="temperature_test" class="col-form-label custom-form-label">Temperature Test:</label>
+                                                    <button type="button" class=" add-fields-btn"  id="toggleTemperatureButton{{ instrument.id }}">
+                                                        <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+                                                    </button>
+                                                </div>
+                                                <div class="col-auto mb-2">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="temperatureCountInput{{ instrument.id }}" placeholder="#temp" style="display: none;">
+                                                </div>
+                                        
+                                                <div class="col-auto d-flex flex-wrap rpm_input_custom" id="temperatureTestFields{{ instrument.id }}">
+                                                                                        
+                                                    {% for temperature_test in instrument.temperature_test %}
+                                                        <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{temperature_test}}">
+                                                    {% endfor %}    
+
+                                                </div>
+                                            </div>
+
+                                            <!-- Temperature Actual -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                <label for="temperature_actual" class="col-auto mb-2 col-form-label custom-form-label">Temperature Actual:</label>
+                                                <div class="col-auto d-flex flex-wrap rpm_input_custom" id="temperatureActualFields{{ instrument.id }}">
+
+                                                    {% for temperature_actual in instrument.temperature_actual %}
+                                                        <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{temperature_actual}}">
+                                                    {% endfor %}
+
+                                                </div>
+                                            </div>
+
+
+                                            <!-- Timer Test -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                
+                                                <div class="col-auto plus_container_custom mb-2" >
+                                                    <label for="timer_test" class="col-form-label custom-form-label">Timer Test:</label>
+                                                    <button type="button" class=" add-fields-btn"  id="toggleTimerButton{{ instrument.id }}">
+                                                        <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+                                                    </button>
+                                                </div>
+                                                <div class="col-auto mb-2">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="timerCountInput{{ instrument.id }}" placeholder="#times" style="display: none;">
+                                                </div>
+                                        
+                                                <div class="col-auto d-flex flex-wrap rpm_input_custom" id="timerTestFields{{ instrument.id }}">
+                                                                                        
+                                                    {% for timer_test in instrument.timer_test %}
+                                                        <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{timer_test}}">
+                                                    {% endfor %}    
+
+                                                </div>
+                                            </div>
+
+                                            <!-- Timer Actual -->
+                                            <div class="row mb-2 pb-2 custom-row align-items-center">
+                                                <label for="timer_actual" class="col-sm-3 mb-2 col-form-label custom-form-label">Timer Actual:</label>
+                                                <div class="col-auto d-flex flex-wrap rpm_input_custom" id="timerActualFields{{ instrument.id }}">
+
+                                                    {% for timer_actual in instrument.timer_actual %}
+                                                        <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{timer_actual}}">
+                                                    {% endfor %}
+
+                                                </div>
+                                            </div>
+
 
                                         {% endif %}
 

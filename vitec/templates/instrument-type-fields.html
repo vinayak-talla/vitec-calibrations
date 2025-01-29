@@ -81,6 +81,19 @@
         
     </div>
 
+    <!-- Model -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="rpm_model" class="col-sm-2 col-form-label custom-form-label">Model:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="rpm_model" name="rpm_model" value="{{ rpm_form.rpm_model.value | default:'' }}">
+            {% if rpm_form.rpm_model.errors %}
+                <div class="text-danger">
+                    {{ rpm_form.rpm_model.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
     <!-- RPM Test -->
     <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
         <label for="rpm_test" class="col-sm-2 col-form-label custom-form-label">RPM Test:</label>
@@ -133,18 +146,18 @@
     <!-- Timer Test -->
     <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
         <label for="timer_test" class="col-sm-2 col-form-label custom-form-label">Timer Test:</label>
-        <div class="col-auto plus_container_custom" id="toggleTimerButton" >
+        <div class="col-auto plus_container_custom" id="toggleRPMTimerButton" >
             <button class=" add-fields-btn">
                 <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
             </button>
         </div>
         <div class="col-auto">
-            <input type="text" class="form-control custom-input sm-custom-input" id="timerCountInput" placeholder="#times" style="display: none;">
+            <input type="text" class="form-control custom-input sm-custom-input" id="rpmTimerCountInput" placeholder="#times" style="display: none;">
         </div>
 
-        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="timerTestFields">
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="rpmTimerTestFields">
 
-            {% for timer_test in timer_test_values %}
+            {% for timer_test in rpm_timer_test_values %}
             <input type="text" class="form-control custom-input rpm-custom-size me-3 timer-test-fields" value="{{timer_test}}">
             {% endfor %}  
         </div>
@@ -161,9 +174,9 @@
      <!-- Timer Actual -->
     <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
         <label for="timer_actual" class="col-sm-2 col-form-label custom-form-label">Timer Actual:</label>
-        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="timerActualFields">
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="rpmTimerActualFields">
 
-            {% for timer_actual in timer_actual_values %}
+            {% for timer_actual in rpm_timer_actual_values %}
                 <input type="text" class="form-control custom-input rpm-custom-size me-3 timer-test-fields" value="{{timer_actual}}">
             {% endfor %}    
         </div>
@@ -216,30 +229,64 @@
         
     </div>
 
-    <!-- Temperature Test -->
+    <!-- Model -->
     <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
-        <label for="temperature_test" class="col-sm-2 col-form-label custom-form-label">Temperature Test:</label>
+        <label for="temperature_model" class="col-sm-2 col-form-label custom-form-label">Model:</label>
         <div class="col-sm-3 ">
-            <input type="text" class="form-control custom-input sm-custom-input" id="temperature_test" name="temperature_test" value="{{ temperature_form.temperature_test.value| default:'' }}">
-            {% if temperature_form.temperature_test.errors %}
+            <input type="text" class="form-control custom-input" id="temperature_model" name="temperature_model" value="{{ temperature_form.temperature_model.value | default:'' }}">
+            {% if temperature_form.temperature_model.errors %}
                 <div class="text-danger">
-                    {{ temperature_form.temperature_test.errors|join:", " }}
+                    {{ temperature_form.temperature_model.errors|join:", " }}
                 </div>
             {% endif %}
         </div>
     </div>
 
-     <!-- Temperature Actual -->
-     <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
-        <label for="temperature_actual" class="col-sm-2 col-form-label custom-form-label">Temperature Actual:</label>
-        <div class="col-sm-3 ">
-            <input type="text" class="form-control custom-input sm-custom-input" id="temperature_actual" name="temperature_actual" value="{{ temperature_form.temperature_actual.value| default:'' }}">
-            {% if temperature_form.temperature_actual.errors %}
-                <div class="text-danger">
-                    {{ temperature_form.temperature_actual.errors|join:", " }}
-                </div>
-            {% endif %}
+    <!-- Temperature Test -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="temperature_test" class="col-sm-2 col-form-label custom-form-label">Temperature Test:</label>
+        <div class="col-auto plus_container_custom" id="toggleTemperatureButton" >
+            <button class=" add-fields-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
         </div>
+        <div class="col-auto">
+            <input type="text" class="form-control custom-input sm-custom-input" id="temperatureCountInput" placeholder="#temp" style="display: none;">
+        </div>
+
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="temperatureTestFields">
+
+            {% for temperature_test in temperature_test_values %}
+            <input type="text" class="form-control custom-input rpm-custom-size me-3 temperature-test-fields" value="{{temperature_test}}">
+            {% endfor %}  
+        </div>
+
+        {% if temperature_form.temperature_test.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in temperature_form.temperature_test.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+        <!-- Temperature Actual -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="temperature_actual" class="col-sm-2 col-form-label custom-form-label">Temperature Actual:</label>
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="temperatureActualFields">
+
+            {% for temperature_actual in temperature_actual_values %}
+                <input type="text" class="form-control custom-input rpm-custom-size me-3 temperature-actual-fields" value="{{temperature_actual}}">
+            {% endfor %}    
+        </div>
+
+        {% if temperature_form.temperature_actual.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in temperature_form.temperature_actual.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 
     <div id="humidity-fields" class="fields">
@@ -271,5 +318,348 @@
     </div>
 
 </div>
+
+
+
+
+
+<!-- Microscope Fields-->
+<div id="microscope-fields" class="fields">
+
+    <!-- Microscope Type -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center dropdown-container" data-dropdown-key="microscope_types">
+        <label for="microscope_type" class="col-sm-2 col-form-label custom-form-label">Microscope Type:</label>
+        <div class="col-auto">
+            <!-- Dropdown for microscope type with Bootstrap-Select -->
+            <select class="selectpicker" data-style="custom-toggle" id="microscopeTypeSelect" name="microscope_type" data-live-search="true" title="Select Microscope Type" data-width="100%" data-size="5">
+                <!-- Dynamically populated microscope type options -->
+                {% for microscope in microscope_types %}
+                    <option class="custom-dropdown" value="{{ microscope }}" {% if microscope_form.microscope_type.value == microscope %}selected{% endif %}>{{ microscope }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto plus_container_custom" id="urls" data-add-dropdown-option-url="{% url 'add-dropdown-option' %}" data-csrf="{{ csrf_token }}">
+            <button class=" add-option-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control new-option-input custom-input" style="display: none;">
+        </div>
+            <!-- Display validation errors -->
+            {% if microscope_form.microscope_type.errors %}
+                <div class="text-danger dropdown-error-custom ">
+                    {{ microscope_form.microscope_type.errors|join:", " }}
+                </div>
+            {% endif %}
+    </div>
+
+
+    <!-- Model -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="microscope_model" class="col-sm-2 col-form-label custom-form-label">Model:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="microscope_model" name="microscope_model" value="{{ microscope_form.microscope_model.value | default:'' }}">
+            {% if microscope_form.microscope_model.errors %}
+                <div class="text-danger">
+                    {{ microscope_form.microscope_model.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div> 
+</div>
+
+
+
+<!-- Timer Fields-->
+<div id="timer-fields" class="fields">
+
+    <!-- Timer Type-->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center dropdown-container" data-dropdown-key="timer_types">
+        <label for="timer_type" class="col-sm-2 col-form-label custom-form-label">Timer Type:</label>
+        <div class="col-auto">
+            <!-- Dropdown for timer type with Bootstrap-Select -->
+            <select class="selectpicker" data-style="custom-toggle" id="timerTypeSelect" name="timer_type" data-live-search="true" title="Select Timer Type" data-width="100%" data-size="5">
+                <!-- Dynamically populated rpm type options -->
+                {% for timer in timer_types %}
+                    <option class="custom-dropdown" value="{{ timer }}" {% if timer_form.timer_type.value == timer %}selected{% endif %}>{{ timer }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto plus_container_custom" id="urls" data-add-dropdown-option-url="{% url 'add-dropdown-option' %}" data-csrf="{{ csrf_token }}">
+            <button class=" add-option-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control new-option-input custom-input" style="display: none;">
+        </div>
+            <!-- Display validation errors -->
+            {% if timer_form.timer_type.errors %}
+                <div class="text-danger dropdown-error-custom ">
+                    {{ timer_form.timer_type.errors|join:", " }}
+                </div>
+            {% endif %}
+        
+    </div>
+
+    <!-- Model -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="timer_model" class="col-sm-2 col-form-label custom-form-label">Model:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="timer_model" name="timer_model" value="{{ timer_form.timer_model.value | default:'' }}">
+            {% if timer_form.timer_model.errors %}
+                <div class="text-danger">
+                    {{ timer_form.timer_model.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Timer Test -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="timer_test" class="col-sm-2 col-form-label custom-form-label">Timer Test:</label>
+        <div class="col-auto plus_container_custom" id="toggleTimerButton" >
+            <button class=" add-fields-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control custom-input sm-custom-input" id="timerCountInput" placeholder="#times" style="display: none;">
+        </div>
+
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="timerTestFields">
+
+            {% for timer_test in timer_test_values %}
+            <input type="text" class="form-control custom-input rpm-custom-size me-3 timer-test-fields" value="{{timer_test}}">
+            {% endfor %}  
+        </div>
+
+        {% if timer_form.timer_test.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in timer_form.timer_test.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+     <!-- Timer Actual -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="timer_actual" class="col-sm-2 col-form-label custom-form-label">Timer Actual:</label>
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="timerActualFields">
+
+            {% for timer_actual in timer_actual_values %}
+                <input type="text" class="form-control custom-input rpm-custom-size me-3 timer-test-fields" value="{{timer_actual}}">
+            {% endfor %}    
+        </div>
+
+        {% if timer_form.timer_actual.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in timer_form.timer_actual.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<!-- ThermoRPM Fields-->
+<div id="thermoRPM-fields" class="fields">
+
+    <!-- RPM Type-->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center dropdown-container" data-dropdown-key="thermoRPM_types">
+        <label for="rpm_type" class="col-sm-2 col-form-label custom-form-label">ThermoRPM Type:</label>
+        <div class="col-auto">
+            <!-- Dropdown for rpm type with Bootstrap-Select -->
+            <select class="selectpicker" data-style="custom-toggle" id="thermoRPMTypeSelect" name="thermoRPM_type" data-live-search="true" title="Select ThermoRPM Type" data-width="100%" data-size="5">
+                <!-- Dynamically populated rpm type options -->
+                {% for thermoRPM in thermoRPM_types %}
+                    <option class="custom-dropdown" value="{{ thermoRPM }}" {% if thermoRPM_form.thermoRPM_type.value == thermoRPM %}selected{% endif %}>{{ thermoRPM }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto plus_container_custom" id="urls" data-add-dropdown-option-url="{% url 'add-dropdown-option' %}" data-csrf="{{ csrf_token }}">
+            <button class=" add-option-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control new-option-input custom-input" style="display: none;">
+        </div>
+            <!-- Display validation errors -->
+            {% if thermoRPM_form.thermoRPM_type.errors %}
+                <div class="text-danger dropdown-error-custom ">
+                    {{ thermoRPM_form.thermoRPM_type.errors|join:", " }}
+                </div>
+            {% endif %}
+        
+    </div>
+
+    <!-- Model -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="thermoRPM_model" class="col-sm-2 col-form-label custom-form-label">Model:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="thermoRPM_model" name="thermoRPM_model" value="{{ thermoRPM_form.thermoRPM_model.value | default:'' }}">
+            {% if thermoRPM_form.thermoRPM_model.errors %}
+                <div class="text-danger">
+                    {{ thermoRPM_form.thermoRPM_model.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- RPM Test -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="thermoRPM_test" class="col-sm-2 col-form-label custom-form-label">RPM Test:</label>
+        <div class="col-auto plus_container_custom" id="toggleThermoRpmButton" >
+            <button class=" add-fields-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control custom-input sm-custom-input" id="thermoRPMCountInput" placeholder="#RPM" style="display: none;">
+        </div>
+
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="thermoRPMTestFields">
+
+            {% for rpm_test in thermoRPM_rpm_test_values %}
+            <input type="text" class="form-control custom-input rpm-custom-size me-3 rpm-test-fields" value="{{rpm_test}}">
+            {% endfor %}  
+        </div>
+
+        {% if thermoRPM_form.rpm_test.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in thermoRPM_form.rpm_test.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+    </div>
+
+     <!-- RPM Actual -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="thermoRPM_actual" class="col-sm-2 col-form-label custom-form-label">RPM Actual:</label>
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="thermoRPMActualFields">
+
+            {% for rpm_actual in thermoRPM_rpm_actual_values %}
+                <input type="text" class="form-control custom-input rpm-custom-size me-3 rpm-test-fields" value="{{rpm_actual}}">
+            {% endfor %}    
+        </div>
+
+        {% if thermoRPM_form.rpm_actual.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in thermoRPM_form.rpm_actual.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Temperature Test -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="thermoRPM_temperature_test" class="col-sm-2 col-form-label custom-form-label">Temperature Test:</label>
+        <div class="col-auto plus_container_custom" id="toggleThermoRPMTemperatureButton" >
+            <button class=" add-fields-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control custom-input sm-custom-input" id="thermoRPMTemperatureCountInput" placeholder="#temp" style="display: none;">
+        </div>
+
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="thermoRPMTemperatureTestFields">
+
+            {% for temperature_test in thermoRPM_temperature_test_values %}
+            <input type="text" class="form-control custom-input rpm-custom-size me-3 temperature-test-fields" value="{{temperature_test}}">
+            {% endfor %}  
+        </div>
+
+        {% if thermoRPM_form.temperature_test.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in thermoRPM_form.temperature_test.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Temperature Actual -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="thermoRPM_temperature_actual" class="col-sm-2 col-form-label custom-form-label">Temperature Actual:</label>
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="thermoRPMTemperatureActualFields">
+
+            {% for temperature_actual in thermoRPM_temperature_actual_values %}
+                <input type="text" class="form-control custom-input rpm-custom-size me-3 temperature-actual-fields" value="{{temperature_actual}}">
+            {% endfor %}    
+        </div>
+
+        {% if thermoRPM_form.temperature_actual.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in thermoRPM_form.temperature_actual.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+
+    <!-- Timer Test -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="thermoRPM_timer_test" class="col-sm-2 col-form-label custom-form-label">Timer Test:</label>
+        <div class="col-auto plus_container_custom" id="togglethermoRPMTimerButton" >
+            <button class=" add-fields-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control custom-input sm-custom-input" id="thermoRPMTimerCountInput" placeholder="#times" style="display: none;">
+        </div>
+
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="thermoRPMTimerTestFields">
+
+            {% for timer_test in thermoRPM_timer_test_values %}
+            <input type="text" class="form-control custom-input rpm-custom-size me-3 timer-test-fields" value="{{timer_test}}">
+            {% endfor %}  
+        </div>
+
+        {% if thermoRPM_form.timer_test.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in thermoRPM_form.timer_test.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+     <!-- Timer Actual -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="thermoRPM_timer_actual" class="col-sm-2 col-form-label custom-form-label">Timer Actual:</label>
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="thermoRPMTimerActualFields">
+
+            {% for timer_actual in thermoRPM_timer_actual_values %}
+                <input type="text" class="form-control custom-input rpm-custom-size me-3 timer-test-fields" value="{{timer_actual}}">
+            {% endfor %}    
+        </div>
+
+        {% if thermoRPM_form.timer_actual.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in thermoRPM_form.timer_actual.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
 
 {% endblock %}

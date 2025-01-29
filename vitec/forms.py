@@ -1,8 +1,5 @@
-from datetime import timedelta
-import json
 from django import forms
-from .models import Institution, Instrument, Pipette, RPM, Temperature, Service_Order
-from django.forms.widgets import HiddenInput
+from .models import *
 
 class InstitutionForm(forms.ModelForm):
     class Meta:
@@ -53,14 +50,54 @@ class PipetteForm(forms.ModelForm):
         fields = ['pipette_type', 'volume']
 
 class RPMForm(forms.ModelForm):
+    rpm_model = forms.CharField(
+        max_length=50,
+        required=False,
+        initial='',  # Set initial value to empty
+    )
     class Meta:
         model = RPM
-        fields = ['rpm_type', 'rpm_test', 'rpm_actual', 'timer_test', 'timer_actual']
+        fields = ['rpm_type', 'rpm_model', 'rpm_test', 'rpm_actual', 'timer_test', 'timer_actual']
 
 class TemperatureForm(forms.ModelForm):
+    temperature_model = forms.CharField(
+        max_length=50,
+        required=False,
+        initial='',  # Set initial value to empty
+    )
     class Meta:
         model = Temperature
-        fields = ['temperature_type', 'temperature_test', 'temperature_actual', 'humidity_test', 'humidity_actual']
+        fields = ['temperature_type', 'temperature_model', 'temperature_test', 'temperature_actual', 'humidity_test', 'humidity_actual']
+
+class MicroscopeForm(forms.ModelForm):
+    microscope_model = forms.CharField(
+        max_length=50,
+        required=False,
+        initial='',  # Set initial value to empty
+    )
+    class Meta:
+        model = Microscope
+        fields = ['microscope_type', 'microscope_model']
+
+class TimerForm(forms.ModelForm):
+    timer_model = forms.CharField(
+        max_length=50,
+        required=False,
+        initial='',  # Set initial value to empty
+    )
+    class Meta:
+        model = Timer
+        fields = ['timer_type', 'timer_model', 'timer_test', 'timer_actual']
+
+class ThermoRPMForm(forms.ModelForm):
+    thermoRPM_model = forms.CharField(
+        max_length=50,
+        required=False,
+        initial='',  # Set initial value to empty
+    )
+    class Meta:
+        model = ThermoRPM
+        fields = ['thermoRPM_type', 'thermoRPM_model', 'rpm_test', 'rpm_actual', 'temperature_test', 'temperature_actual', 'timer_test', 'timer_actual']
 
 class RPMValueForm(forms.ModelForm):
     class Meta:
@@ -71,6 +108,16 @@ class TemperatureValueForm(forms.ModelForm):
     class Meta:
         model = Temperature
         fields = ['temperature_test', 'temperature_actual', 'humidity_test', 'humidity_actual']
+
+class TimerValueForm(forms.ModelForm):
+    class Meta:
+        model = Timer
+        fields = ['timer_test', 'timer_actual']
+
+class ThermoRPMValueForm(forms.ModelForm):
+    class Meta:
+        model = ThermoRPM
+        fields = ['rpm_test', 'rpm_actual', 'temperature_test', 'temperature_actual', 'timer_test', 'timer_actual']
 
 class ServiceOrderForm(forms.ModelForm):
     class Meta:

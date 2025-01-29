@@ -2,7 +2,10 @@
     "instrument_types": [
         "Pipette",
         "RPM",
-        "Temperature"
+        "Temperature",
+        "Microscope",
+        "Timer",
+        "ThermoRPM"
     ],
     "pipette_types": [
         "Single Channel",
@@ -28,5 +31,19 @@
         "Glass Thermometer",
         "DTH",
         "Tetsifnfgmd"
+    ],
+    "microscope_types": [
+        "Compound",
+        "Stereo",
+        "Electron",
+        "Tetsfjgk"
+    ],
+    "timer_types": [
+        "Digital",
+        "IDK"
+    ],
+    "thermoRPM_types": [
+        "Test 1",
+        "Test 2"
     ]
 }

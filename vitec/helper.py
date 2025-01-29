@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from .forms import PipetteForm, RPMForm, TemperatureForm, InstrumentForm
+from .forms import *
 from .utils import load_instrument_types
 from .models import Institution
 
@@ -90,12 +90,32 @@ def find_instrument_type(instrument_form, request):
         context['rpm_form']=  form
         context['rpm_test_values'] = parse_array_fields(request.POST.get('rpm_test', ''))
         context['rpm_actual_values'] = parse_array_fields(request.POST.get('rpm_actual', ''))  
-        context['timer_test_values'] = parse_array_fields(request.POST.get('timer_test', ''))
-        context['timer_actual_values'] = parse_array_fields(request.POST.get('timer_actual', ''))    
+        context['rpm_timer_test_values'] = parse_array_fields(request.POST.get('timer_test', ''))
+        context['rpm_timer_actual_values'] = parse_array_fields(request.POST.get('timer_actual', ''))    
 
     elif instrument_type == 'Temperature':
         form = TemperatureForm(request.POST)
+        context['temperature_test_values'] = parse_array_fields(request.POST.get('temperature_test', ''))
+        context['temperature_actual_values'] = parse_array_fields(request.POST.get('temperature_actual', ''))  
         context['temperature_form']=  form
+    
+    elif instrument_type == 'Microscope':
+        form = MicroscopeForm(request.POST)
+        context['microscope_form'] = form
+    elif instrument_type == 'Timer':
+        form = TimerForm(request.POST)
+        context['timer_test_values'] = parse_array_fields(request.POST.get('timer_test', ''))
+        context['timer_actual_values'] = parse_array_fields(request.POST.get('timer_actual', '')) 
+        context['timer_form'] = form
+    elif instrument_type == 'ThermoRPM':
+        form = ThermoRPMForm(request.POST)
+        context['thermoRPM_form']=  form
+        context['thermoRPM_rpm_test_values'] = parse_array_fields(request.POST.get('rpm_test', ''))
+        context['thermoRPM_rpm_actual_values'] = parse_array_fields(request.POST.get('rpm_actual', ''))  
+        context['thermoRPM_timer_test_values'] = parse_array_fields(request.POST.get('timer_test', ''))
+        context['thermoRPM_timer_actual_values'] = parse_array_fields(request.POST.get('timer_actual', ''))  
+        context['thermoRPM_temperature_test_values'] = parse_array_fields(request.POST.get('temperature_test', ''))
+        context['thermoRPM_temperature_actual_values'] = parse_array_fields(request.POST.get('temperature_actual', ''))  
 
     if form.is_valid():
             add_instrument_type(form,parent_instrument,request)
@@ -140,12 +160,34 @@ def edit_instrument_post(request, instrument):
         context["rpm_form"] = form
         context['rpm_test_values'] = instrument.rpm_test
         context['rpm_actual_values'] = instrument.rpm_actual
-        context['timer_test_values'] = instrument.timer_test
-        context['timer_actual_values'] = instrument.timer_actual
+        context['rpm_timer_test_values'] = instrument.timer_test
+        context['rpm_timer_actual_values'] = instrument.timer_actual
     elif instrument.instrument_type == "Temperature":
         instrument = instrument.temperature
         form = TemperatureForm(request.POST, instance=instrument)
+        context['temperature_test_values'] = instrument.temperature_test
+        context['temperature_actual_values'] = instrument.temperature_actual
         context["temperature_form"] = form
+    elif instrument.instrument_type == 'Microscope':
+        instrument = instrument.microscope
+        form = MicroscopeForm(request.POST, instance=instrument)
+        context['microscope_form'] = form
+    elif instrument.instrument_type == 'Timer':
+        instrument = instrument.timer
+        form = TimerForm(request.POST, instance=instrument)
+        context['timer_test_values'] = instrument.timer_test
+        context['timer_actual_values'] = instrument.timer_actual
+        context['timer_form'] = form
+    elif instrument.instrument_type == 'ThermoRPM':
+        instrument = instrument.thermorpm
+        form = ThermoRPMForm(request.POST, instance=instrument)
+        context['thermoRPM_form']=  form
+        context['thermoRPM_rpm_test_values'] = instrument.rpm_test
+        context['thermoRPM_rpm_actual_values'] = instrument.rpm_actual
+        context['thermoRPM_timer_test_values'] =  instrument.timer_test
+        context['thermoRPM_timer_actual_values'] = instrument.timer_actual
+        context['thermoRPM_temperature_test_values'] = instrument.temperature_test
+        context['thermoRPM_temperature_actual_values'] = instrument.temperature_actual
 
     if instrument_form.is_valid() and form.is_valid():
         parent = instrument_form.save(commit=False)
@@ -175,11 +217,31 @@ def edit_instrument_get(instrument):
         context["rpm_form"] = RPMForm(instance=instrument)
         context['rpm_test_values'] = instrument.rpm_test
         context['rpm_actual_values'] = instrument.rpm_actual
-        context['timer_test_values'] = instrument.timer_test
-        context['timer_actual_values'] = instrument.timer_actual
+        context['rpm_timer_test_values'] = instrument.timer_test
+        context['rpm_timer_actual_values'] = instrument.timer_actual
     elif instrument.instrument_type == "Temperature":
         instrument = instrument.temperature
+        context['temperature_test_values'] = instrument.temperature_test
+        context['temperature_actual_values'] = instrument.temperature_actual
         context["temperature_form"] = TemperatureForm(instance=instrument)
+    elif instrument.instrument_type == 'Microscope':
+        instrument = instrument.microscope
+        context['microscope_form'] = MicroscopeForm(instance=instrument)
+    elif instrument.instrument_type == 'Timer':
+        instrument = instrument.timer
+        context['timer_test_values'] = instrument.timer_test
+        context['timer_actual_values'] = instrument.timer_actual
+        context['timer_form'] = TimerForm(instance=instrument)
+    elif instrument.instrument_type == 'ThermoRPM':
+        instrument = instrument.thermorpm
+        form = ThermoRPMForm(instance=instrument)
+        context['thermoRPM_form']=  form
+        context['thermoRPM_rpm_test_values'] = instrument.rpm_test
+        context['thermoRPM_rpm_actual_values'] = instrument.rpm_actual
+        context['thermoRPM_timer_test_values'] =  instrument.timer_test
+        context['thermoRPM_timer_actual_values'] = instrument.timer_actual
+        context['thermoRPM_temperature_test_values'] = instrument.temperature_test
+        context['thermoRPM_temperature_actual_values'] = instrument.temperature_actual
 
     context['instrument_form'] = instrument_form
 

@@ -1,16 +1,14 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.timezone import now
 from django.contrib import messages
-from .forms import InstitutionForm, InstrumentForm, PipetteForm, RPMForm, TemperatureForm, RPMValueForm, TemperatureValueForm, ServiceOrderForm
-from .models import Institution, Instrument, Pipette, RPM, Temperature, Service_Order
+from .forms import *
+from .models import *
 from django.db.models import Case, When
 from django.core.paginator import Paginator
 from .helper import get_paginated_page_range, parse_phone_number, find_instrument_type, form_not_valid, edit_instrument_post, edit_instrument_get, add_instrument_valid
 from .utils import add_dropdown_option, load_instrument_types
 from django.db.models import Max
-from weasyprint import HTML
-from django.templatetags.static import static
 from .so_pdf_generation import create_so_pdf
 
 
@@ -165,7 +163,10 @@ def add_instrument(request):
         'instrument_form': InstrumentForm(),
         'pipette_form': PipetteForm(),
         'rpm_form': RPMForm(),
-        'thermometer_form': TemperatureForm(),
+        'temperature_form': TemperatureForm(),
+        'microscope_form': MicroscopeForm(),
+        'timer_form': TimerForm(),
+        'thermoRPM_form': ThermoRPMForm(),
         'institutions': Institution.objects.all()
         }
     context.update(load_instrument_types())
@@ -349,6 +350,12 @@ def service_order(request, so_number):
             cast_so_instruments.append(Temperature.objects.get(id=instrument.id))
         elif instrument.instrument_type == "Pipette":
             cast_so_instruments.append(Pipette.objects.get(id=instrument.id))
+        elif instrument.instrument_type == "Microscope":
+            cast_so_instruments.append(Microscope.objects.get(id=instrument.id))
+        elif instrument.instrument_type == "Timer":
+            cast_so_instruments.append(Timer.objects.get(id=instrument.id))
+        elif instrument.instrument_type == "ThermoRPM":
+            cast_so_instruments.append(ThermoRPM.objects.get(id=instrument.id))
 
     paginator = Paginator(cast_so_instruments, 2)  # Show 10 institutions per page
     page_number = request.GET.get('page', 1)
@@ -380,6 +387,10 @@ def update_instrument_values(request, instrument_id):
         if instrument_type == "RPM":
             rpm_instrument = instrument.rpm  # Cast to RPM child model
             form = RPMValueForm(request.POST, instance=rpm_instrument)
+        elif instrument_type == 'Timer':
+            form = TimerValueForm(request.POST, instance= instrument.timer)
+        elif instrument_type == 'ThermoRPM':
+            form = ThermoRPMValueForm(request.POST, instance= instrument.thermorpm)
         else:
             temp_instrument = instrument.temperature  # Cast to Temperature child model
             form = TemperatureValueForm(request.POST, instance=temp_instrument)
@@ -501,7 +512,10 @@ def add_instrument_service_order(request, so_number):
         'instrument_form': instrument_form,
         'pipette_form': PipetteForm(),
         'rpm_form': RPMForm(),
-        'thermometer_form': TemperatureForm(),
+        'temperature_form': TemperatureForm(),
+        'microscope_form': MicroscopeForm(),
+        'timer_form': TimerForm(),
+        'thermoRPM_form': ThermoRPMForm(),
         'institutions': Institution.objects.all(),
         'so_number': so_number
         }

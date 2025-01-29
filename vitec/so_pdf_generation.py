@@ -72,6 +72,9 @@ def create_so_pdf(so_number):
     pipettes = [i.pipette for i in instruments if i.instrument_type == "Pipette"]
     rpms = [i.rpm for i in instruments if i.instrument_type == "RPM"]
     temperatures = [i.temperature for i in instruments if i.instrument_type == "Temperature"]
+    microscopes = [i.microscope for i in instruments if i.instrument_type == "Microscope"]
+    timers = [i.timer for i in instruments if i.instrument_type == "Timer"]
+    thermoRPMs = [i.thermorpm for i in instruments if i.instrument_type == "ThermoRPM"]
 
     phone_number = f"({institution.phone_number[:3]}) {institution.phone_number[3:6]}-{institution.phone_number[6:]}"
     date = service_order.date.strftime("%m/%d/%Y")
@@ -126,15 +129,35 @@ def create_so_pdf(so_number):
         elements.append(Spacer(1, 24))
 
     if rpms:
-        rpm_data = [[str(i+1), r.id, r.make, r.rpm_type] for i, r in enumerate(rpms)]
+        rpm_data = [[str(i+1), r.id, r.make, r.model, r.rpm_type] for i, r in enumerate(rpms)]
         elements.append(Paragraph("RPMs", header_style))
-        elements.append(create_table(rpm_data, ["#", "ID", "Make", "RPM Type"], doc))
+        elements.append(create_table(rpm_data, ["#", "ID", "Make", "Model", "RPM Type"], doc))
         elements.append(Spacer(1, 24))
 
     if temperatures:
-        temp_data = [[str(i+1), t.id, t.make, t.temperature_type] for i, t in enumerate(temperatures)]
+        temp_data = [[str(i+1), t.id, t.make, t.model, t.temperature_type] for i, t in enumerate(temperatures)]
         elements.append(Paragraph("Temperatures", header_style))
-        elements.append(create_table(temp_data, ["#", "ID", "Make", "Temperature Type"], doc))
+        elements.append(create_table(temp_data, ["#", "ID", "Make", "Model", "Temperature Type"], doc))
+    
+    if microscopes:
+        mircroscope_data = [[str(i+1), m.id, m.make, m.model, m.microscope_type] for i, m in enumerate(microscopes)]
+        elements.append(Paragraph("Microscopes", header_style))
+        elements.append(create_table(mircroscope_data, ["#", "ID", "Make", "Model", "Microscope Type"], doc))
+        elements.append(Spacer(1, 24))
+    
+    if timers:
+        timer_data = [[str(i+1), t.id, t.make, t.model, t.timer_type] for i, t in enumerate(timers)]
+        elements.append(Paragraph("Timers", header_style))
+        elements.append(create_table(timer_data, ["#", "ID", "Make", "Model", "Timer Type"], doc))
+        elements.append(Spacer(1, 24))
+    
+    if thermoRPMs:
+        timer_data = [[str(i+1), t.id, t.make, t.model, t.thermoRPM_type] for i, t in enumerate(thermoRPMs)]
+        elements.append(Paragraph("ThermoRPMs", header_style))
+        elements.append(create_table(timer_data, ["#", "ID", "Make", "Model", "ThermoRPM Type"], doc))
+        elements.append(Spacer(1, 24))
+
+    
 
     # Add Header/Footer Template
     doc.build(elements, onFirstPage=draw_header_footer, onLaterPages=draw_header_footer)

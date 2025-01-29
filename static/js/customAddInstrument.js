@@ -17,24 +17,61 @@ document.addEventListener('DOMContentLoaded', function () {
         var pipetteFields = document.getElementById('pipette-fields');
         var rpmFields = document.getElementById('rpm-fields');
         var temperatureFields = document.getElementById('temperature-fields');
+        var microscopeFields = document.getElementById('microscope-fields');
+        var timerFields = document.getElementById('timer-fields');
+        var thermoRPMFields = document.getElementById('thermoRPM-fields');
+
         console.log(instrumentType)
         // Toggle child form display
         if (instrumentType === 'Pipette') {
             pipetteFields.style.display = 'block';
             rpmFields.style.display = 'none';
             temperatureFields.style.display = 'none';
+            microscopeFields.style.display = 'none'
+            timerFields.style.display = 'none'
+            thermoRPMFields.style.display = 'none'
         } else if (instrumentType === 'RPM') {
             pipetteFields.style.display = 'none';
             rpmFields.style.display = 'block';
             temperatureFields.style.display = 'none';
+            microscopeFields.style.display = 'none'
+            timerFields.style.display = 'none'
+            thermoRPMFields.style.display = 'none'
         } else if (instrumentType === 'Temperature') {
             pipetteFields.style.display = 'none';
             rpmFields.style.display = 'none';
             temperatureFields.style.display = 'block';
+            microscopeFields.style.display = 'none'
+            timerFields.style.display = 'none'
+            thermoRPMFields.style.display = 'none'
+        } else if (instrumentType === 'Microscope') {
+            pipetteFields.style.display = 'none';
+            rpmFields.style.display = 'none';
+            temperatureFields.style.display = 'none';
+            microscopeFields.style.display = 'block'
+            timerFields.style.display = 'none'
+            thermoRPMFields.style.display = 'none'
+        }else if (instrumentType === 'Timer') {
+            pipetteFields.style.display = 'none';
+            rpmFields.style.display = 'none';
+            temperatureFields.style.display = 'none';
+            microscopeFields.style.display = 'none'
+            timerFields.style.display = 'block'
+            thermoRPMFields.style.display = 'none'
+        }else if (instrumentType === 'ThermoRPM') {
+            pipetteFields.style.display = 'none';
+            rpmFields.style.display = 'none';
+            temperatureFields.style.display = 'none';
+            microscopeFields.style.display = 'none'
+            timerFields.style.display = 'none'
+            thermoRPMFields.style.display = 'block'
         } else {
             pipetteFields.style.display = 'none';
             rpmFields.style.display = 'none';
             temperatureFields.style.display = 'none';
+            microscopeFields.style.display = 'none'
+            timerFields.style.display = 'none'
+            thermoRPMFields.style.display = 'none'
         }
     }
 
@@ -124,12 +161,34 @@ document.addEventListener('DOMContentLoaded', function () {
     const rpmTestFields = document.getElementById('rpmTestFields');
     const rpmActualFields = document.getElementById('rpmActualFields');
 
+    const rpmTimerTestFields = document.getElementById('rpmTimerTestFields');
+    const rpmTimerActualFields = document.getElementById('rpmTimerActualFields');
+
     const timerTestFields = document.getElementById('timerTestFields');
     const timerActualFields = document.getElementById('timerActualFields');
+
+    const temperatureTestFields = document.getElementById('temperatureTestFields');
+    const temperatureActualFields = document.getElementById('temperatureActualFields');
+
+
+    const thermoRPMTimerTestFields = document.getElementById('thermoRPMTimerTestFields');
+    const thermoRPMTimerActualFields = document.getElementById('thermoRPMTimerActualFields');
+
+    const thermoRPMTestFields = document.getElementById('thermoRPMTestFields');
+    const thermoRPMActualFields = document.getElementById('thermoRPMActualFields');
+
+    const thermoRPMTemperatureTestFields = document.getElementById('thermoRPMTemperatureTestFields');
+    const thermoRPMTemperatureActualFields = document.getElementById('thermoRPMTemperatureActualFields');
 
     document.getElementById('toggleRpmButton').addEventListener('click', function (event) {
         event.preventDefault();
         toggleArrayFieldBtn([rpmTestFields, rpmActualFields], document.getElementById('rpmCountInput'))
+  
+    });
+
+    document.getElementById('toggleRPMTimerButton').addEventListener('click', function (event) {
+        event.preventDefault();
+        toggleArrayFieldBtn([rpmTimerTestFields, rpmTimerActualFields], document.getElementById('rpmTimerCountInput'))
   
     });
 
@@ -139,18 +198,63 @@ document.addEventListener('DOMContentLoaded', function () {
   
     });
 
+    document.getElementById('toggleTemperatureButton').addEventListener('click', function (event) {
+        event.preventDefault();
+        toggleArrayFieldBtn([temperatureTestFields, temperatureActualFields], document.getElementById('temperatureCountInput'))
+  
+    });
+    
+
+    document.getElementById('toggleThermoRpmButton').addEventListener('click', function (event) {
+        event.preventDefault();
+        toggleArrayFieldBtn([thermoRPMTestFields, thermoRPMActualFields], document.getElementById('thermoRPMCountInput'))
+  
+    });
+
+    document.getElementById('toggleThermoRPMTemperatureButton').addEventListener('click', function (event) {
+        event.preventDefault();
+        toggleArrayFieldBtn([thermoRPMTemperatureTestFields, thermoRPMTemperatureActualFields], document.getElementById('thermoRPMTemperatureCountInput'))
+  
+    });
+
+    document.getElementById('togglethermoRPMTimerButton').addEventListener('click', function (event) {
+        event.preventDefault();
+        toggleArrayFieldBtn([thermoRPMTimerTestFields, thermoRPMTimerActualFields], document.getElementById('thermoRPMTimerCountInput'))
+  
+    });
+    
+
 
 
     // Combine the rpm fields into one field before submitting
     const form = document.querySelector('form');
     form.addEventListener('submit', function (event) {
 
-        consolidateArrayFields(form, rpmTestFields,'rpm_test')
-        consolidateArrayFields(form, rpmActualFields,'rpm_actual')
+        const instrumentType = document.getElementById('instrumentTypeSelect').value;
 
-        consolidateArrayFields(form, timerTestFields, 'timer_test')
-        consolidateArrayFields(form, timerActualFields, 'timer_actual')
+        if(instrumentType === "RPM") {
+            consolidateArrayFields(form, rpmTestFields,'rpm_test')
+            consolidateArrayFields(form, rpmActualFields,'rpm_actual')
 
+            consolidateArrayFields(form, rpmTimerTestFields, 'timer_test')
+            consolidateArrayFields(form, rpmTimerActualFields, 'timer_actual')
+        } else if(instrumentType === "Timer") {
+            consolidateArrayFields(form, timerTestFields, 'timer_test')
+            consolidateArrayFields(form, timerActualFields, 'timer_actual')
+        } else if(instrumentType === "Temperature") {
+            consolidateArrayFields(form, temperatureTestFields, 'temperature_test')
+            consolidateArrayFields(form, temperatureActualFields, 'temperature_actual')
+        } else if(instrumentType === "ThermoRPM") {
+            consolidateArrayFields(form, thermoRPMTestFields,'rpm_test')
+            consolidateArrayFields(form, thermoRPMActualFields,'rpm_actual')
+            consolidateArrayFields(form, thermoRPMTemperatureTestFields, 'temperature_test')
+            consolidateArrayFields(form, thermoRPMTemperatureActualFields, 'temperature_actual')
+            consolidateArrayFields(form, thermoRPMTimerTestFields, 'timer_test')
+            consolidateArrayFields(form, thermoRPMTimerActualFields, 'timer_actual')
+        }
+
+
+        
     });
 
 

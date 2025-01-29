@@ -19,7 +19,7 @@ helper.py - edit_instrument_get(instrument)
 views.py - service_order(request, so_number)
     Add if statement for casting instruments
 forms.py
-    Add nee ValuesForm class for instrument type
+    Add new ValuesForm class for instrument type
 views.py - update_instrument_values(request, instrument_id)
     Add if statement for new instrument type
 views.py - add_instrument_service_order(request, so_number)
@@ -28,7 +28,12 @@ instrument-type-fields.html
     Create div and respective fields for new instrument type
 customAddInstrument.js - toggleFields()
     Add variable for new instrument type fields and add it to if statement
-
+service-order.html
+    Add fields to modal
+customAddServiceOrder.html
+    Add code for fields 
+so_pdf_generation.py
+    Add code for creating table of new type
 
 ## Add Instrument Type Fields
 models.py
@@ -37,14 +42,10 @@ forms.py
     Add necessary fields to the respective form class
 instrument-type-fields.html
     Add fields to respective instrument type fields
-forms.py
-    Add fields to respestive ValuesForm class
 
 FOR ARRAY FIELDS:
 customAddInstrument.js
-    Try to make RPM code reusable, add any needed changes
-helper.py
-    Make parse_rpm_fields generic and reuse
+    Add code for multiple fields and field consolidation
 helper.py - find_instrument_type(instrument_form, request)
     Call parser to if statement 
 helper.py - edit_instrument_post(request, instrument)
@@ -53,6 +54,8 @@ helper.py - edit_instrument_get(instrument)
     Add array to context
 
 FOR VALUE FIELDS:
+forms.py
+    Add fields to respestive ValuesForm class
 service-order.html
     Add code to the modal
 customAddServiceOrder.js - IF ARRAY FIELD
