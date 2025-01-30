@@ -177,3 +177,32 @@
     padding: 0;
     display: contents;
 }
+
+.custom-toggle {
+    color: black !important; 
+    background-color: white;
+    border: 1px solid #cccccc;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    padding-bottom: 0px;
+    padding-top: 0px;
+    line-height: 30px; 
+}
+
+.custom-toggle:hover {
+    color: black; 
+    background-color: white;
+    border-color: #8d8d8d;
+}
+
+.custom-dropdown.active, .custom-dropdown:focus {
+    background-color: #3D6A80;
+}
+
+/* Change background and text color when a dropdown item is clicked or focused */
+.dropdown-item:active,
+.dropdown-item:focus {
+    background-color: #3D6A80; /* Desired background color */
+}

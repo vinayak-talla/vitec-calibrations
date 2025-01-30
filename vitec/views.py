@@ -167,6 +167,10 @@ def add_instrument(request):
         'microscope_form': MicroscopeForm(),
         'timer_form': TimerForm(),
         'thermoRPM_form': ThermoRPMForm(),
+        'balance_form': BalanceForm(),
+        'pH_meter_form': PHMeterForm(),
+        'airflow_form': AirflowForm(),
+        'refrigeration_form': RefrigerationForm(),
         'institutions': Institution.objects.all()
         }
     context.update(load_instrument_types())
@@ -356,6 +360,15 @@ def service_order(request, so_number):
             cast_so_instruments.append(Timer.objects.get(id=instrument.id))
         elif instrument.instrument_type == "ThermoRPM":
             cast_so_instruments.append(ThermoRPM.objects.get(id=instrument.id))
+        elif instrument.instrument_type == "Balance":
+            cast_so_instruments.append(Balance.objects.get(id=instrument.id))
+        elif instrument.instrument_type == "pH Meter":
+            cast_so_instruments.append(PHMeter.objects.get(id=instrument.id))
+        elif instrument.instrument_type == "Airflow":
+            cast_so_instruments.append(Airflow.objects.get(id=instrument.id))
+            context.update(load_instrument_types())
+        elif instrument.instrument_type == "Refrigeration":
+            cast_so_instruments.append(Refrigeration.objects.get(id=instrument.id))
 
     paginator = Paginator(cast_so_instruments, 2)  # Show 10 institutions per page
     page_number = request.GET.get('page', 1)
@@ -389,8 +402,14 @@ def update_instrument_values(request, instrument_id):
             form = RPMValueForm(request.POST, instance=rpm_instrument)
         elif instrument_type == 'Timer':
             form = TimerValueForm(request.POST, instance= instrument.timer)
-        elif instrument_type == 'ThermoRPM':
-            form = ThermoRPMValueForm(request.POST, instance= instrument.thermorpm)
+        elif instrument_type == 'Balance':
+            form = BalanceValueForm(request.POST, instance= instrument.balance)
+        elif instrument_type == 'pH Meter':
+            form = PHMeterValueForm(request.POST, instance= instrument.phmeter)
+        elif instrument_type == 'Airflow':
+            form = AirflowValueForm(request.POST, instance= instrument.airflow)
+        elif instrument_type == 'Refrigeration':
+            form = RefrigerationValueForm(request.POST, instance= instrument.refrigeration)
         else:
             temp_instrument = instrument.temperature  # Cast to Temperature child model
             form = TemperatureValueForm(request.POST, instance=temp_instrument)
@@ -516,6 +535,10 @@ def add_instrument_service_order(request, so_number):
         'microscope_form': MicroscopeForm(),
         'timer_form': TimerForm(),
         'thermoRPM_form': ThermoRPMForm(),
+        'balance_form': BalanceForm(),
+        'pH_meter_form': PHMeterForm(),
+        'airflow_form': AirflowForm(),
+        'refrigeration_form': RefrigerationForm(),
         'institutions': Institution.objects.all(),
         'so_number': so_number
         }

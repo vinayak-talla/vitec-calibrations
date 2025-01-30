@@ -5,7 +5,20 @@
         "Temperature",
         "Microscope",
         "Timer",
-        "ThermoRPM"
+        "ThermoRPM",
+        "Balance",
+        "pH Meter",
+        "Airflow",
+        "Refrigeration"
+    ],
+    "unit_types": [
+        "g",
+        "kg",
+        "lb"
+    ],
+    "evaluation_types": [
+        "PASS",
+        "FAIL"
     ],
     "pipette_types": [
         "Single Channel",
@@ -45,5 +58,21 @@
     "thermoRPM_types": [
         "Test 1",
         "Test 2"
+    ],
+    "balance_types": [
+        "Test 1",
+        "Test 2",
+        "test3"
+    ],
+    "airflow_types": [
+        "Biosafety Cabinet",
+        "Fume Hood",
+        "PCR Work Station",
+        "test4"
+    ],
+    "refrigeration_types": [
+        "Refrigerator",
+        "Freezer",
+        "Test1"
     ]
 }

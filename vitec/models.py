@@ -60,6 +60,10 @@ class RPM(Instrument):
     )
     def __str__(self):
         return f"{self.id} {self.rpm_test} {self.rpm_actual}"
+    def save(self, *args, **kwargs):
+        if not self.rpm_model.strip():  # Replace empty or whitespace-only values
+            self.rpm_model = "N/A"
+        super().save(*args, **kwargs)
 
 class Temperature(Instrument):
     temperature_type = models.CharField(max_length=100)
@@ -78,10 +82,18 @@ class Temperature(Instrument):
     humidity_actual = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
     def __str__(self):
         return f"{self.id} {self.temperature_type} {self.temperature_test} {self.temperature_actual}"
+    def save(self, *args, **kwargs):
+        if not self.temperature_model.strip():  # Replace empty or whitespace-only values
+            self.temperature_model = "N/A"
+        super().save(*args, **kwargs)
     
 class Microscope(Instrument):
     microscope_type = models.CharField(max_length=100)
     microscope_model = models.CharField(max_length=50, blank=True, default="N/A")
+    def save(self, *args, **kwargs):
+        if not self.microscope_model.strip():  # Replace empty or whitespace-only values
+            self.microscope_model = "N/A"
+        super().save(*args, **kwargs)
 
 class Timer(Instrument):
     timer_type = models.CharField(max_length=100)
@@ -96,6 +108,10 @@ class Timer(Instrument):
         blank=True,   # Allows the field to be blank in forms
         default=list  # Ensures an empty list is used if no value is provided
     )
+    def save(self, *args, **kwargs):
+        if not self.timer_model.strip():  # Replace empty or whitespace-only values
+            self.timer_model = "N/A"
+        super().save(*args, **kwargs)
 
 class ThermoRPM(Instrument):
     thermoRPM_type = models.CharField(max_length=100)
@@ -130,6 +146,82 @@ class ThermoRPM(Instrument):
         blank=True,   # Allows the field to be blank in forms
         default=list  # Ensures an empty list is used if no value is provided
     )
+    def save(self, *args, **kwargs):
+        if not self.thermoRPM_model.strip():  # Replace empty or whitespace-only values
+            self.thermoRPM_model = "N/A"
+        super().save(*args, **kwargs)
+
+class Balance(Instrument):
+    balance_type = models.CharField(max_length=100)
+    balance_model = models.CharField(max_length=50, blank=True, default="N/A")
+    unit_type = models.CharField(max_length=10)
+    weight_test = ArrayField(
+        models.IntegerField(),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    weight_actual = ArrayField(
+        models.IntegerField(),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    def save(self, *args, **kwargs):
+        if not self.balance_model.strip():  # Replace empty or whitespace-only values
+            self.balance_model = "N/A"
+        super().save(*args, **kwargs)
+
+class PHMeter(Instrument):
+    pH_meter_model = models.CharField(max_length=50, blank=True, default="N/A")
+    pH4_test = models.IntegerField(null=True, blank=True)
+    pH4_actual = models.IntegerField(null=True, blank=True)
+    pH7_test = models.IntegerField(null=True, blank=True)
+    pH7_actual = models.IntegerField(null=True, blank=True)
+    pH10_test = models.IntegerField(null=True, blank=True)
+    pH10_actual = models.IntegerField(null=True, blank=True)
+    def save(self, *args, **kwargs):
+        if not self.pH_meter_model.strip():  # Replace empty or whitespace-only values
+            self.pH_meter_model = "N/A"
+        super().save(*args, **kwargs)
+
+class Airflow(Instrument):
+    airflow_type = models.CharField(max_length=100)
+    airflow_model = models.CharField(max_length=50, blank=True, default="N/A")
+    downflow = ArrayField(
+        models.IntegerField(),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    inflow = ArrayField(
+        models.IntegerField(),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    uv_light_test = models.CharField(max_length=10, blank=True)
+    filter_leak_test = models.CharField(max_length=10, blank=True)
+    pcr_airflow = ArrayField(
+        models.IntegerField(),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    particle_size = ArrayField(
+        models.IntegerField(),
+        blank=True,   # Allows the field to be blank in forms
+        default=list  # Ensures an empty list is used if no value is provided
+    )
+    def save(self, *args, **kwargs):
+        if not self.airflow_model.strip():  # Replace empty or whitespace-only values
+            self.airflow_model = "N/A"
+        super().save(*args, **kwargs)
+
+
+class Refrigeration(Instrument):
+    refrigeration_type = models.CharField(max_length=100)
+    refrigeration_model = models.CharField(max_length=50, blank=True, default="N/A")
+    def save(self, *args, **kwargs):
+        if not self.refrigeration_model.strip():  # Replace empty or whitespace-only values
+            self.refrigeration_model = "N/A"
+        super().save(*args, **kwargs)
+
 
 class Service_Order(models.Model):
     so_number = models.AutoField(primary_key=True)

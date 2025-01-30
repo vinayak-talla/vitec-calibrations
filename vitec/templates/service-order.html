@@ -247,6 +247,7 @@
                                                         <input type="text" class="form-control custom-input sm-custom-input" id="humidity_actual" name="humidity_actual" value="{{ instrument.humidity_actual| default:'' }}">
                                                     </div>
                                                 </div>
+
                                             
 
                                             {% else %}
@@ -406,6 +407,240 @@
 
                                                 </div>
                                             </div>
+
+                                        
+                                        {% elif instrument.instrument_type == "Balance" %}
+                                            <!-- Weight Test -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                
+                                                <div class="col-auto plus_container_custom mb-2" >
+                                                    <label for="weight_test" class="col-form-label custom-form-label">Weight Test:</label>
+                                                    <button type="button" class=" add-fields-btn"  id="toggleWeightButton{{ instrument.id }}">
+                                                        <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+                                                    </button>
+                                                </div>
+                                                <div class="col-auto mb-2">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="weightCountInput{{ instrument.id }}" placeholder="#input" style="display: none;">
+                                                </div>
+                                        
+                                                <div class="col-auto d-flex flex-wrap rpm_input_custom" id="weightTestFields{{ instrument.id }}">
+                                                                                        
+                                                    {% for weight_test in instrument.weight_test %}
+                                                        <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{weight_test}}">
+                                                    {% endfor %}    
+
+                                                </div>
+                                            </div>
+
+                                            <!-- Weight Actual -->
+                                            <div class="row mb-2 pb-2 custom-row align-items-center">
+                                                <label for="weight_actual" class="col-auto mb-2 col-form-label custom-form-label">Weight Actual:</label>
+                                                <div class="col-auto d-flex flex-wrap rpm_input_custom" id="weightActualFields{{ instrument.id }}">
+
+                                                    {% for weight_actual in instrument.weight_actual %}
+                                                        <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{weight_actual}}">
+                                                    {% endfor %}
+
+                                                </div>
+                                            </div>
+
+                                        
+                                        {% elif instrument.instrument_type == "pH Meter" %}
+                                            <!-- pH4 Test -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                <label for="pH4_test" class="col-auto col-form-label custom-form-label">pH4 Test:</label>
+                                                <div class="col-auto ">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="pH4_test" name="pH4_test" value="{{ instrument.pH4_test| default:'' }}">
+                                                </div>
+                                            </div>
+
+                                            <!-- pH4 Actual -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                <label for="pH4_actual" class="col-auto col-form-label custom-form-label">pH4 Actual:</label>
+                                                <div class="col-auto ">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="pH4_actual" name="pH4_actual" value="{{ instrument.pH4_actual| default:'' }}">
+                                                </div>
+                                            </div>
+
+                                            <!-- pH7 Test -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                <label for="pH7_test" class="col-auto col-form-label custom-form-label">pH7 Test:</label>
+                                                <div class="col-auto ">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="pH7_test" name="pH7_test" value="{{ instrument.pH7_test| default:'' }}">
+                                                </div>
+                                            </div>
+
+                                            <!-- pH7 Actual -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                <label for="pH7_actual" class="col-auto col-form-label custom-form-label">pH7 Actual:</label>
+                                                <div class="col-auto ">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="pH7_actual" name="pH7_actual" value="{{ instrument.pH7_actual| default:'' }}">
+                                                </div>
+                                            </div>
+
+                                            <!-- pH10 Test -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                <label for="pH10_test" class="col-auto col-form-label custom-form-label">pH10 Test:</label>
+                                                <div class="col-auto ">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="pH10_test" name="pH10_test" value="{{ instrument.pH10_test| default:'' }}">
+                                                </div>
+                                            </div>
+
+                                            <!-- pH10 Actual -->
+                                            <div class="row mb-2 pb-2 custom-row align-items-center">
+                                                <label for="pH10_actual" class="col-auto col-form-label custom-form-label">pH10 Actual:</label>
+                                                <div class="col-auto ">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="pH10_actual" name="pH10_actual" value="{{ instrument.pH10_actual| default:'' }}">
+                                                </div>
+                                            </div>
+                                                
+                                        
+
+
+                                        {% elif instrument.instrument_type == "Airflow" %}
+
+
+                                            <!-- UV Light Test-->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center dropdown-container" data-dropdown-key="evaluation_types">
+                                                <label for="uv_light_test" class="col-auto col-form-label custom-form-label">UV Light Test:</label>
+                                                <div class="col-auto">
+                                                    <!-- Dropdown for UV Light Test with Bootstrap-Select -->
+                                                    <select class="selectpicker" data-style="custom-toggle" id="uvLightTestSelect" name="uv_light_test" title="Select PASS/FAIL" data-width="100%" data-size="5">
+                                                        <!-- Dynamically populated options -->
+                                                        {% for evaluation in evaluation_types %}
+                                                            <option class="custom-dropdown" value="{{ evaluation }}" {% if instrument.uv_light_test == evaluation %}selected{% endif %}>{{ evaluation }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <!-- Filter Leak Test-->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center dropdown-container" data-dropdown-key="evaluation_types">
+                                                <label for="filter_leak_test" class="col-auto col-form-label custom-form-label">Filter Leak Test:</label>
+                                                <div class="col-auto">
+                                                    <!-- Dropdown for UV Light Test with Bootstrap-Select -->
+                                                    <select class="selectpicker" data-style="custom-toggle" id="filterLeakTestSelect" name="filter_leak_test" title="Select PASS/FAIL" data-width="100%" data-size="5">
+                                                        <!-- Dynamically populated options -->
+                                                        {% for evaluation in evaluation_types %}
+                                                            <option class="custom-dropdown" value="{{ evaluation }}" {% if instrument.filter_leak_test == evaluation %}selected{% endif %}>{{ evaluation }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+
+                                            <!-- Downflow -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                
+                                                <div class="col-auto plus_container_custom mb-2" >
+                                                    <label for="downflow" class="col-form-label custom-form-label">Downflow:</label>
+                                                    <button type="button" class=" add-fields-btn"  id="toggleDownflowButton{{ instrument.id }}">
+                                                        <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+                                                    </button>
+                                                </div>
+                                                <div class="col-auto mb-2">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="downflowCountInput{{ instrument.id }}" placeholder="#input" style="display: none;">
+                                                </div>
+                                        
+                                                <div class="col-auto d-flex flex-wrap rpm_input_custom" id="downflowFields{{ instrument.id }}">
+                                                                                        
+                                                    {% for downflow in instrument.downflow %}
+                                                        <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{downflow}}">
+                                                    {% endfor %}    
+
+                                                </div>
+                                            </div>
+
+                                            {% if instrument.airflow_type == "PCR Work Station" %}
+                                                <!-- Inflow -->
+                                                <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                    
+                                                    <div class="col-auto plus_container_custom mb-2" >
+                                                        <label for="inflow" class="col-form-label custom-form-label">Inflow:</label>
+                                                        <button type="button" class=" add-fields-btn"  id="toggleInflowButton{{ instrument.id }}">
+                                                            <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-auto mb-2">
+                                                        <input type="text" class="form-control custom-input sm-custom-input" id="inflowCountInput{{ instrument.id }}" placeholder="#input" style="display: none;">
+                                                    </div>
+                                            
+                                                    <div class="col-auto d-flex flex-wrap rpm_input_custom" id="inflowFields{{ instrument.id }}">
+                                                                                            
+                                                        {% for inflow in instrument.inflow %}
+                                                            <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{inflow}}">
+                                                        {% endfor %}    
+
+                                                    </div>
+                                                </div>
+
+                                                <!-- PCR Airflow -->
+                                                <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                    
+                                                    <div class="col-auto plus_container_custom mb-2" >
+                                                        <label for="pcr_airflow" class="col-form-label custom-form-label">PCR Airflow:</label>
+                                                        <button type="button" class=" add-fields-btn"  id="togglePCRAirflowButton{{ instrument.id }}">
+                                                            <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-auto mb-2">
+                                                        <input type="text" class="form-control custom-input sm-custom-input" id="pcrAirflowCountInput{{ instrument.id }}" placeholder="#input" style="display: none;">
+                                                    </div>
+                                            
+                                                    <div class="col-auto d-flex flex-wrap rpm_input_custom" id="pcrAirflowFields{{ instrument.id }}">
+                                                                                            
+                                                        {% for pcr_airflow in instrument.pcr_airflow %}
+                                                            <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{pcr_airflow}}">
+                                                        {% endfor %}    
+
+                                                    </div>
+                                                </div>
+
+                                                <!-- Particle Size -->
+                                                <div class="row mb-2 pb-2 custom-row align-items-center">
+                                                    <div class="col-auto plus_container_custom mb-2" >
+                                                        <label for="particle_size" class="col-form-label custom-form-label">Particle Size:</label>
+                                                        <button type="button" class=" add-fields-btn"  id="toggleParticleSizeButton{{ instrument.id }}">
+                                                            <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-auto mb-2">
+                                                        <input type="text" class="form-control custom-input sm-custom-input" id="particleSizeCountInput{{ instrument.id }}" placeholder="#input" style="display: none;">
+                                                    </div>
+                                                    <div class="col-auto d-flex flex-wrap rpm_input_custom" id="particleSizeFields{{ instrument.id }}">
+                                                                                            
+                                                        {% for particle_size in instrument.particle_size %}
+                                                            <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{particle_size}}">
+                                                        {% endfor %}    
+
+                                                    </div>
+                                                </div>
+                                            
+                                            {% else %}
+                                                <!-- Inflow -->
+                                                <div class="row mb-2 pb-2 custom-row align-items-center">
+                                                    <div class="col-auto plus_container_custom mb-2" >
+                                                        <label for="inflow" class="col-form-label custom-form-label">Inflow:</label>
+                                                        <button type="button" class=" add-fields-btn"  id="toggleInflowButton{{ instrument.id }}">
+                                                            <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-auto mb-2">
+                                                        <input type="text" class="form-control custom-input sm-custom-input" id="inflowCountInput{{ instrument.id }}" placeholder="#input" style="display: none;">
+                                                    </div>
+                                                    <div class="col-auto d-flex flex-wrap rpm_input_custom" id="inflowFields{{ instrument.id }}">
+                                                                                            
+                                                        {% for inflow in instrument.inflow %}
+                                                            <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{inflow}}">
+                                                        {% endfor %}    
+
+                                                    </div>
+                                                </div>
+                                                
+                                            {% endif %}
+
+                                        {% elif instrument.instrument_type == "Refrigeration" %}
+
 
 
                                         {% endif %}

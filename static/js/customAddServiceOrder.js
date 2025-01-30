@@ -95,6 +95,60 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
         }
+        else if (instrumentType === "Balance") {
+            const toggleWeight = document.getElementById(`toggleWeightButton${instrumentId}`)
+            toggleWeight.addEventListener('click', function (event) {
+                event.preventDefault();
+                const weightTestFields = document.getElementById(`weightTestFields${instrumentId}`);
+                const weightActualFields = document.getElementById(`weightActualFields${instrumentId}`);
+                toggleArrayFieldBtn([weightTestFields, weightActualFields], document.getElementById(`weightCountInput${instrumentId}`))
+               
+
+            });
+
+        }
+        else if (instrumentType === "Airflow") {
+            const toggleDownflow = document.getElementById(`toggleDownflowButton${instrumentId}`)
+            toggleDownflow.addEventListener('click', function (event) {
+                event.preventDefault();
+                const downflowFields = document.getElementById(`downflowFields${instrumentId}`);
+                toggleArrayFieldBtn([downflowFields], document.getElementById(`downflowCountInput${instrumentId}`))
+               
+
+            });
+
+            const toggleInflow = document.getElementById(`toggleInflowButton${instrumentId}`)
+            toggleInflow.addEventListener('click', function (event) {
+                event.preventDefault();
+                const inflowFields = document.getElementById(`inflowFields${instrumentId}`);
+                toggleArrayFieldBtn([inflowFields], document.getElementById(`inflowCountInput${instrumentId}`))
+               
+
+            });
+
+            const togglePCRAirflow = document.getElementById(`togglePCRAirflowButton${instrumentId}`)
+            if (togglePCRAirflow) {
+                togglePCRAirflow.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    const pcrAirflowFields = document.getElementById(`pcrAirflowFields${instrumentId}`);
+                    toggleArrayFieldBtn([pcrAirflowFields], document.getElementById(`pcrAirflowCountInput${instrumentId}`))
+                
+
+                });
+
+
+                const toggleParticleSize = document.getElementById(`toggleParticleSizeButton${instrumentId}`)
+                toggleParticleSize.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    const particleSizeFields = document.getElementById(`particleSizeFields${instrumentId}`);
+                    toggleArrayFieldBtn([particleSizeFields], document.getElementById(`particleSizeCountInput${instrumentId}`))
+                
+
+                });
+            }
+
+        }
+
         
 
     });
@@ -141,7 +195,9 @@ const instrumentHandlers = {
     RPM: (form,instrumentId) => consolidateRPM(form,instrumentId), // Pass the form parameter
     Temperature: (form, instrumentId) => consolidateTemperature(form, instrumentId),
     Timer: (form, instrumentId) => consolidateTimer(form,instrumentId),
-    ThermoRPM: (form, instrumentId) => consolidateThermoRPM(form, instrumentId)
+    ThermoRPM: (form, instrumentId) => consolidateThermoRPM(form, instrumentId),
+    Balance: (form, instrumentId) => consolidateBalance(form, instrumentId),
+    Airflow: (form, instrumentId) => consolidateAirflow(form, instrumentId)
 };
 // Handle paste event (typically triggered by QR scanner)
 function handlePaste(event) {
@@ -212,6 +268,33 @@ function consolidateThermoRPM(form, instrumentId) {
 
     consolidateArrayFields(form, rpmTestFields,'rpm_test')
     consolidateArrayFields(form, rpmActualFields,'rpm_actual')
+
+
+}
+
+function consolidateBalance(form, instrumentId) {
+    const weightTestFields = document.getElementById(`weightTestFields${instrumentId}`);
+    const weightActualFields = document.getElementById(`weightActualFields${instrumentId}`);
+
+    consolidateArrayFields(form, weightTestFields, 'weight_test')
+    consolidateArrayFields(form, weightActualFields, 'weight_actual')
+
+
+}
+
+function consolidateAirflow(form, instrumentId) {
+    const downflowFields = document.getElementById(`downflowFields${instrumentId}`);
+    const inflowFields = document.getElementById(`inflowFields${instrumentId}`);
+    const pcrAirflowFields = document.getElementById(`pcrAirflowFields${instrumentId}`);
+    const particleSizeFields = document.getElementById(`particleSizeFields${instrumentId}`);
+
+    consolidateArrayFields(form, downflowFields, 'downflow')
+    consolidateArrayFields(form, inflowFields, 'inflow')
+
+    if(pcrAirflowFields) {
+        consolidateArrayFields(form, pcrAirflowFields, 'pcr_airflow')
+        consolidateArrayFields(form, particleSizeFields, 'particle_size')
+    }
 
 
 }

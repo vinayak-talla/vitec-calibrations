@@ -99,6 +99,48 @@ class ThermoRPMForm(forms.ModelForm):
         model = ThermoRPM
         fields = ['thermoRPM_type', 'thermoRPM_model', 'rpm_test', 'rpm_actual', 'temperature_test', 'temperature_actual', 'timer_test', 'timer_actual']
 
+class BalanceForm(forms.ModelForm):
+    balance_model = forms.CharField(
+        max_length=50,
+        required=False,
+        initial='',  # Set initial value to empty
+    )
+    class Meta:
+        model = Balance
+        fields = ['balance_type', 'balance_model', 'unit_type', 'weight_test', 'weight_actual']
+
+class PHMeterForm(forms.ModelForm):
+    pH_meter_model = forms.CharField(
+        max_length=50,
+        required=False,
+        initial='',  # Set initial value to empty
+    )
+    class Meta:
+        model = PHMeter
+        fields = ['pH_meter_model','pH4_test', 'pH4_actual','pH7_test', 'pH7_actual','pH10_test', 'pH10_actual']
+
+class AirflowForm(forms.ModelForm):
+    airflow_model = forms.CharField(
+        max_length=50,
+        required=False,
+        initial='',  # Set initial value to empty
+    )
+    class Meta:
+        model = Airflow
+        fields = '__all__'
+
+class RefrigerationForm(forms.ModelForm):
+    refrigeration_model = forms.CharField(
+        max_length=50,
+        required=False,
+        initial='',  # Set initial value to empty
+    )
+    class Meta:
+        model = Refrigeration
+        fields = '__all__'
+
+
+
 class RPMValueForm(forms.ModelForm):
     class Meta:
         model = RPM
@@ -119,7 +161,29 @@ class ThermoRPMValueForm(forms.ModelForm):
         model = ThermoRPM
         fields = ['rpm_test', 'rpm_actual', 'temperature_test', 'temperature_actual', 'timer_test', 'timer_actual']
 
+class BalanceValueForm(forms.ModelForm):
+    class Meta:
+        model = Balance
+        fields = ['weight_test', 'weight_actual']
+
+class PHMeterValueForm(forms.ModelForm):
+    class Meta:
+        model = PHMeter
+        fields = ['pH4_test', 'pH4_actual','pH7_test', 'pH7_actual','pH10_test', 'pH10_actual']
+
+class AirflowValueForm(forms.ModelForm):
+    class Meta:
+        model = Airflow
+        fields = ['downflow', 'inflow', 'uv_light_test', 'filter_leak_test', 'pcr_airflow', 'particle_size']
+
+class RefrigerationValueForm(forms.ModelForm):
+    class Meta:
+        model = Refrigeration
+        fields = '__all__'
+
 class ServiceOrderForm(forms.ModelForm):
     class Meta:
         model = Service_Order
         fields = ['additional_contact', 'department']
+
+

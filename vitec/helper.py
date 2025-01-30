@@ -86,7 +86,9 @@ def find_instrument_type(instrument_form, request):
         form = PipetteForm(request.POST)
         context['pipette_form']=  form
     elif instrument_type == 'RPM':
+        print(request.POST)
         form = RPMForm(request.POST)
+        print(form)
         context['rpm_form']=  form
         context['rpm_test_values'] = parse_array_fields(request.POST.get('rpm_test', ''))
         context['rpm_actual_values'] = parse_array_fields(request.POST.get('rpm_actual', ''))  
@@ -115,7 +117,28 @@ def find_instrument_type(instrument_form, request):
         context['thermoRPM_timer_test_values'] = parse_array_fields(request.POST.get('timer_test', ''))
         context['thermoRPM_timer_actual_values'] = parse_array_fields(request.POST.get('timer_actual', ''))  
         context['thermoRPM_temperature_test_values'] = parse_array_fields(request.POST.get('temperature_test', ''))
-        context['thermoRPM_temperature_actual_values'] = parse_array_fields(request.POST.get('temperature_actual', ''))  
+        context['thermoRPM_temperature_actual_values'] = parse_array_fields(request.POST.get('temperature_actual', ''))
+    elif instrument_type == 'Balance':
+        print(request.POST)
+        form = BalanceForm(request.POST)
+        print(form)
+        context['weight_test_values'] = parse_array_fields(request.POST.get('weight_test', ''))
+        context['weight_actual_values'] = parse_array_fields(request.POST.get('weight_actual', '')) 
+        context['balance_form'] = form
+    elif instrument_type == 'pH Meter':
+        form = PHMeterForm(request.POST)
+        context['pH_meter_form'] = form
+    elif instrument_type == 'Airflow':
+        form = AirflowForm(request.POST)
+        context['downflow_values'] = parse_array_fields(request.POST.get('downflow', ''))
+        context['inflow_values'] = parse_array_fields(request.POST.get('inflow', '')) 
+        context['pcr_airflow_values'] = parse_array_fields(request.POST.get('pcr_airflow', '')) 
+        context['particle_size_values'] = parse_array_fields(request.POST.get('particle_size', '')) 
+        context['airflow_form'] = form
+    elif instrument_type == 'Refrigeration':
+        print(request.POST)
+        form = RefrigerationForm(request.POST)
+        context['refrigeration_form'] = form  
 
     if form.is_valid():
             add_instrument_type(form,parent_instrument,request)
@@ -188,6 +211,28 @@ def edit_instrument_post(request, instrument):
         context['thermoRPM_timer_actual_values'] = instrument.timer_actual
         context['thermoRPM_temperature_test_values'] = instrument.temperature_test
         context['thermoRPM_temperature_actual_values'] = instrument.temperature_actual
+    elif instrument.instrument_type == 'Balance':
+        instrument = instrument.balance
+        form = BalanceForm(request.POST, instance=instrument)
+        context['weight_test_values'] = instrument.weight_test
+        context['weight_actual_values'] = instrument.weight_actual
+        context['balance_form'] = form
+    elif instrument.instrument_type == 'pH Meter':
+        instrument = instrument.phmeter
+        form = PHMeterForm(request.POST, instance=instrument)
+        context['pH_meter_form'] = form
+    elif instrument.instrument_type == 'Airflow':
+        instrument = instrument.airflow
+        form = AirflowForm(request.POST, instance=instrument)
+        context['downflow_values'] = instrument.downflow
+        context['inflow_values'] = instrument.inflow
+        context['pcr_airflow_values'] = instrument.pcr_airflow
+        context['particle_size_values'] = instrument.particle_size
+        context['airflow_form'] = form
+    elif instrument.instrument_type == 'Refrigeration':
+        instrument = instrument.refrigeration
+        form = RefrigerationForm(request.POST, instance=instrument)
+        context['refrigeration_form'] = form  
 
     if instrument_form.is_valid() and form.is_valid():
         parent = instrument_form.save(commit=False)
@@ -242,6 +287,28 @@ def edit_instrument_get(instrument):
         context['thermoRPM_timer_actual_values'] = instrument.timer_actual
         context['thermoRPM_temperature_test_values'] = instrument.temperature_test
         context['thermoRPM_temperature_actual_values'] = instrument.temperature_actual
+    elif instrument.instrument_type == 'Balance':
+        instrument = instrument.balance
+        form = BalanceForm(instance=instrument)
+        context['weight_test_values'] = instrument.weight_test
+        context['weight_actual_values'] = instrument.weight_actual
+        context['balance_form'] = form
+    elif instrument.instrument_type == 'pH Meter':
+        instrument = instrument.phmeter
+        form = PHMeterForm(instance=instrument)
+        context['pH_meter_form'] = form
+    elif instrument.instrument_type == 'Airflow':
+        instrument = instrument.airflow
+        form = AirflowForm(instance=instrument)
+        context['downflow_values'] = instrument.downflow
+        context['inflow_values'] = instrument.inflow
+        context['pcr_airflow_values'] = instrument.pcr_airflow
+        context['particle_size_values'] = instrument.particle_size
+        context['airflow_form'] = form
+    elif instrument.instrument_type == 'Refrigeration':
+        instrument = instrument.refrigeration
+        form = RefrigerationForm(instance=instrument)
+        context['refrigeration_form'] = form  
 
     context['instrument_form'] = instrument_form
 

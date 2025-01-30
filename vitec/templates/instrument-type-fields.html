@@ -466,11 +466,6 @@
 
 
 
-
-
-
-
-
 <!-- ThermoRPM Fields-->
 <div id="thermoRPM-fields" class="fields">
 
@@ -660,6 +655,488 @@
     </div>
 
 </div>
+
+
+
+<!-- Balance Fields-->
+<div id="balance-fields" class="fields">
+
+    <!-- Balance Type-->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center dropdown-container" data-dropdown-key="balance_types">
+        <label for="balance_type" class="col-sm-2 col-form-label custom-form-label">Balance Type:</label>
+        <div class="col-auto">
+            <!-- Dropdown for balance type with Bootstrap-Select -->
+            <select class="selectpicker" data-style="custom-toggle" id="balanceTypeSelect" name="balance_type" data-live-search="true" title="Select Balance Type" data-width="100%" data-size="5">
+                <!-- Dynamically populated rpm type options -->
+                {% for balance in balance_types %}
+                    <option class="custom-dropdown" value="{{ balance }}" {% if balance_form.balance_type.value == balance %}selected{% endif %}>{{ balance }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto plus_container_custom" id="urls" data-add-dropdown-option-url="{% url 'add-dropdown-option' %}" data-csrf="{{ csrf_token }}">
+            <button class=" add-option-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control new-option-input custom-input" style="display: none;">
+        </div>
+            <!-- Display validation errors -->
+            {% if balance_form.balance_type.errors %}
+                <div class="text-danger dropdown-error-custom ">
+                    {{ balance_form.balance_type.errors|join:", " }}
+                </div>
+            {% endif %}
+        
+    </div>
+
+    <!-- Model -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="balance_model" class="col-sm-2 col-form-label custom-form-label">Model:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="balance_model" name="balance_model" value="{{ balance_form.balance_model.value | default:'' }}">
+            {% if balance_form.balance_model.errors %}
+                <div class="text-danger">
+                    {{ balance_form.balance_model.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <!-- Unit Type-->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center" data-dropdown-key="unit_types">
+        <label for="unit_type" class="col-sm-2 col-form-label custom-form-label">Unit Type:</label>
+        <div class="col-auto">
+            <!-- Dropdown for unit type with Bootstrap-Select -->
+            <select class="selectpicker" data-style="custom-toggle" id="unitTypeSelect" name="unit_type" title="Select Unit Type" data-width="100%" data-size="5">
+                <!-- Dynamically populated rpm type options -->
+                {% for unit in unit_types %}
+                    <option class="custom-dropdown" value="{{ unit }}" {% if balance_form.unit_type.value == unit %}selected{% endif %}>{{ unit }}</option>
+                {% endfor %}
+            </select>
+        </div>
+            <!-- Display validation errors -->
+            {% if balance_form.unit_type.errors %}
+                <div class="text-danger dropdown-error-custom ">
+                    {{ balance_form.unit_type.errors|join:", " }}
+                </div>
+            {% endif %}
+        
+    </div>
+
+    <!-- Weight Test -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="weight_test" class="col-sm-2 col-form-label custom-form-label">Weight Test:</label>
+        <div class="col-auto plus_container_custom" id="toggleWeightButton" >
+            <button class=" add-fields-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control custom-input sm-custom-input" id="weightCountInput" placeholder="#input" style="display: none;">
+        </div>
+
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="weightTestFields">
+
+            {% for weight_test in weight_test_values %}
+            <input type="text" class="form-control custom-input rpm-custom-size me-3 timer-test-fields" value="{{weight_test}}">
+            {% endfor %}  
+        </div>
+
+        {% if balance_form.weight_test.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in balance_form.weight_test.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+     <!-- Weight Actual -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="weight_actual" class="col-sm-2 col-form-label custom-form-label">Weight Actual:</label>
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="weightActualFields">
+
+            {% for weight_actual in weight_actual_values %}
+                <input type="text" class="form-control custom-input rpm-custom-size me-3 timer-test-fields" value="{{weight_actual}}">
+            {% endfor %}    
+        </div>
+
+        {% if balance_form.weight_actual.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in balance_form.weight_actual.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
+<!-- pH Meter Fields-->
+<div id="pH-meter-fields" class="fields">
+
+    <!-- Model -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="pH_meter_model" class="col-sm-2 col-form-label custom-form-label">Model:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="pH_meter_model" name="pH_meter_model" value="{{ pH_meter_form.pH_meter_model.value | default:'' }}">
+            {% if pH_meter_form.pH_meter_model.errors %}
+                <div class="text-danger">
+                    {{ pH_meter_form.pH_meter_model.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- pH4 Test -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="pH4_test" class="col-sm-2 col-form-label custom-form-label">pH4 Test:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input sm-custom-input" id="pH4_test" name="pH4_test" value="{{ pH_meter_form.pH4_test.value| default:'' }}">
+            {% if pH_meter_form.pH4_test.errors %}
+                <div class="text-danger">
+                    {{ pH_meter_form.pH4_test.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- pH4 Actual -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="pH4_actual" class="col-sm-2 col-form-label custom-form-label">pH4 Actual:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input sm-custom-input" id="pH4_actual" name="pH4_actual" value="{{ pH_meter_form.pH4_actual.value| default:'' }}">
+            {% if pH_meter_form.pH4_actual.errors %}
+                <div class="text-danger">
+                    {{ pH_meter_form.pH4_actual.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- pH7 Test -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="pH7_test" class="col-sm-2 col-form-label custom-form-label">pH7 Test:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input sm-custom-input" id="pH7_test" name="pH7_test" value="{{ pH_meter_form.pH7_test.value| default:'' }}">
+            {% if pH_meter_form.pH7_test.errors %}
+                <div class="text-danger">
+                    {{ pH_meter_form.pH7_test.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- pH7 Actual -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="pH7_actual" class="col-sm-2 col-form-label custom-form-label">pH7 Actual:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input sm-custom-input" id="pH7_actual" name="pH7_actual" value="{{ pH_meter_form.pH7_actual.value| default:'' }}">
+            {% if pH_meter_form.pH7_actual.errors %}
+                <div class="text-danger">
+                    {{ pH_meter_form.pH7_actual.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <!-- pH10 Test -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="pH10_test" class="col-sm-2 col-form-label custom-form-label">pH10 Test:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input sm-custom-input" id="pH10_test" name="pH10_test" value="{{ pH_meter_form.pH10_test.value| default:'' }}">
+            {% if pH_meter_form.pH10_test.errors %}
+                <div class="text-danger">
+                    {{ pH_meter_form.pH10_test.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- pH10 Actual -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="pH10_actual" class="col-sm-2 col-form-label custom-form-label">pH10 Actual:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input sm-custom-input" id="pH10_actual" name="pH10_actual" value="{{ pH_meter_form.pH10_actual.value| default:'' }}">
+            {% if pH_meter_form.pH10_actual.errors %}
+                <div class="text-danger">
+                    {{ pH_meter_form.pH10_actual.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+<!-- Airflow Fields-->
+<div id="airflow-fields" class="fields">
+
+    <!-- Airflow Type-->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center dropdown-container" data-dropdown-key="airflow_types">
+        <label for="airflow_type" class="col-sm-2 col-form-label custom-form-label">Airflow Type:</label>
+        <div class="col-auto">
+            <!-- Dropdown for airflow type with Bootstrap-Select -->
+            <select class="selectpicker" data-style="custom-toggle" id="airflowTypeSelect" name="airflow_type" data-live-search="true" title="Select Airflow Type"  data-airflow-type="{{airflow_form.airflow_type.value}}" data-width="100%" data-size="5">
+                <!-- Dynamically populated airflow type options -->
+                {% for airflow in airflow_types %}
+                    <option class="custom-dropdown" value="{{ airflow }}" {% if airflow_form.airflow_type.value == airflow %}selected{% endif %}>{{ airflow }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto plus_container_custom" id="urls" data-add-dropdown-option-url="{% url 'add-dropdown-option' %}" data-csrf="{{ csrf_token }}">
+            <button class=" add-option-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control new-option-input custom-input" style="display: none;">
+        </div>
+            <!-- Display validation errors -->
+            {% if airflow_form.airflow_type.errors %}
+                <div class="text-danger dropdown-error-custom ">
+                    {{ airflow_form.airflow_type.errors|join:", " }}
+                </div>
+            {% endif %}
+        
+    </div>
+
+    <!-- Model -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="airflow_model" class="col-sm-2 col-form-label custom-form-label">Model:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="airflow_model" name="airflow_model" value="{{ airflow_form.airflow_model.value | default:'' }}">
+            {% if airflow_form.airflow_model.errors %}
+                <div class="text-danger">
+                    {{ airflow_form.airflow_model.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <!-- UV Light Test-->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center" data-dropdown-key="evaluation_types">
+        <label for="uv_light_test" class="col-sm-2 col-form-label custom-form-label">UV Light Test:</label>
+        <div class="col-auto">
+            <!-- Dropdown for UV Light Test with Bootstrap-Select -->
+            <select class="selectpicker" data-style="custom-toggle" id="uvLightTestSelect" name="uv_light_test" title="Select PASS/FAIL" data-width="100%" data-size="5">
+                <!-- Dynamically populated options -->
+                {% for evaluation in evaluation_types %}
+                    <option class="custom-dropdown" value="{{ evaluation }}" {% if airflow_form.uv_light_test.value == evaluation %}selected{% endif %}>{{ evaluation }}</option>
+                {% endfor %}
+            </select>
+        </div>
+            <!-- Display validation errors -->
+            {% if airflow_form.uv_light_test.errors %}
+                <div class="text-danger dropdown-error-custom ">
+                    {{ airflow_form.uv_light_test.errors|join:", " }}
+                </div>
+            {% endif %}
+    </div>
+
+
+    <!-- Filter Leak Test-->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center" data-dropdown-key="evaluation_types">
+        <label for="filter_leak_test" class="col-sm-2 col-form-label custom-form-label">Filter Leak Test:</label>
+        <div class="col-auto">
+            <!-- Dropdown for Filter Leak Test with Bootstrap-Select -->
+            <select class="selectpicker" data-style="custom-toggle" id="filterLeakTestSelect" name="filter_leak_test" title="Select PASS/FAIL" data-width="100%" data-size="5">
+                <!-- Dynamically populated options -->
+                {% for evaluation in evaluation_types %}
+                    <option class="custom-dropdown" value="{{ evaluation }}" {% if airflow_form.filter_leak_test.value == evaluation %}selected{% endif %}>{{ evaluation }}</option>
+                {% endfor %}
+            </select>
+        </div>
+            <!-- Display validation errors -->
+            {% if airflow_form.filter_leak_test.errors %}
+                <div class="text-danger dropdown-error-custom ">
+                    {{ airflow_form.filter_leak_test.errors|join:", " }}
+                </div>
+            {% endif %}
+    </div>
+
+    <!-- Downflow -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="downflow" class="col-sm-2 col-form-label custom-form-label">Downflow:</label>
+        <div class="col-auto plus_container_custom" id="toggleDownflowButton" >
+            <button class=" add-fields-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control custom-input sm-custom-input" id="downflowCountInput" placeholder="#input" style="display: none;">
+        </div>
+
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="downflowFields">
+
+            {% for downflow in downflow_values %}
+                <input type="text" class="form-control custom-input rpm-custom-size me-3 " value="{{downflow}}">
+            {% endfor %}  
+        </div>
+
+        {% if airflow_form.downflow.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in airflow_form.downflow.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Inflow -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="inflow" class="col-sm-2 col-form-label custom-form-label">Inflow:</label>
+        <div class="col-auto plus_container_custom" id="toggleInflowButton" >
+            <button class=" add-fields-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control custom-input sm-custom-input" id="inflowCountInput" placeholder="#input" style="display: none;">
+        </div>
+
+        <div class="col-auto d-flex flex-wrap rpm_input_custom" id="inflowFields">
+
+            {% for inflow in inflow_values %}
+                <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{inflow}}">
+            {% endfor %}  
+        </div>
+
+        {% if airflow_form.inflow.errors %}
+            <div class="text-danger rpm-err-margin">
+                {% for error in airflow_form.inflow.errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div id="pcr-fields" class="fields">
+
+        <!-- PCR Airflow -->
+        <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+            <label for="pcr_airflow" class="col-sm-2 col-form-label custom-form-label">PCR Airflow:</label>
+            <div class="col-auto plus_container_custom" id="togglePCRAirflowButton" >
+                <button class=" add-fields-btn">
+                    <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+                </button>
+            </div>
+            <div class="col-auto">
+                <input type="text" class="form-control custom-input sm-custom-input" id="pcrAirflowCountInput" placeholder="#input" style="display: none;">
+            </div>
+
+            <div class="col-auto d-flex flex-wrap rpm_input_custom" id="pcrAirflowFields">
+
+                {% for pcr_airflow in pcr_airflow_values %}
+                    <input type="text" class="form-control custom-input rpm-custom-size me-3 " value="{{pcr_airflow}}">
+                {% endfor %}  
+            </div>
+
+            {% if airflow_form.pcr_airflow.errors %}
+                <div class="text-danger rpm-err-margin">
+                    {% for error in airflow_form.pcr_airflow.errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Particle Size -->
+        <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+            <label for="particle_size" class="col-sm-2 col-form-label custom-form-label">Particle Size:</label>
+            <div class="col-auto plus_container_custom" id="toggleParticleSizeButton" >
+                <button class=" add-fields-btn">
+                    <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+                </button>
+            </div>
+            <div class="col-auto">
+                <input type="text" class="form-control custom-input sm-custom-input" id="particleSizeCountInput" placeholder="#input" style="display: none;">
+            </div>
+
+            <div class="col-auto d-flex flex-wrap rpm_input_custom" id="particleSizeFields">
+
+                {% for particle_size in particle_size_values %}
+                    <input type="text" class="form-control custom-input rpm-custom-size me-3" value="{{particle_size}}">
+                {% endfor %}  
+            </div>
+
+            {% if airflow_form.particle_size.errors %}
+                <div class="text-danger rpm-err-margin">
+                    {% for error in airflow_form.particle_size.errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    
+</div>
+
+
+
+
+
+
+
+<!-- Refrigeration Fields-->
+<div id="refrigeration-fields" class="fields">
+
+    <!-- Refrigeration Type-->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center dropdown-container" data-dropdown-key="refrigeration_types">
+        <label for="refrigeration_type" class="col-sm-2 col-form-label custom-form-label">Refrigeration Type:</label>
+        <div class="col-auto">
+            <!-- Dropdown for refrigeration type with Bootstrap-Select -->
+            <select class="selectpicker" data-style="custom-toggle" id="refrigerationTypeSelect" name="refrigeration_type" data-live-search="true" title="Select Refrigeration Type" data-width="100%" data-size="5">
+                <!-- Dynamically populated rpm type options -->
+                {% for refrigeration in refrigeration_types %}
+                    <option class="custom-dropdown" value="{{ refrigeration }}" {% if refrigeration_form.refrigeration_type.value == refrigeration %}selected{% endif %}>{{ refrigeration }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto plus_container_custom" id="urls" data-add-dropdown-option-url="{% url 'add-dropdown-option' %}" data-csrf="{{ csrf_token }}">
+            <button class=" add-option-btn">
+                <img src="{% static 'images/plus_icon.png' %}" alt="Add" width="14" height="14">
+            </button>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control new-option-input custom-input" style="display: none;">
+        </div>
+            <!-- Display validation errors -->
+            {% if refrigeration_form.refrigeration_type.errors %}
+                <div class="text-danger dropdown-error-custom ">
+                    {{ refrigeration_form.refrigeration_type.errors|join:", " }}
+                </div>
+            {% endif %}
+        
+    </div>
+
+    <!-- Model -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="refrigeration_model" class="col-sm-2 col-form-label custom-form-label">Model:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input" id="refrigeration_model" name="refrigeration_model" value="{{ refrigeration_form.refrigeration_model.value | default:'' }}">
+            {% if refrigeration_form.refrigeration_model.errors %}
+                <div class="text-danger">
+                    {{refrigeration_form.refrigeration_model.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+
 
 
 {% endblock %}

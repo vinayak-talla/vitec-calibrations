@@ -75,6 +75,10 @@ def create_so_pdf(so_number):
     microscopes = [i.microscope for i in instruments if i.instrument_type == "Microscope"]
     timers = [i.timer for i in instruments if i.instrument_type == "Timer"]
     thermoRPMs = [i.thermorpm for i in instruments if i.instrument_type == "ThermoRPM"]
+    balances = [i.balance for i in instruments if i.instrument_type == "Balance"]
+    pH_meters = [i.phmeter for i in instruments if i.instrument_type == "pH Meter"]
+    airflows = [i.airflow for i in instruments if i.instrument_type == "Airflow"]
+    refrigerations = [i.refrigeration for i in instruments if i.instrument_type == "Refrigeration"]
 
     phone_number = f"({institution.phone_number[:3]}) {institution.phone_number[3:6]}-{institution.phone_number[6:]}"
     date = service_order.date.strftime("%m/%d/%Y")
@@ -129,34 +133,57 @@ def create_so_pdf(so_number):
         elements.append(Spacer(1, 24))
 
     if rpms:
-        rpm_data = [[str(i+1), r.id, r.make, r.model, r.rpm_type] for i, r in enumerate(rpms)]
+        rpm_data = [[str(i+1), r.id, r.make, r.rpm_model, r.rpm_type] for i, r in enumerate(rpms)]
         elements.append(Paragraph("RPMs", header_style))
         elements.append(create_table(rpm_data, ["#", "ID", "Make", "Model", "RPM Type"], doc))
         elements.append(Spacer(1, 24))
 
     if temperatures:
-        temp_data = [[str(i+1), t.id, t.make, t.model, t.temperature_type] for i, t in enumerate(temperatures)]
+        temp_data = [[str(i+1), t.id, t.make, t.temperature_model, t.temperature_type] for i, t in enumerate(temperatures)]
         elements.append(Paragraph("Temperatures", header_style))
         elements.append(create_table(temp_data, ["#", "ID", "Make", "Model", "Temperature Type"], doc))
     
     if microscopes:
-        mircroscope_data = [[str(i+1), m.id, m.make, m.model, m.microscope_type] for i, m in enumerate(microscopes)]
+        mircroscope_data = [[str(i+1), m.id, m.make, m.microscope_model, m.microscope_type] for i, m in enumerate(microscopes)]
         elements.append(Paragraph("Microscopes", header_style))
         elements.append(create_table(mircroscope_data, ["#", "ID", "Make", "Model", "Microscope Type"], doc))
         elements.append(Spacer(1, 24))
     
     if timers:
-        timer_data = [[str(i+1), t.id, t.make, t.model, t.timer_type] for i, t in enumerate(timers)]
+        timer_data = [[str(i+1), t.id, t.make, t.timer_model, t.timer_type] for i, t in enumerate(timers)]
         elements.append(Paragraph("Timers", header_style))
         elements.append(create_table(timer_data, ["#", "ID", "Make", "Model", "Timer Type"], doc))
         elements.append(Spacer(1, 24))
     
     if thermoRPMs:
-        timer_data = [[str(i+1), t.id, t.make, t.model, t.thermoRPM_type] for i, t in enumerate(thermoRPMs)]
+        thermoRPM_data = [[str(i+1), t.id, t.make, t.thermoRPM_model, t.thermoRPM_type] for i, t in enumerate(thermoRPMs)]
         elements.append(Paragraph("ThermoRPMs", header_style))
-        elements.append(create_table(timer_data, ["#", "ID", "Make", "Model", "ThermoRPM Type"], doc))
+        elements.append(create_table(thermoRPM_data, ["#", "ID", "Make", "Model", "ThermoRPM Type"], doc))
+        elements.append(Spacer(1, 24))
+    
+    if balances:
+        balance_data = [[str(i+1), b.id, b.make, b.balance_model, b.balance_type] for i, b in enumerate(balances)]
+        elements.append(Paragraph("Balances", header_style))
+        elements.append(create_table(balance_data, ["#", "ID", "Make", "Model", "Balance Type"], doc))
+        elements.append(Spacer(1, 24))
+    
+    if pH_meters:
+        pH_meter_data = [[str(i+1), p.id, p.make, p.pH_meter_model] for i, p in enumerate(pH_meters)]
+        elements.append(Paragraph("pH Meters", header_style))
+        elements.append(create_table(pH_meter_data, ["#", "ID", "Make", "Model"], doc))
+        elements.append(Spacer(1, 24))
+    
+    if airflows:
+        airflow_data = [[str(i+1), a.id, a.make, a.airflow_model, a.airflow_type] for i, a in enumerate(airflows)]
+        elements.append(Paragraph("Airflows", header_style))
+        elements.append(create_table(airflow_data, ["#", "ID", "Make", "Model", "Airflow Type"], doc))
         elements.append(Spacer(1, 24))
 
+    if refrigerations:
+        refrigeration_data = [[str(i+1), r.id, r.make, r.refrigeration_model, r.refrigeration_type] for i, r in enumerate(refrigerations)]
+        elements.append(Paragraph("Refrigerations", header_style))
+        elements.append(create_table(refrigeration_data, ["#", "ID", "Make", "Model", "Refrigeration Type"], doc))
+        elements.append(Spacer(1, 24))
     
 
     # Add Header/Footer Template

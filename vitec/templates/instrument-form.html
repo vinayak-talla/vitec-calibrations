@@ -43,7 +43,7 @@
         <label for="instrument_type" class="col-sm-2 col-form-label custom-form-label">Instrument Type:</label>
         <div class="col-auto">
             <!-- Dropdown for instrument type with Bootstrap-Select -->
-            <select class="selectpicker" data-style="custom-toggle" id="instrumentTypeSelect" name="instrument_type" title="Select Instrument Type" data-width="100%" data-size="5" data-instrument-type="{{instrument_form.instrument_type.value}}" {% block make_disabled %} {% endblock %}>
+            <select class="selectpicker" data-style="custom-toggle" id="instrumentTypeSelect" name="instrument_type" title="Select Instrument Type" data-width="100%" data-live-search="true" data-size="5" data-instrument-type="{{instrument_form.instrument_type.value}}" {% block make_disabled %} {% endblock %}>
                 <!-- Dynamically populated instrument type options -->
                 <option value="" disabled hidden selected>Select Instrument Type</option> 
                 {% for instrument in instrument_types %}

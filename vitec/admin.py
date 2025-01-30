@@ -9,6 +9,10 @@ admin.site.register(Temperature)
 admin.site.register(Microscope)
 admin.site.register(Timer)
 admin.site.register(ThermoRPM)
+admin.site.register(Airflow)
+admin.site.register(Balance)
+admin.site.register(Refrigeration)
+admin.site.register(PHMeter)
 admin.site.register(Service_Order)
 
 
