@@ -1,4 +1,5 @@
-from django.http import JsonResponse
+import json
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.timezone import now
 from django.contrib import messages
@@ -10,6 +11,8 @@ from .helper import get_paginated_page_range, parse_phone_number, find_instrumen
 from .utils import add_dropdown_option, load_instrument_types
 from django.db.models import Max
 from .so_pdf_generation import create_so_pdf
+import os, csv
+
 
 
 def home(request):
@@ -325,7 +328,10 @@ def service_order(request, so_number):
         service_order = Service_Order.objects.get(so_number=so_number)
         instrument_list = service_order.instrument_list[::-1]
         context['service_order'] = service_order
-        context['lab_contact'] = Institution.objects.get(name=service_order.institution).contact
+        institution = Institution.objects.get(id=service_order.institution.id)
+        context['lab_contact'] = institution.contact
+        context['department'] = institution.department
+
         
     else:
         instrument_list = []
@@ -370,7 +376,7 @@ def service_order(request, so_number):
         elif instrument.instrument_type == "Refrigeration":
             cast_so_instruments.append(Refrigeration.objects.get(id=instrument.id))
 
-    paginator = Paginator(cast_so_instruments, 2)  # Show 10 institutions per page
+    paginator = Paginator(cast_so_instruments, 10)  
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
 
@@ -611,3 +617,43 @@ def download_service_order_pdf(request, so_number):
     
     return create_so_pdf(so_number)
     
+
+def label_data(request, so_number):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+    
+    try:
+        service_order = Service_Order.objects.get(so_number=so_number)
+        instrument_list = service_order.instrument_list
+        so_instruments = Instrument.objects.filter(id__in=instrument_list).only('id', 'make', 'instrument_type')
+
+        data = []
+        for instrument in so_instruments:
+            data.append({
+                'id': instrument.id,
+                'make': instrument.make,
+                'instrument_type': instrument.instrument_type,
+            })
+
+        return JsonResponse({'instruments': data})
+    
+    except Service_Order.DoesNotExist:
+        return JsonResponse({'error': 'Service order not found'}, status=404)
+
+def label_data_msg(request):
+    if not request.user.is_authenticated:
+        messages.warning(request, 'Restricted Access. You must login before accessing Vitec Admin.')
+        return redirect('login')
+    
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        message = data.get('message', '')
+        message_type = data.get('message_type', 'info')
+
+        # Add the message to Django's message framework
+        if message_type == 'success':
+            messages.success(request, message)
+        else:
+            messages.error(request, message)
+
+        return JsonResponse({"status": "Message sent to Django"})

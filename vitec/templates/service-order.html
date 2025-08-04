@@ -39,13 +39,16 @@
 
         </div>
         <div class="separator"></div>
-        <form method="POST" action="{% url 'add-service-order-details' service_order.so_number %}"  class="form" id="serviceOrderDetailsForm">
-            {% csrf_token %}
+        {% if department %}
             <div class="info-item">
                 <span class="info-label">Department:</span>
-                <input type="text" class="form-control so-custom-input" name="department" value="{{ service_order.department|default:'' }}" >
+                <span class="info-value">{{department}}</span>
+
             </div>
             <div class="separator"></div>
+        {% endif %}
+        <form method="POST" action="{% url 'add-service-order-details' service_order.so_number %}"  class="form" id="serviceOrderDetailsForm">
+            {% csrf_token %}
             <div class="info-item">
                 <span class="info-label">Additional Contact:</span>
                 <input type="text" class="form-control so-custom-input" name="additional_contact" value="{{ service_order.additional_contact|default:'' }}" >
@@ -640,9 +643,61 @@
                                             {% endif %}
 
                                         {% elif instrument.instrument_type == "Refrigeration" %}
+                                            <!-- Voltage -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                <label for="voltage" class="col-auto col-form-label custom-form-label">Voltage:</label>
+                                                <div class="col-auto ">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="voltage" name="voltage" value="{{ instrument.voltage| default:'' }}">
+                                                </div>
+                                            </div>
+
+                                            <!-- Temperature1 Test -->
+                                            <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                <label for="temperature1_test" class="col-auto col-form-label custom-form-label">Temperature Test:</label>
+                                                <div class="col-auto ">
+                                                    <input type="text" class="form-control custom-input sm-custom-input" id="temperature1_test" name="temperature1_test" value="{{ instrument.temperature1_test| default:'' }}">
+                                                </div>
+                                            </div>
 
 
+                                            {% if instrument.refrigeration_type == "Refrigerator/Freezer" %}
 
+                                                <!-- Temperature1 Actual -->
+                                                <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                    <label for="temperature1_actual" class="col-auto col-form-label custom-form-label">Temperature Actual:</label>
+                                                    <div class="col-auto ">
+                                                        <input type="text" class="form-control custom-input sm-custom-input" id="temperature1_actual" name="temperature1_actual" value="{{ instrument.temperature1_actual| default:'' }}">
+                                                    </div>
+                                                </div>
+
+
+                                                <!-- Temperature2 Test -->
+                                                <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+                                                    <label for="temperature2_test" class="col-auto col-form-label custom-form-label">Freezer Test:</label>
+                                                    <div class="col-auto ">
+                                                        <input type="text" class="form-control custom-input sm-custom-input" id="temperature2_test" name="temperature2_test" value="{{ instrument.temperature2_test| default:'' }}">
+                                                    </div>
+                                                </div>
+
+                                                <!-- Temperature2 Actual -->
+                                                <div class="row mb-2 pb-2 custom-row align-items-center">
+                                                    <label for="temperature2_actual" class="col-auto col-form-label custom-form-label">Freezer Actual:</label>
+                                                    <div class="col-auto ">
+                                                        <input type="text" class="form-control custom-input sm-custom-input" id="temperature2_actual" name="temperature2_actual" value="{{ instrument.temperature2_actual| default:'' }}">
+                                                    </div>
+                                                </div>
+                                            {% else %}
+
+                                                <!-- Temperature1 Actual -->
+                                                <div class="row mb-2 pb-2 custom-row align-items-center">
+                                                    <label for="temperature1_actual" class="col-auto col-form-label custom-form-label">Temperature Actual:</label>
+                                                    <div class="col-auto ">
+                                                        <input type="text" class="form-control custom-input sm-custom-input" id="temperature1_actual" name="temperature1_actual" value="{{ instrument.temperature1_actual| default:'' }}">
+                                                    </div>
+                                                </div>
+
+                                            {% endif %}
+  
                                         {% endif %}
 
                                         <div class="row mb-2 pb-2 custom-row align-items-center" id="formErrors{{ instrument.id }}" style="display: none;">
@@ -724,6 +779,7 @@
     <button type="submit" class="btn save-add-btn" name="save_and_continue" form="serviceOrderDetailsForm">Save and Continue</button>
     {% if service_order %}
     <a href="{% url 'download-service-order' service_order.so_number %}" class="btn btn-secondary save-add-btn">Download PDF</a>
+    <button class="btn save-add-btn" onclick="sendToPrinter('{{ service_order.so_number }}')">Send Printer Data</button>
     {% endif %}
 </div>
 

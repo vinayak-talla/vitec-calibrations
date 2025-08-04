@@ -4,16 +4,14 @@ from .models import *
 class InstitutionForm(forms.ModelForm):
     class Meta:
         model = Institution
-        fields = ['name', 'contact', 'address', 'phone_number', 'email']
+        fields = ['name', 'contact', 'department', 'address', 'phone_number', 'email']
         labels = {
             'name': 'Institution Name',
             'contact': 'Contact Name',
+            'lab_name': 'Lab Name',
             'address': 'Address',
             'phone_number': 'Phone Number',
             'email': 'Email'
-        }
-        error_messages = {
-            'name': {'unique': 'This institution name already exists.'},
         }
     
     def clean_phone_number(self):
@@ -27,10 +25,18 @@ class InstitutionForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         name = cleaned_data.get('name')
+        contact = cleaned_data.get('contact')
 
         # Check for duplicate institution names
-        if name and Institution.objects.filter(name=name).exclude(pk=self.instance.pk).exists():
-            self.add_error('name', 'This institution has already been added.')
+        if name and contact:
+            duplicate = Institution.objects.filter(
+                name=name,
+                contact=contact
+            ).exclude(pk=self.instance.pk)
+
+            if duplicate.exists():
+                self.add_error('name', 'This institution and contact combination already exists.')
+                self.add_error('contact', 'This institution and contact combination already exists.')
 
 
 
@@ -179,11 +185,11 @@ class AirflowValueForm(forms.ModelForm):
 class RefrigerationValueForm(forms.ModelForm):
     class Meta:
         model = Refrigeration
-        fields = '__all__'
+        fields = ['temperature1_test', 'temperature1_actual', 'temperature2_test', 'temperature2_actual', 'voltage']
 
 class ServiceOrderForm(forms.ModelForm):
     class Meta:
         model = Service_Order
-        fields = ['additional_contact', 'department']
+        fields = ['additional_contact']
 
 

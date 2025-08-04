@@ -1,5 +1,46 @@
 # Vitec Admin
 
+## App Commands
+
+### Database Migrations
+
+#### Dev Environment
+python manage.py makemigrations
+python manage.py migrate
+
+#### Prod Environment
+Shouldn't need to run again:
+gcloud beta run jobs create vitec-migrate \                    
+  --image gcr.io/vitec-calibrations-admin/vitec-app \
+  --region us-central1 \
+  --command "python" \
+  --args "manage.py","migrate" \
+  --set-cloudsql-instances vitec-calibrations-admin:us-central1:vitec-admin-database \
+  --set-env-vars DJANGO_SETTINGS_MODULE=viteccalibrations.settings.production
+
+gcloud beta run jobs execute vitec-migrate --region us-central1
+
+
+
+### Running App Local
+Make sure you're in directory with venv and manage.py
+source venv/bin/activate  
+python manage.py runserver
+
+### Push to Prod
+gcloud auth login
+gcloud config set project vitec-calibrations-admin
+gcloud builds submit --tag gcr.io/vitec-calibrations-admin/vitec-app
+gcloud run deploy vitec-app \
+  --image gcr.io/vitec-calibrations-admin/vitec-app \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --add-cloudsql-instances vitec-calibrations-admin:us-central1:vitec-admin-database \
+  --set-env-vars DJANGO_SETTINGS_MODULE=viteccalibrations.settings.production
+
+### Push to Git
+
 
 ## Add Instrument Type
 models.py

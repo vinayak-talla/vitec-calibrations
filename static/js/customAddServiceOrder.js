@@ -189,6 +189,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+    
+
 });
 
 const instrumentHandlers = {
@@ -410,4 +412,58 @@ function consolidateArrayFields(form, field, name) {
     input.value = array;
     form.appendChild(input);
 
+}
+
+function sendToPrinter(soNumber) {
+    fetch('http://127.0.0.1:5000/download-label', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ so_number: soNumber }),
+        credentials: 'include'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not OK");
+        }
+        return response.json();
+    })
+    .then(data => {
+        sendDjangoMsg("success","Service order data sent successfully to Zebra!")
+
+    })
+    .catch(error => {
+        sendDjangoMsg("error","Failed to send data to printer. Make sure the Zebra listener is running.")
+
+    });
+}
+
+
+function sendDjangoMsg(msgType, msgBody) {
+    fetch('/vitec/set-message/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken(),
+        },
+        body: JSON.stringify({
+            message: msgBody,
+            message_type: msgType
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to send Django message");
+        }
+        // Reload the page after the message is successfully sent
+        window.location.reload();
+    })
+    .catch(error => {
+        console.error("Error sending Django message:", error);
+    });
+}
+
+function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 }

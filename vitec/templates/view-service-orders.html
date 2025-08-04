@@ -34,7 +34,6 @@
     <th>SO NUMBER</th>
     <th>DATE</th>
     <th>INSTITUTION</th>
-    <th>DEPARTMENT</th>
 </tr>
 {% endblock %}
 
@@ -46,7 +45,6 @@
             <td><a href="{% url 'service-order' service_order.so_number %}" class="table-row-link">{{ service_order.so_number }}</a></td>
             <td>{{ service_order.date }}</td>
             <td>{{ service_order.institution }}</td>
-            <td>{{ service_order.department }}</td>
         </tr>
     {% endfor %}
 {% else %}

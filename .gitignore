@@ -1,2 +1,5 @@
 .pg_service.conf
 .vitec_pgpass
+venv/
+.env
+*.sqlite3

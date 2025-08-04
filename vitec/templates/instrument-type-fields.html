@@ -1097,7 +1097,7 @@
         <label for="refrigeration_type" class="col-sm-2 col-form-label custom-form-label">Refrigeration Type:</label>
         <div class="col-auto">
             <!-- Dropdown for refrigeration type with Bootstrap-Select -->
-            <select class="selectpicker" data-style="custom-toggle" id="refrigerationTypeSelect" name="refrigeration_type" data-live-search="true" title="Select Refrigeration Type" data-width="100%" data-size="5">
+            <select class="selectpicker" data-style="custom-toggle" id="refrigerationTypeSelect" name="refrigeration_type" data-live-search="true" data-refrigeration-type="{{refrigeration.refrigeration_type.value}}" title="Select Refrigeration Type" data-width="100%" data-size="5">
                 <!-- Dynamically populated rpm type options -->
                 {% for refrigeration in refrigeration_types %}
                     <option class="custom-dropdown" value="{{ refrigeration }}" {% if refrigeration_form.refrigeration_type.value == refrigeration %}selected{% endif %}>{{ refrigeration }}</option>
@@ -1131,6 +1131,73 @@
                     {{refrigeration_form.refrigeration_model.errors|join:", " }}
                 </div>
             {% endif %}
+        </div>
+    </div>
+
+    <!-- Voltage -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="voltage" class="col-sm-2 col-form-label custom-form-label">Voltage:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input sm-custom-input" id="voltage" name="voltage" value="{{ refrigeration_form.voltage.value| default:'' }}">
+            {% if refrigeration_form.voltage.errors %}
+                <div class="text-danger">
+                    {{ refrigeration_form.voltage.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Temperature1 Test -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="temperature1_test" class="col-sm-2 col-form-label custom-form-label">Temperature Test:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input sm-custom-input" id="temperature1_test" name="temperature1_test" value="{{ refrigeration_form.temperature1_test.value| default:'' }}">
+            {% if refrigeration_form.temperature1_test.errors %}
+                <div class="text-danger">
+                    {{ refrigeration_form.temperature1_test.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Temperature1 Actual -->
+    <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+        <label for="temperature1_actual" class="col-sm-2 col-form-label custom-form-label">Temperature Actual:</label>
+        <div class="col-sm-3 ">
+            <input type="text" class="form-control custom-input sm-custom-input" id="temperature1_actual" name="temperature1_actual" value="{{ refrigeration_form.temperature1_actual.value| default:'' }}">
+            {% if refrigeration_form.temperature1_actual.errors %}
+                <div class="text-danger">
+                    {{ refrigeration_form.temperature1_actual.errors|join:", " }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="temp2-fields" class="fields">
+        <!-- Temperature2 Test -->
+        <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+            <label for="temperature2_test" class="col-sm-2 col-form-label custom-form-label">Freezer Test:</label>
+            <div class="col-sm-3 ">
+                <input type="text" class="form-control custom-input sm-custom-input" id="temperature2_test" name="temperature2_test" value="{{ refrigeration_form.temperature2_test.value| default:'' }}">
+                {% if refrigeration_form.temperature2_test.errors %}
+                    <div class="text-danger">
+                        {{ refrigeration_form.temperature2_test.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Temperature2 Actual -->
+        <div class="row mb-4 pb-4 border-bottom custom-row align-items-center">
+            <label for="temperature2_actual" class="col-sm-2 col-form-label custom-form-label">Freezer Actual:</label>
+            <div class="col-sm-3 ">
+                <input type="text" class="form-control custom-input sm-custom-input" id="temperature2_actual" name="temperature2_actual" value="{{ refrigeration_form.temperature2_actual.value| default:'' }}">
+                {% if refrigeration_form.temperature2_actual.errors %}
+                    <div class="text-danger">
+                        {{ refrigeration_form.temperature2_actual.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 

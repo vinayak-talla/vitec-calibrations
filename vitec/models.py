@@ -3,11 +3,16 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class Institution(models.Model):
-    name = models.CharField(primary_key=True,max_length=150)
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=150)
+    department = models.CharField(max_length=150, blank=True)
     contact = models.CharField(max_length=120)
     address = models.CharField(max_length=200)
     phone_number = models.CharField(max_length=10)
     email = models.EmailField(max_length=100)
+    class Meta:
+        # Ensure no duplicate combinations of name and contact
+        unique_together = ['name', 'contact']
 
     def __str__(self):
         return f"{self.name}"
@@ -217,6 +222,11 @@ class Airflow(Instrument):
 class Refrigeration(Instrument):
     refrigeration_type = models.CharField(max_length=100)
     refrigeration_model = models.CharField(max_length=50, blank=True, default="N/A")
+    voltage = models.DecimalField(max_digits=6, decimal_places=1, null=True, blank=True)
+    temperature1_test = models.DecimalField(max_digits=6, decimal_places=3, null=True, blank=True)
+    temperature1_actual = models.DecimalField(max_digits=6, decimal_places=3, null=True, blank=True)
+    temperature2_test = models.DecimalField(max_digits=6, decimal_places=3, null=True, blank=True)
+    temperature2_actual = models.DecimalField(max_digits=6, decimal_places=3, null=True, blank=True)
     def save(self, *args, **kwargs):
         if not self.refrigeration_model.strip():  # Replace empty or whitespace-only values
             self.refrigeration_model = "N/A"
@@ -229,7 +239,6 @@ class Service_Order(models.Model):
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
     instrument_list = ArrayField(models.CharField(max_length=50))
     additional_contact = models.CharField(max_length=120, blank=True)
-    department = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
         return f"{self.so_number} {self.date} {self.institution}"

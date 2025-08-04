@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
     $(document.getElementById('instrumentTypeSelect')).on('changed.bs.select', function () {
         toggleFields()
     });
-    console.log(document.getElementById('instrumentTypeSelect').value)
 
     function toggleFields() {
         // Get the selected instrument type from the clicked dropdown item
@@ -195,6 +194,31 @@ document.addEventListener('DOMContentLoaded', function () {
             pcrFields.style.display = 'block';
         } else {
             pcrFields.style.display = 'none';
+        }
+       
+    }
+
+
+    if(document.getElementById('refrigerationTypeSelect').getAttribute('data-refrigeration-type') != "None") {
+        toggleRefrigerationFields() 
+    }
+
+    $(document.getElementById('refrigerationTypeSelect')).on('changed.bs.select', function () {
+        toggleRefrigerationFields()
+    });
+
+    function toggleRefrigerationFields() {
+        // Get the selected instrument type from the clicked dropdown item
+        const refigerationType = document.getElementById('refrigerationTypeSelect').value;
+        
+        // Get references to the fields that should be shown or hidden based on selection
+        var temp2Fields = document.getElementById('temp2-fields');
+
+        // Toggle child form display
+        if (refigerationType === 'Refrigerator/Freezer') {
+            temp2Fields.style.display = 'block';
+        } else {
+            temp2Fields.style.display = 'none';
         }
        
     }

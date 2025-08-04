@@ -21,4 +21,6 @@ urlpatterns = [
     path("add-service-order-details/<int:so_number>/", views.add_service_order_details, name="add-service-order-details"),
     path("view-service-orders/", views.view_service_orders, name="view-service-orders"),
     path('download-service-order/<int:so_number>/', views.download_service_order_pdf, name='download-service-order'),
+    path('label-data/<int:so_number>/', views.label_data, name='label-data'),
+    path('set-message/', views.label_data_msg, name='set-message'),
 ]

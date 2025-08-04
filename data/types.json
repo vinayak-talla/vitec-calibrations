@@ -73,6 +73,6 @@
     "refrigeration_types": [
         "Refrigerator",
         "Freezer",
-        "Test1"
+        "Refrigerator/Freezer"
     ]
 }

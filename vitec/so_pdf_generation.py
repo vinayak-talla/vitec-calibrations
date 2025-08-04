@@ -67,7 +67,7 @@ def create_table(data, headers, doc):
 def create_so_pdf(so_number):
     service_order = get_object_or_404(Service_Order, so_number=so_number)
     instruments = Instrument.objects.filter(id__in=service_order.instrument_list)
-    institution = Institution.objects.get(name=service_order.institution)
+    institution = Institution.objects.get(id=service_order.institution.id)
 
     pipettes = [i.pipette for i in instruments if i.instrument_type == "Pipette"]
     rpms = [i.rpm for i in instruments if i.instrument_type == "RPM"]
@@ -99,8 +99,8 @@ def create_so_pdf(so_number):
     # Define the data with bold labels
     details_data = [
         [Paragraph(f"<b>Date:</b> {date}", custom_style), Paragraph(f"<b>INV#:</b> {service_order.so_number}", custom_style)],
-        [Paragraph(f"<b>Institution:</b> {service_order.institution}", custom_style), Paragraph(f"<b>Contact:</b> {institution.contact}", custom_style)],
-        [Paragraph(f"<b>Department:</b> {service_order.department or 'N/A'}", custom_style), Paragraph(f"<b>Email:</b> {institution.email}", custom_style)],
+        [Paragraph(f"<b>Institution:</b> {institution}", custom_style), Paragraph(f"<b>Contact:</b> {institution.contact}", custom_style)],
+        [Paragraph(f"<b>Department:</b> {institution.department or 'N/A'}", custom_style), Paragraph(f"<b>Email:</b> {institution.email}", custom_style)],
         [Paragraph(f"<b>Additional Contact:</b> {service_order.additional_contact or 'N/A'}", custom_style), Paragraph(f"<b>Phone:</b> {phone_number}", custom_style)],
         [Paragraph(f"<b>Address:</b> {institution.address}", custom_style), None]
     ]

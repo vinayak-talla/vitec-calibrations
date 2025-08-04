@@ -82,7 +82,7 @@
             <select class="selectpicker" data-style="custom-toggle" id="institution" name="institution" data-live-search="true" title="Select Institution" data-width="100%" data-size="5" {% block disable_institution %} {% endblock %}>
                 <!-- Dynamically populated institution options -->
                 {% for institution in institutions %}
-                    <option class="custom-dropdown" value="{{ institution.name }}" {% if instrument_form.institution.value == institution.name %}selected{% endif %}>{{ institution.name }}</option>
+                    <option class="custom-dropdown" value="{{ institution.id }}" {% if instrument_form.institution.value|stringformat:"s" == institution.id|stringformat:"s" %}selected{% endif %}>{{ institution.name }} - {{ institution.contact }}</option>
                 {% endfor %}
             </select>
             <!-- Display validation errors -->
